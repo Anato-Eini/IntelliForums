@@ -16,7 +16,13 @@ class User(models.Model):
     def check_password(self, raw_password):
         return check_password(raw_password, self.password)
 
+class Forum(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+
 class Post(models.Model):
+    forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
@@ -25,12 +31,11 @@ class Post(models.Model):
         return self.title
 
 class UserPost(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Comment(models.Model):
-    user_post = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
