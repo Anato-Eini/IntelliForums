@@ -24,6 +24,9 @@ def render_register(request):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             birth_date = form.cleaned_data.get('birth_date')
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+
 
             if User.objects.filter(username=username).exists():
                 form.add_error('username', 'Username already taken')
@@ -32,7 +35,10 @@ def render_register(request):
                     username = username,
                     password = make_password(password),
                     email = email,
-                    birth_date = birth_date
+                    birth_date = birth_date,
+                    first_name = first_name,
+                    last_name = last_name,
+                    user_type=1
                ).save()
                return redirect('login')
         else:

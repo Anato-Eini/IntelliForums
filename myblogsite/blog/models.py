@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.hashers import check_password
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
@@ -23,6 +23,9 @@ class User(models.Model):
     password = models.CharField(max_length=255)
     email = models.EmailField()
     birth_date = models.DateField()
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    user_type = models.IntegerField() #Admin = 0, user = 1
 
     def __str__(self):
         return self.username
