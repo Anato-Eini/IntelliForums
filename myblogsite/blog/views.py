@@ -8,6 +8,9 @@ from .forms import *
 def post_list(request):
     return render(request, 'post_list.html', {'posts': Post.objects.all()})
 
+def get_forums(request):
+    return
+
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comments = Comment.objects.filter(post=post)
