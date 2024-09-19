@@ -2,14 +2,17 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.auth.hashers import make_password
 
-from .models import Post, Comment, User
+from .models import Post, Comment, User, Forum
 from .forms import *
+
+def fetch_posts(request, pk):
+    pass
 
 def post_list(request):
     return render(request, 'post_list.html', {'posts': Post.objects.all()})
 
 def get_forums(request):
-    return
+    return render(request, 'forum.html', {'forums': Forum.objects.all()})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
