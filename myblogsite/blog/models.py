@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.hashers import check_password
 
 class User(models.Model):
-    username = models.CharField(max_length=100)
+    username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=255)
     email = models.EmailField()
     birth_date = models.DateField()
