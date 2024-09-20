@@ -2,14 +2,29 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.auth.hashers import make_password
 
-from .models import Post, Comment, User, Forum
+from .models import Post, Comment, User, Forum, UserPost
 from .forms import *
 
-def fetch_posts(request, pk):
-    pass
+def fetch_posts_forum(request, pk):
+    """TODO Implement Paginator to query a batch of 20 results"""
+    return render(request, 'post_list.html', {
+        'posts' : UserPost.objects.select_related('post_ref').filter(post_ref__forum_ref__id=pk).values(
+            'post_ref__user_ref__username',
+            'post_ref__title',
+            'post_ref__content',
+            'post_ref__created_at'
+        )
+    })
 
-def post_list(request):
-    return render(request, 'post_list.html', {'posts': Post.objects.all()})
+def fetch_posts(request):
+    """TODO Implement Paginator to query a batch of 20 results"""
+    return render(request, 'post_list.html', {
+        'posts': UserPost.objects.select_related('post_ref').values(
+            'post_ref__user_ref__username',
+            'post_ref__title',
+            'post_ref__content',
+            'post_ref__created_at'
+        )})
 
 def get_forums(request):
     return render(request, 'forum.html', {'forums': Forum.objects.all()})
@@ -19,6 +34,7 @@ def post_detail(request, pk):
     comments = Comment.objects.filter(post=post)
     return render(request, 'post_detail.html', {'post': post, 'comments': comments})
 
+@csrf_protect
 def render_register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
