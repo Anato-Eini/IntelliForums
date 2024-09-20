@@ -1,5 +1,7 @@
 # IntelliForums
 
+Functional Requirements <a href = 'https://docs.google.com/document/d/1QwDRXmar-ztxRYgQpsVKN3Fgg6jkXiQ-JWenTDIHvTM/edit'>here</a>
+
 Figma <a href = 'https://www.figma.com/design/RyUp3QbuiyquVUd6hOr0Bn/IM2?node-id=0-1&t=kqXksnKuYjtsJIEU-1'>link</a>
 
 Gantt Chart <a href = 'https://docs.google.com/spreadsheets/d/1emJhUlhcaSpzuB8jP_2BvoRQ1bP72NqA/edit?usp=sharing&ouid=100040180580851938686&rtpof=true&sd=true'>link</a>
