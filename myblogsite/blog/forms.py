@@ -21,6 +21,9 @@ class LoginForm(forms.Form):
         max_length=255,
     )
 
+# class CommentForm(forms.ModelForm):
+
+
 class GeneralPostForm(forms.ModelForm):
     choices = forms.ChoiceField(
         label="Upload to:"

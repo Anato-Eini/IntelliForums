@@ -39,24 +39,30 @@ class Post(models.Model):
     image = models.ImageField(upload_to=upload_path, blank=True, null=True)
 
     def save(self, *args, **kwargs):
+        change_path(self, "posts", args, kwargs)
+
+    def save_model(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
-        if self.image:
-            old_path = self.image.path
-            new_dir = f"media/posts/{self.id}/"
-            base_name = os.path.basename(self.image.name)
-            new_path = os.path.join(new_dir, base_name)
-
-            if not os.path.exists(new_dir):
-                os.makedirs(new_dir)
-
-            shutil.move(old_path, new_path)
-
-            self.image.name = f"posts/{self.id}/{base_name}"
-            super().save(update_fields=['image'])  # Save again to update the image field
 
     def __str__(self):
         return self.title
+
+def change_path(model, folder, *args, **kwargs):
+    model.save_model(*args, **kwargs)
+
+    if model.image:
+        old_path = model.image.path
+        new_dir = f"media/{folder}/{model.id}/"
+        base_name = os.path.basename(model.image.name)
+        new_path = os.path.join(new_dir, base_name)
+
+        if not os.path.exists(new_dir):
+            os.makedirs(new_dir)
+
+        shutil.move(old_path, new_path)
+
+        model.image.name = f"posts/{model.id}/{base_name}"
+        model.super().save(update_fields=['image'])
 
 class Vote(models.Model):
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -71,6 +77,13 @@ class Comment(models.Model):
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to=upload_path, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        change_path(self, "comments", args, kwargs)
+
+    def save_model(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.author} on {self.post.title}"
