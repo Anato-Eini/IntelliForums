@@ -55,6 +55,26 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'myblogsite.urls'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'your_app_name': {  # Replace with your app name
+            'handlers': ['console'],
+            'level': 'DEBUG',  # Adjust the level as needed
+        },
+    },
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

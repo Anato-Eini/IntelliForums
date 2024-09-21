@@ -25,7 +25,7 @@ class Forum(models.Model):
 
 class Post(models.Model):
     forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
-    user_ref = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)

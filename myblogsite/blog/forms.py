@@ -23,9 +23,9 @@ class LoginForm(forms.Form):
 
 class GeneralPostForm(forms.ModelForm):
     choices = forms.ChoiceField(
-        choices=[ (forum.id, forum.title) for forum in Forum.objects.all() ],
         label="Upload to:"
     )
+
     class Meta:
         model = Post
         fields = ['title', 'content', 'image']
@@ -51,6 +51,10 @@ class GeneralPostForm(forms.ModelForm):
             'content': 'Content',
             'image': 'Image'
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self. fields['choices'].choices = [ (forum.id, forum.title) for forum in Forum.objects.all() ]
 
 class PostForm(forms.ModelForm):
     class Meta:

@@ -1,11 +1,11 @@
+import logging
 from django.contrib.auth import login, authenticate
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-from .models import Post, Comment, User, UserPost
 from .forms import *
 
 def fetch_posts(request, pk, page_number):
@@ -23,6 +23,7 @@ def fetch_posts(request, pk, page_number):
                 UserPost.objects.select_related('post_ref')
                 .filter(post_ref__forum_ref__id=pk)
                 .values(
+                    'post_ref__id',
                     'post_ref__user_ref__username',
                     'post_ref__title',
                     'post_ref__content',
@@ -30,6 +31,7 @@ def fetch_posts(request, pk, page_number):
                 )
                 if Forum.objects.filter(id=pk).exists() else UserPost.objects.select_related('post_ref')
                 .values(
+                    'post_ref__id',
                     'post_ref__user_ref__username',
                     'post_ref__title',
                     'post_ref__content',
@@ -57,17 +59,35 @@ def render_new_post(request, forum_pk):
         return redirect('login')
 
     if request.method == 'POST':
-        post = GeneralPostForm(request.POST, request.FILES) \
-            if not Forum.objects.filter(id=forum_pk).exists() \
-            else PostForm(request.POST, request.FILES)
-        if post.is_valid():
-            post.save()
+        if Forum.objects.filter(id=forum_pk).exists():
+            form = PostForm(request.POST, request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.forum_ref = get_object_or_404(Forum, id=forum_pk)
+            else:
+                raise ValidationError("Incorrect data")
+        else:
+            form = GeneralPostForm(request.POST, request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.forum_ref = get_object_or_404(Forum, id=form.cleaned_data['choices'])
+            else:
+                raise ValidationError("Incorrect data")
+
+        user_instance = User.objects.get(id=request.user.id)
+        post.user_ref = user_instance
+        post.save()
+        UserPost.objects.create(
+            post_ref=post,
+            user_ref=user_instance
+        )
+        return redirect(reverse('home', args=[0, 1]))
     else:
-        post = GeneralPostForm() \
+        form = GeneralPostForm() \
             if not Forum.objects.filter(id=forum_pk).exists() \
             else PostForm()
 
-    return render(request, 'post_form.html', {'form' : post})
+    return render(request, 'post_form.html', {'form' : form})
 
 def post_detail(request, pk):
     """Render a particular post"""
