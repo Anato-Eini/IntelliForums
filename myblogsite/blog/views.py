@@ -58,16 +58,16 @@ def render_new_post(request, forum_pk):
 
     if request.method == 'POST':
         post = GeneralPostForm(request.POST, request.FILES) \
-            if Forum.objects.filter(id=forum_pk).exists() \
+            if not Forum.objects.filter(id=forum_pk).exists() \
             else PostForm(request.POST, request.FILES)
         if post.is_valid():
             post.save()
     else:
         post = GeneralPostForm() \
-            if Forum.objects.filter(id=forum_pk).exists() \
+            if not Forum.objects.filter(id=forum_pk).exists() \
             else PostForm()
 
-    return render(request, 'post_form.html', {'post' : post})
+    return render(request, 'post_form.html', {'form' : post})
 
 def post_detail(request, pk):
     """Render a particular post"""

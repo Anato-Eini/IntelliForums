@@ -2,29 +2,26 @@ from django import forms
 from .models import *
 
 class LoginForm(forms.Form):
-    class Meta:
-        model = User
-        fields = ['username', 'password']
-        widgets = {
-            'username': forms.TextInput(
-                attrs={
-                    'class' :'form-control'
-                }
-            ),
-            'password': forms.PasswordInput(
-                attrs={
-                    'class' :'form-control'
-                }
-            )
-        }
-        labels = {
-            'username': 'Username',
-            'password': 'Password'
-        }
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }
+        ),
+        label="Username",
+        max_length=100,
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                'class' : 'form-control'
+            }
+        ),
+        label="Password",
+        max_length=255,
+    )
 
-
-class GeneralPostForm(forms.Form):
-
+class GeneralPostForm(forms.ModelForm):
     choices = forms.ChoiceField(
         choices=[ (forum.id, forum.title) for forum in Forum.objects.all() ],
         label="Upload to:"
