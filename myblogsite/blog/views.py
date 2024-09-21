@@ -1,30 +1,45 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.auth.hashers import make_password
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .models import Post, Comment, User, Forum, UserPost
 from .forms import *
 
-def fetch_posts_forum(request, pk):
-    """TODO Implement Paginator to query a batch of 20 results"""
+def fetch_posts_forum(request, pk, page_number):
     return render(request, 'post_list.html', {
-        'posts' : UserPost.objects.select_related('post_ref').filter(post_ref__forum_ref__id=pk).values(
-            'post_ref__user_ref__username',
-            'post_ref__title',
-            'post_ref__content',
-            'post_ref__created_at'
-        )
+        'posts' : _get_page_object(
+            Paginator(
+                UserPost.objects.select_related('post_ref')
+                .filter(post_ref__forum_ref__id=pk)
+                .values(
+                    'post_ref__user_ref__username',
+                    'post_ref__title',
+                    'post_ref__content',
+                    'post_ref__created_at'
+                ), 20), page_number).object_list
     })
 
-def fetch_posts(request):
-    """TODO Implement Paginator to query a batch of 20 results"""
+def _get_page_object(paginator_object, page_number):
+    try:
+        page_object = paginator_object.page(page_number)
+    except PageNotAnInteger:
+        page_object = paginator_object.page(1)
+    except EmptyPage:
+        page_object = paginator_object.page(paginator_object.num_pages)
+
+    return page_object
+
+def fetch_posts(request, page_number):
     return render(request, 'post_list.html', {
-        'posts': UserPost.objects.select_related('post_ref').values(
+        'posts': _get_page_object(Paginator(UserPost.objects.select_related('post_ref')
+        .values(
             'post_ref__user_ref__username',
             'post_ref__title',
             'post_ref__content',
             'post_ref__created_at'
-        )})
+        ), 20), page_number).object_list
+    })
 
 def get_forums(request):
     return render(request, 'forum.html', {'forums': Forum.objects.all()})
