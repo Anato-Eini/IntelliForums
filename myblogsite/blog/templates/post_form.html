@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Post Here</h1>
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         
         {{ form.non_field_errors }}

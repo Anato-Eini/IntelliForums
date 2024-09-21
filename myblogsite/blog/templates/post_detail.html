@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{post.title}}</title>
+    <title>{{ post.title }}</title>
 </head>
 <body>
     <h1>{{ post.title }}</h1>
+    <h4> </h4>
     <p>{{ post.content }}</p>
+    <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 700px; max-height: 700px;">
     <h2>Comments: </h2>
     <ul>
         {% for comment in comments %}

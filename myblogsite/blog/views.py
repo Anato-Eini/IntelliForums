@@ -27,7 +27,8 @@ def fetch_posts(request, pk, page_number):
                     'post_ref__user_ref__username',
                     'post_ref__title',
                     'post_ref__content',
-                    'post_ref__created_at'
+                    'post_ref__created_at',
+                    'id'
                 )
                 if Forum.objects.filter(id=pk).exists() else UserPost.objects.select_related('post_ref')
                 .values(
@@ -35,7 +36,8 @@ def fetch_posts(request, pk, page_number):
                     'post_ref__user_ref__username',
                     'post_ref__title',
                     'post_ref__content',
-                    'post_ref__created_at'
+                    'post_ref__created_at',
+                    'id'
                 ),20
             ), page_number
         ).object_list,
@@ -90,12 +92,15 @@ def render_new_post(request, forum_pk):
     return render(request, 'post_form.html', {'form' : form})
 
 def post_detail(request, pk):
-    """Render a particular post"""
+    """
+    Render a particular post
+    Receives primary key for user_post
+    """
     if not request.user.is_authenticated:
         return redirect('login')
 
-    post = get_object_or_404(Post, pk=pk)
-    comments = Comment.objects.filter(post=post)
+    post = get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id)
+    comments = Comment.objects.filter(user_post_ref=pk)
     return render(request, 'post_detail.html', {'post': post, 'comments': comments})
 
 @csrf_protect

@@ -1,3 +1,6 @@
+import os
+import shutil
+
 from django.db import models
 from django.contrib.auth.hashers import check_password, make_password
 
@@ -23,13 +26,34 @@ class Forum(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
 
+
+def upload_path(instance, filename):
+    return f"temporary/{filename}"
+
 class Post(models.Model):
     forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
-    image = models.ImageField(upload_to=f"posts/{id}/", blank=True, null=True)
+    image = models.ImageField(upload_to=upload_path, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.image:
+            old_path = self.image.path
+            new_dir = f"media/posts/{self.id}/"
+            base_name = os.path.basename(self.image.name)
+            new_path = os.path.join(new_dir, base_name)
+
+            if not os.path.exists(new_dir):
+                os.makedirs(new_dir)
+
+            shutil.move(old_path, new_path)
+
+            self.image.name = f"posts/{self.id}/{base_name}"
+            super().save(update_fields=['image'])  # Save again to update the image field
 
     def __str__(self):
         return self.title

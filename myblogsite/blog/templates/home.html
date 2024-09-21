@@ -8,7 +8,7 @@
     <h1>Blog Posts</h1>
     <button onclick= "location.href = '{% url 'new_post' forum_pk=forum_pk %}'">New Post</button>
     {% for post in posts %}
-        <h3 onclick="location.href = '{% url 'post_detail' pk=post.post_ref__id %}'">{{ post.post_ref__title }}</h3>
+        <h3 onclick="location.href = '{% url 'post_detail' pk=post.id %}'">{{ post.post_ref__title }}</h3>
     {% endfor %}
 
 </body>
