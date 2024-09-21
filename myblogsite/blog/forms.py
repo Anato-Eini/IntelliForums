@@ -31,7 +31,7 @@ class GeneralPostForm(forms.Form):
     )
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'image']
         widgets = {
             'title': forms.TextInput(
                 attrs={
@@ -42,18 +42,23 @@ class GeneralPostForm(forms.Form):
                 attrs={
                     'class' : 'form-control'
                 }
+            ),
+            'image': forms.ClearableFileInput(
+                attrs={
+                    'class' : 'form-control'
+                }
             )
         }
         labels = {
             'title': 'Title',
-            'content': 'Content'
+            'content': 'Content',
+            'image': 'Image'
         }
-
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'image']
         widgets = {
             'title': forms.TextInput(
                 attrs={
@@ -64,19 +69,34 @@ class PostForm(forms.ModelForm):
                 attrs={
                     'class' : 'form-control'
                 }
+            ),
+            'image' : forms.ClearableFileInput(
+                attrs={
+                    'class' : 'form-control'
+                }
             )
         }
         labels = {
             'title' : 'Title',
             'content' : 'Content',
+            'image' : 'Upload an Image'
         }
 
-
-class RegisterForm(forms.Form):
+class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'password', 'email', 'birth_date']
+        fields = ['first_name', 'last_name', 'username', 'password', 'email', 'birth_date']
         widgets = {
+            'first_name': forms.TextInput(
+                attrs={
+                    'class' : 'form-control'
+                }
+            ),
+            'last_name': forms.TextInput(
+                attrs={
+                    'class' : 'form-control'
+                }
+            ),
             'username': forms.TextInput(
                 attrs={
                     'class': 'form-control'
@@ -90,17 +110,15 @@ class RegisterForm(forms.Form):
             'email': forms.EmailInput(
                 attrs={
                     'class': 'form-control'
-                }
+                },
             ),
-            'birth_date': forms.DateField(
-                attrs={
-                    'class': 'form-control'
-                }
-            )
+            'birth_date': forms.DateField(),
         }
         labels = {
             'username': 'Username',
             'password': 'Password',
             'email': 'Email',
-            'birth_date': 'Birth date'
+            'birth_date': 'Birth date',
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
         }
