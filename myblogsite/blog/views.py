@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
@@ -17,7 +17,8 @@ def fetch_posts_forum(request, pk, page_number):
                     'post_ref__title',
                     'post_ref__content',
                     'post_ref__created_at'
-                ), 20), page_number).object_list
+                ), 20), page_number).object_list,
+        'page_number' : page_number,
     })
 
 def _get_page_object(paginator_object, page_number):
@@ -38,11 +39,12 @@ def fetch_posts(request, page_number):
             'post_ref__title',
             'post_ref__content',
             'post_ref__created_at'
-        ), 20), page_number).object_list
+        ), 20), page_number).object_list,
+        'page_number' : page_number,
     })
 
-def get_forums(request):
-    return render(request, 'forum.html', {'forums': Forum.objects.all()})
+def render_home(request):
+    return render(request, 'home.html', {'forums': Forum.objects.all()})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
