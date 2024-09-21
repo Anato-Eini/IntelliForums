@@ -8,7 +8,7 @@ class User(models.Model):
     birth_date = models.DateField()
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    user_type = models.IntegerField() #Admin = 0, user = 1
+    user_type = models.IntegerField(default=1)#Admin = 0, user = 1
 
     def __str__(self):
         return self.username
@@ -22,7 +22,7 @@ class Forum(models.Model):
 
 class Post(models.Model):
     forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
-    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
