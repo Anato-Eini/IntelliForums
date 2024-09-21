@@ -30,6 +30,11 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+class Vote(models.Model):
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
+    is_upvote = models.BooleanField()
+
 class UserPost(models.Model):
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
