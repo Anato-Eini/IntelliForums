@@ -64,14 +64,14 @@ def change_path(model, folder, *args, **kwargs):
 
         model.image.name = f"{folder}/{model.id}/{base_name}"
 
-class Vote(models.Model):
-    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
-    post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
-    is_upvote = models.BooleanField()
-
 class UserPost(models.Model):
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Vote(models.Model):
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+    is_upvote = models.BooleanField()
 
 class Comment(models.Model):
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
@@ -89,4 +89,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user_ref.username} on {self.user_post_ref.post_ref.title}"
-
