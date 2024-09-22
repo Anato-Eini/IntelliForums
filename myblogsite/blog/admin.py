@@ -32,8 +32,10 @@ class ForumAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     """
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
-    text = models.TextField()
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to=upload_path, blank=True, null=True)
     """
     list_display = (
         'id',
@@ -78,7 +80,7 @@ class UserPostAdmin(admin.ModelAdmin):
 
 class VoteAdmin(admin.ModelAdmin):
     """
-    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
     is_upvote = models.BooleanField()
     """
