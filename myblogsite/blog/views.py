@@ -91,7 +91,7 @@ def render_new_post(request, forum_pk):
 
     return render(request, 'post_form.html', {'form' : form})
 
-def post_detail(request, pk):
+def post_detail(request, pk, page_number):
     """
     Render a particular post
     Receives primary key for user_post
@@ -100,12 +100,28 @@ def post_detail(request, pk):
         return redirect('login')
 
     if request.method == "POST":
-        """Implement post handling of comments here"""
-        pass
+        form = CommentForm(request.POST, request.FILES)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user_post_ref = get_object_or_404(UserPost, id=pk)
+            page_number = 1
+            comment.save()
+    else:
+        form = CommentForm()
 
     post = get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id)
-    comments = Comment.objects.filter(user_post_ref__id=pk)
-    return render(request, 'post_detail.html', {'post': post, 'comments': comments})
+    return render(request, 'post_detail.html', {
+        'post': post,
+        'comments': _get_page_object(
+            Paginator(
+                Comment.objects.filter(user_post_ref__id=pk),
+                20
+            ),
+            page_number
+        ).object_list,
+        "user_post_pk" : pk,
+        'form' : form
+    })
 
 @csrf_protect
 def render_register(request):
