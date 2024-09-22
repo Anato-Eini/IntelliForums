@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ post.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    script
 </head>
 <body>
     <h1 style="display: inline" onclick="location.href = '{% url 'home' pk=0 page_number=1 %}'">Home</h1>
@@ -13,6 +15,8 @@
         {{ post.created_at }}</p></span>
     <p>{{ post.content }}</p>
     <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 700px; max-height: 700px;">
+    <h5>Upvote: {{ upvotes }}</h5>
+    <h5>Downvote: {{ downvotes }}</h5>
     <h2>Comments: </h2>
     {% for comment in comments %}
         <div class="comments">

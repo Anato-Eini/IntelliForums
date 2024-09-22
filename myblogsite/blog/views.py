@@ -1,22 +1,20 @@
-import logging
 from django.contrib.auth import login, authenticate
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .forms import *
 
+@login_required(login_url='login')
 def fetch_posts(request, pk, page_number):
     """
     Fetch posts
     if forum does exist, it will fetch appropriate posts else it will fetch all posts from all forums
     with 20 results per page
     """
-    if not request.user.is_authenticated:
-        return redirect('login')
-
     return render(request, 'home.html', {
         'posts' : _get_page_object(
             Paginator(
@@ -30,7 +28,8 @@ def fetch_posts(request, pk, page_number):
                     'post_ref__created_at',
                     'id'
                 )
-                if Forum.objects.filter(id=pk).exists() else UserPost.objects.select_related('post_ref')
+                if Forum.objects.filter(id=pk).exists()
+                else UserPost.objects.select_related('post_ref')
                 .values(
                     'post_ref__id',
                     'post_ref__user_ref__username',
@@ -55,11 +54,10 @@ def _get_page_object(paginator_object, page_number):
 
     return page_object
 
+@csrf_protect
+@login_required(login_url='login')
 def render_new_post(request, forum_pk):
     """Render general post form is forum_pk does exist else it will render a post particular to that forum"""
-    if not request.user.is_authenticated:
-        return redirect('login')
-
     if request.method == 'POST':
         if Forum.objects.filter(id=forum_pk).exists():
             form = PostForm(request.POST, request.FILES)
@@ -91,14 +89,12 @@ def render_new_post(request, forum_pk):
 
     return render(request, 'post_form.html', {'form' : form})
 
+@login_required(login_url='login')
 def post_detail(request, pk, page_number):
     """
     Render a particular post
     Receives primary key for user_post
     """
-    if not request.user.is_authenticated:
-        return redirect('login')
-
     if request.method == "POST":
         form = CommentForm(request.POST, request.FILES)
         if form.is_valid():
@@ -112,10 +108,8 @@ def post_detail(request, pk, page_number):
     else:
         form = CommentForm()
 
-    post = get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id)
-
     return render(request, 'post_detail.html', {
-        'post': post,
+        'post': get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id),
         'comments': _get_page_object(
             Paginator(
                 Comment.objects.select_related('user_ref')
@@ -131,13 +125,18 @@ def post_detail(request, pk, page_number):
             page_number
         ).object_list,
         "user_post_pk" : pk,
-        'form' : form
+        'form' : form,
+        'upvotes' : _get_vote_number(True, pk),
+        'downvotes' : _get_vote_number(False, pk)
     })
+
+def _get_vote_number(upvote, user_post_pk):
+    return (Vote.objects.select_related('user_post')
+            .filter(user_post_ref__id=user_post_pk, is_upvote=upvote).count())
 
 @csrf_protect
 def render_register(request):
     """Render a form for register page"""
-
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
