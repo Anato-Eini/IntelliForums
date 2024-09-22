@@ -104,17 +104,28 @@ def post_detail(request, pk, page_number):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.user_post_ref = get_object_or_404(UserPost, id=pk)
+            comment.user_ref = get_object_or_404(User, id=request.user.id)
             page_number = 1
             comment.save()
+        else:
+            raise ValidationError("Incorrect data")
     else:
         form = CommentForm()
 
     post = get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id)
+
     return render(request, 'post_detail.html', {
         'post': post,
         'comments': _get_page_object(
             Paginator(
-                Comment.objects.filter(user_post_ref__id=pk),
+                Comment.objects.select_related('user_ref')
+                .filter(user_post_ref__id=pk)
+                .values(
+                    'content',
+                    'created_at',
+                    'image',
+                    'user_ref__username',
+                ),
                 20
             ),
             page_number

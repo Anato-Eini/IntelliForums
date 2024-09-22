@@ -62,6 +62,8 @@ def change_path(model, folder, *args, **kwargs):
 
         shutil.move(old_path, new_path)
 
+        model.image.name = f"{folder}/{model.id}/{base_name}"
+
 class Vote(models.Model):
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -86,5 +88,5 @@ class Comment(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.author} on {self.post.title}"
+        return f"{self.user_ref.username} on {self.user_post_ref.post_ref.title}"
 

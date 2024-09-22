@@ -38,7 +38,6 @@ class CommentForm(forms.ModelForm):
             )
         }
         labels = {
-            'title' : 'Title',
             'content' : 'Content',
             'image' : 'Image'
         }

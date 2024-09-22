@@ -14,21 +14,19 @@
     <p>{{ post.content }}</p>
     <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 700px; max-height: 700px;">
     <h2>Comments: </h2>
-        {% for comment in comments %}
-            <li>{{ comment.author }}: {{ comment.text }}</li>
-        {% endfor %}
     {% for comment in comments %}
         <div class="comments">
-            <div>{{ comment.user_post_ref.user_ref.username }}</div>
+            <div>{{ comment.user_ref.username }}</div>
             <div>{{ comment.created_at }}</div>
             <p>{{ comment.content }}</p>
+            <img src="/media/{{ comment.image }}" style="max-width: 700px; max-height: 700px;" alt="{{ comment.title }}">
         </div>
     {% endfor %}
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.non_field_errors }}
         {{ form.as_p }}
-        <button type="submit"></button>
+        <button type="submit">Submit</button>
     </form>
     
 </body>
