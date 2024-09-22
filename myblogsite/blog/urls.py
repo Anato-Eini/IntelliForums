@@ -9,7 +9,7 @@ urlpatterns = [
     path('register/', views.render_register, name='register'),
     path('new_post/<int:forum_pk>/', views.render_new_post, name='new_post'),
     path('home/<int:pk>/<int:page_number>/', views.fetch_posts,name='home'),
-    path('home/<int:pk>/<int:page_number>/', views.fetch_posts, name='posts_forum'),
-    path('home/<int:pk>/', views.post_detail, name='post_detail')
+    path('forum/<int:pk>/<int:page_number>/', views.fetch_posts, name='posts_forum'),
+    path('post_detail/<int:pk>/<int:page_number>/', views.post_detail, name='post_detail')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
