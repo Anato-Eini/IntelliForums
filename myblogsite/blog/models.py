@@ -53,8 +53,8 @@ def change_path(model, folder, *args, **kwargs):
 
     if model.image:
         old_path = model.image.path
-        new_dir = f"media/{folder}/{model.id}/"
         base_name = os.path.basename(model.image.name)
+        new_dir = f"media/{folder}/"
         new_path = os.path.join(new_dir, base_name)
 
         if not os.path.exists(new_dir):
@@ -62,7 +62,7 @@ def change_path(model, folder, *args, **kwargs):
 
         shutil.move(old_path, new_path)
 
-        model.image.name = f"{folder}/{model.id}/{base_name}"
+        model.image.name = f"{folder}/{base_name}"
 
 class UserPost(models.Model):
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
