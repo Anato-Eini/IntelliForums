@@ -39,7 +39,9 @@ class CommentAdmin(admin.ModelAdmin):
         'id',
         'user_post_ref',
         'content',
-        'created_at'
+        'created_at',
+        'image',
+        'user_ref'
     )
 
 class UserAdmin(admin.ModelAdmin):
