@@ -84,7 +84,6 @@ class VoteAdmin(admin.ModelAdmin):
     """
     list_display = (
         'id',
-        'user_ref',
         'user_post_ref',
         'is_upvote'
     )
