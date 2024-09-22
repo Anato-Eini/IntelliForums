@@ -38,7 +38,7 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'user_post_ref',
-        'text',
+        'content',
         'created_at'
     )
 

@@ -99,8 +99,12 @@ def post_detail(request, pk):
     if not request.user.is_authenticated:
         return redirect('login')
 
+    if request.method == "POST":
+        """Implement post handling of comments here"""
+        pass
+
     post = get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id)
-    comments = Comment.objects.filter(user_post_ref=pk)
+    comments = Comment.objects.filter(user_post_ref__id=pk)
     return render(request, 'post_detail.html', {'post': post, 'comments': comments})
 
 @csrf_protect

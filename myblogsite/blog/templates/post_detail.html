@@ -17,6 +17,19 @@
         {% for comment in comments %}
             <li>{{ comment.author }}: {{ comment.text }}</li>
         {% endfor %}
+    {% for comment in comments %}
+        <div class="comments">
+            <div>{{ comment.user_post_ref.user_ref.username }}</div>
+            <div>{{ comment.created_at }}</div>
+            <p>{{ comment.content }}</p>
+        </div>
+    {% endfor %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {{ form.as_p }}
+        <button type="submit"></button>
+    </form>
     
 </body>
 </html>

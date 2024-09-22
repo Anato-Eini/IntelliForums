@@ -21,7 +21,27 @@ class LoginForm(forms.Form):
         max_length=255,
     )
 
-# class CommentForm(forms.ModelForm):
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content', 'image']
+        widgets = {
+            'content': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                }
+            ),
+            'image': forms.ClearableFileInput(
+                attrs={
+                    'class': 'form-control',
+                }
+            )
+        }
+        labels = {
+            'title' : 'Title',
+            'content' : 'Content',
+            'image' : 'Image'
+        }
 
 
 class GeneralPostForm(forms.ModelForm):
