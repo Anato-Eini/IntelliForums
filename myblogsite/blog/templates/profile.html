@@ -7,11 +7,12 @@
 <body>
 <h1 style="display: inline" onclick="location.href = '{% url 'home' pk=0 page_number=1 %}'">Home</h1>
 <h2>Profile</h2>
+<img src="{{ picture }}" style="max-width: 700px; max-height: 700px;">
 <h5>Username: <i>{{ username }}</i></h5>
 <h5>First name: <i>{{ first_name }}</i></h5>
 <h5>Last name: <i>{{ last_name }}</i></h5>
 <h5>Email: <i>{{ email }}</i></h5>
 <h5>Birth Data: <i>{{ birth_date }}</i></h5>
-<h5>User Type: <i>{{ user_type }}</i></h5>
+<h5>Is Staff: <i>{{ is_staff }}</i></h5>
 </body>
 </html>

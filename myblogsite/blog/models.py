@@ -1,31 +1,50 @@
 import os
 import shutil
 
-from django.db import models
-from django.contrib.auth.hashers import check_password, make_password
+from datetime import date
 
-class User(models.Model):
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.db import models
+
+class UserManager(BaseUserManager):
+    def create_user(self, username, password=None, **extra_fields):
+        if not username:
+            raise ValueError('Users must have username')
+        user = self.model(username=username, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, password, **extra_fields):
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_staff', True)
+        return self.create_user(username, password, **extra_fields)
+
+class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=255)
     email = models.EmailField()
-    birth_date = models.DateField()
+    birth_date = models.DateField(default=date.today)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    user_type = models.IntegerField(default=1)#Admin = 0, user = 1
+    picture = models.ImageField(
+        upload_to='profile/',
+        default='profile/blank-profile-picture-973460_128012234212.png',
+        blank=True,
+    )
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
+
+    objects = UserManager()
 
     def __str__(self):
         return self.username
 
-    def set_password(self, password):
-        self.password = make_password(password)
-
-    def check_password(self, raw_password):
-        return check_password(raw_password, self.password)
-
 class Forum(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
-
 
 def upload_path(instance, filename):
     return f"temporary/{filename}"

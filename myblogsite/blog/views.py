@@ -1,3 +1,6 @@
+import logging
+from pyexpat.errors import messages
+
 from django.contrib.auth import login, authenticate
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect
@@ -5,6 +8,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.contrib import messages
 
 from .forms import *
 
@@ -168,7 +172,8 @@ def render_profile(request):
         'birth_date' : user.birth_date,
         'first_name' : user.first_name,
         'last_name' : user.last_name,
-        'user_type' : "User" if user.user_type == 1 else "Admin"
+        'is_staff' : user.is_staff,
+        'picture' : user.picture.url,
     })
 
 def _get_vote_count_comment(upvote, comment_pk):
@@ -185,26 +190,13 @@ def _get_vote_count_upost_(upvote, user_post_pk):
 def render_register(request):
     """Render a form for register page"""
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-
-            if User.objects.filter(username=username).exists():
-                form.add_error('username', 'Username already taken')
-            else:
-                user = User(
-                    username=username,
-                    first_name=form.cleaned_data.get('first_name'),
-                    last_name=form.cleaned_data.get('last_name'),
-                    email=form.cleaned_data.get('email'),
-                    birth_date=form.cleaned_data.get('birth_date')
-                )
-                user.set_password(password)
-                user.save()
-                return redirect('login')
+            form.save()
+            messages.success(request, 'Your account has been created!')
+            return redirect('login')
         else:
-            raise forms.ValidationError('Please enter valid data')
+            messages.error(request, 'Incorrect data')
     else:
         form = RegisterForm()
 
@@ -222,6 +214,8 @@ def login_post(request):
             password = form.cleaned_data.get('password')
 
             user = authenticate(request, username=username, password=password)
+
+            logging.error(f"Does user exists? {user is not None}")
 
             if user is not None:
                 login(request, user)
