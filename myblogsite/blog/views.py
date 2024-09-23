@@ -50,7 +50,8 @@ def fetch_posts(request, pk, page_number):
         ).object_list,
         'page_number' : page_number,
         'forum_pk' : pk,
-        'form' : form
+        'form' : form,
+        'id' : request.user.id
     })
 
 def _get_page_object(paginator_object, page_number):
@@ -156,12 +157,18 @@ def post_detail(request, pk, page_number):
         'form' : form,
         'post_upvotes' : _get_vote_count_upost_(True, pk),
         'post_downvotes' : _get_vote_count_upost_(False, pk),
-        "comment_upvotes" : {
-            x: y for x, y in zip(list_comments, comment_upvotes)
-        },
-        "comment_downvotes" : {
-            x : y for x, y in zip(list_comments, comment_downvotes)
-        }
+    })
+
+@login_required(login_url='login')
+def render_profile(request):
+    user = User.objects.get(id=request.user.id)
+    return render(request, 'profile.html', {
+        'username' : user.username,
+        'email' : user.email,
+        'birth_date' : user.birth_date,
+        'first_name' : user.first_name,
+        'last_name' : user.last_name,
+        'user_type' : "User" if user.user_type == 1 else "Admin"
     })
 
 def _get_vote_count_comment(upvote, comment_pk):

@@ -6,7 +6,9 @@
 </head>
 <body>
     <h1>Blog Posts</h1>
+    <button onclick="location.href = '{% url 'profile' %}'">Profile</button>
     <span>
+        <div> 
         <form action="" method="post">
             {% csrf_token %}
             
@@ -16,7 +18,7 @@
             
             <button type="submit">Submit</button>
         </form>
-        
+        </div>
     </span>
     <button onclick= "location.href = '{% url 'new_post' forum_pk=forum_pk %}'">New Post</button>
     {% for post in posts %}
