@@ -101,7 +101,7 @@ def render_new_post(request, forum_pk):
 @login_required(login_url='login')
 def post_detail(request, pk, page_number):
     """
-    Render a particular post
+    Render a particular post, its votes and comments and their votes
     Receives primary key for user_post
     """
     if request.method == "POST":
@@ -126,13 +126,15 @@ def post_detail(request, pk, page_number):
                     'created_at',
                     'image',
                     'user_ref__username',
+                    'id'
                 ),
                 20
             ),
             page_number
         ).object_list
 
-    # vote_comments =
+    comment_upvotes = [_get_vote_count_comment(True, comment['id']) for comment in list_comments]
+    comment_downvotes = [_get_vote_count_comment(False, comment['id']) for comment in list_comments]
 
     return render(request, 'post_detail.html', {
         'post': get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id),
@@ -152,12 +154,24 @@ def post_detail(request, pk, page_number):
         ).object_list,
         "user_post_pk" : pk,
         'form' : form,
-        'upvotes' : _get_vote_number(True, pk),
-        'downvotes' : _get_vote_number(False, pk)
+        'post_upvotes' : _get_vote_count_upost_(True, pk),
+        'post_downvotes' : _get_vote_count_upost_(False, pk),
+        "comment_upvotes" : {
+            x: y for x, y in zip(list_comments, comment_upvotes)
+        },
+        "comment_downvotes" : {
+            x : y for x, y in zip(list_comments, comment_downvotes)
+        }
     })
 
-def _get_vote_number(upvote, user_post_pk):
-    return (Vote.objects.select_related('user_post')
+def _get_vote_count_comment(upvote, comment_pk):
+    """Get number of votes of a particular comment"""
+    return (VoteComment.objects.select_related('comment_ref')
+            .filter(comment_ref__id=comment_pk, is_upvote=upvote).count())
+
+def _get_vote_count_upost_(upvote, user_post_pk):
+    """Get number of votes of a particular post"""
+    return (VotePost.objects.select_related('user_post')
             .filter(user_post_ref__id=user_post_pk, is_upvote=upvote).count())
 
 @csrf_protect
