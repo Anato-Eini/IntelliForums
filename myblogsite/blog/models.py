@@ -1,6 +1,3 @@
-import os
-import shutil
-
 from datetime import date
 
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
@@ -47,7 +44,7 @@ class Forum(models.Model):
     description = models.TextField()
 
 def upload_path(instance, filename):
-    return f"temporary/{filename}"
+    return f"{filename}"
 
 class Post(models.Model):
     forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
@@ -57,31 +54,8 @@ class Post(models.Model):
     created_at = models.DateField(auto_now_add=True)
     image = models.ImageField(upload_to=upload_path, blank=True, null=True)
 
-    def save(self, *args, **kwargs):
-        change_path(self, "posts", args, kwargs)
-        super().save(update_fields=['image'])
-
-    def save_model(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return self.title
-
-def change_path(model, folder, *args, **kwargs):
-    model.save_model(*args, **kwargs)
-
-    if model.image:
-        old_path = model.image.path
-        base_name = os.path.basename(model.image.name)
-        new_dir = f"media/{folder}/"
-        new_path = os.path.join(new_dir, base_name)
-
-        if not os.path.exists(new_dir):
-            os.makedirs(new_dir)
-
-        shutil.move(old_path, new_path)
-
-        model.image.name = f"{folder}/{base_name}"
 
 class UserPost(models.Model):
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -98,13 +72,6 @@ class Comment(models.Model):
     content = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to=upload_path, blank=True, null=True)
-
-    def save(self, *args, **kwargs):
-        change_path(self, "comments", args, kwargs)
-        super().save(update_fields=['image'])
-
-    def save_model(self, *args, **kwargs):
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user_ref.username} on {self.user_post_ref.post_ref.title}"
