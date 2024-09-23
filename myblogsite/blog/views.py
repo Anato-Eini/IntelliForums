@@ -8,6 +8,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .forms import *
 
+@csrf_protect
 @login_required(login_url='login')
 def fetch_posts(request, pk, page_number):
     """
@@ -15,6 +16,13 @@ def fetch_posts(request, pk, page_number):
     if forum does exist, it will fetch appropriate posts else it will fetch all posts from all forums
     with 20 results per page
     """
+    if request.method == 'POST':
+        form = ForumForm(request.POST)
+        if form.is_valid():
+            return redirect('posts_forum', pk=form.cleaned_data.get('choices'), page_number=1)
+
+    form = ForumForm()
+
     return render(request, 'home.html', {
         'posts' : _get_page_object(
             Paginator(
@@ -41,7 +49,8 @@ def fetch_posts(request, pk, page_number):
             ), page_number
         ).object_list,
         'page_number' : page_number,
-        'forum_pk' : pk
+        'forum_pk' : pk,
+        'form' : form
     })
 
 def _get_page_object(paginator_object, page_number):

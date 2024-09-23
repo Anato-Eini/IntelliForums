@@ -76,7 +76,18 @@ class GeneralPostForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self. fields['choices'].choices = [ (forum.id, forum.title) for forum in Forum.objects.all() ]
+        self.fields['choices'].choices = [ (forum.id, forum.title) for forum in Forum.objects.all() ]
+
+class ForumForm(forms.Form):
+    choices = forms.ChoiceField(
+        label = "Switch Forum"
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        list_var = [(0, "General")]
+        list_var.extend([(forum.id, forum.title) for forum in Forum.objects.all()])
+        self.fields['choices'].choices = list_var
 
 class PostForm(forms.ModelForm):
     class Meta:
