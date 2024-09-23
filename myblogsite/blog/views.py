@@ -117,6 +117,23 @@ def post_detail(request, pk, page_number):
     else:
         form = CommentForm()
 
+    list_comments = _get_page_object(
+            Paginator(
+                Comment.objects.select_related('user_ref')
+                .filter(user_post_ref__id=pk)
+                .values(
+                    'content',
+                    'created_at',
+                    'image',
+                    'user_ref__username',
+                ),
+                20
+            ),
+            page_number
+        ).object_list
+
+    # vote_comments =
+
     return render(request, 'post_detail.html', {
         'post': get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id),
         'comments': _get_page_object(

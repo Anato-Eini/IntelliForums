@@ -78,7 +78,7 @@ class UserPostAdmin(admin.ModelAdmin):
         'user_ref'
     )
 
-class VoteAdmin(admin.ModelAdmin):
+class VotePostAdmin(admin.ModelAdmin):
     """
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -90,9 +90,23 @@ class VoteAdmin(admin.ModelAdmin):
         'is_upvote'
     )
 
+class VoteCommentAdmin(admin.ModelAdmin):
+    """
+    comment_ref = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_upvote = models.BooleanField()
+    """
+    list_display = (
+        'id',
+        'comment_ref',
+        'user_ref',
+        'is_upvote'
+    )
+
 admin.site.register(Post, PostAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Forum, ForumAdmin)
 admin.site.register(UserPost, UserPostAdmin)
-admin.site.register(Vote, VoteAdmin)
+admin.site.register(VotePost, VotePostAdmin)
+admin.site.register(VoteComment, VoteCommentAdmin)

@@ -68,8 +68,9 @@ class UserPost(models.Model):
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
 
-class Vote(models.Model):
+class VotePost(models.Model):
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     is_upvote = models.BooleanField()
 
 class Comment(models.Model):
@@ -88,3 +89,8 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user_ref.username} on {self.user_post_ref.post_ref.title}"
+
+class VoteComment(models.Model):
+    comment_ref = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_upvote = models.BooleanField()
