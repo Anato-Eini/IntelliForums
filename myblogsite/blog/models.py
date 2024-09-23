@@ -34,7 +34,7 @@ class Post(models.Model):
     forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    content = models.TextField()
+    content = models.TextField(blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
     image = models.ImageField(upload_to=upload_path, blank=True, null=True)
 
@@ -75,7 +75,7 @@ class Vote(models.Model):
 class Comment(models.Model):
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to=upload_path, blank=True, null=True)
 
