@@ -1,7 +1,5 @@
-import logging
 from pyexpat.errors import messages
 
-from django.contrib.auth import login, authenticate
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -201,28 +199,3 @@ def render_register(request):
         form = RegisterForm()
 
     return render(request, 'register_form.html', {'form' : form})
-
-@csrf_protect
-def login_post(request):
-    """Render a form for login page"""
-
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-
-            user = authenticate(request, username=username, password=password)
-
-            logging.error(f"Does user exists? {user is not None}")
-
-            if user is not None:
-                login(request, user)
-                return redirect(reverse('home', args=[0, 1]))
-        else:
-            raise forms.ValidationError('Please enter valid data')
-    else:
-        form = LoginForm()
-
-    return render(request, 'login_form.html', context={'form': form})
