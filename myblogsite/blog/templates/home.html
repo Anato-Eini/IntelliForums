@@ -6,8 +6,13 @@
 </head>
 <body>
     <h1>Blog Posts</h1>
-    <button onclick="location.href = '{% url 'profile' %}'">Profile</button>
-    <button onclick="location.href = '{% url 'logout' %}'">Log Out</button>
+    {% if user.is_authenticated %}
+        <button onclick="location.href = '{% url 'profile' %}'">Profile</button>
+        <button onclick="location.href = '{% url 'logout' %}'">Log Out</button>
+    {% else %}
+        <button onclick="location.href = '{% url 'login' %}'">Log In</button>
+        <button onclick="location.href = '{% url 'register' %}'">Register</button>
+    {% endif %}
     <span>
         <div> 
         <form action="" method="post">

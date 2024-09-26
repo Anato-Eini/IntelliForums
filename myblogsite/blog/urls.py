@@ -9,7 +9,8 @@ class CustomLoginView(LoginView):
     template_name = 'login_form.html'
 
 urlpatterns = [
-    path('', CustomLoginView.as_view(), name='login'),
+    path('', views.go_default_page, name='default_page'),
+    path('login/', CustomLoginView.as_view(), name='login'),
     path('register/', views.render_register, name='register'),
     path('new_post/<int:forum_pk>/', views.render_new_post, name='new_post'),
     path('home/<int:pk>/<int:page_number>/', views.fetch_posts,name='home'),

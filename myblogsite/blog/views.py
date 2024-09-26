@@ -10,8 +10,10 @@ from django.contrib import messages
 
 from .forms import *
 
+def go_default_page(request):
+    return redirect('home', pk=0, page_number=1)
+
 @csrf_protect
-@login_required(login_url='login')
 def fetch_posts(request, pk, page_number):
     """
     Fetch posts
@@ -53,7 +55,7 @@ def fetch_posts(request, pk, page_number):
         'page_number' : page_number,
         'forum_pk' : pk,
         'form' : form,
-        'id' : request.user.id
+        'user' : request.user
     })
 
 def _get_page_object(paginator_object, page_number):
@@ -101,7 +103,6 @@ def render_new_post(request, forum_pk):
 
     return render(request, 'post_form.html', {'form' : form})
 
-@login_required(login_url='login')
 def post_detail(request, pk, page_number):
     """
     Render a particular post, its votes and comments and their votes
@@ -159,6 +160,7 @@ def post_detail(request, pk, page_number):
         'form' : form,
         'post_upvotes' : _get_vote_count_upost_(True, pk),
         'post_downvotes' : _get_vote_count_upost_(False, pk),
+        'user' : request.user
     })
 
 @login_required(login_url='login')

@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/home/james/Codes/School-Activities/CSIT327/Laboratory 3 - Django Setup and Exercises /myenv/bin/python" "$0" "$@"
-' '''
+#!/home/james/Codes/IntelliForums/myenv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
