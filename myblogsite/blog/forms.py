@@ -127,32 +127,11 @@ class RegisterForm(forms.ModelForm):
     )
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'password', 'email', 'birth_date', 'picture', 'password']
+        fields = ['username', 'password', 'picture', 'password']
         widgets = {
-            'first_name': forms.TextInput(
-                attrs={
-                    'class' : 'form-control'
-                }
-            ),
-            'last_name': forms.TextInput(
-                attrs={
-                    'class' : 'form-control'
-                }
-            ),
             'username': forms.TextInput(
                 attrs={
                     'class': 'form-control'
-                }
-            ),
-            'email': forms.EmailInput(
-                attrs={
-                    'class': 'form-control'
-                },
-            ),
-            'birth_date': forms.DateInput(
-                attrs={
-                    'class': 'form-control',
-                    'type' : 'date',
                 }
             ),
             'image' : forms.ClearableFileInput(
@@ -163,10 +142,6 @@ class RegisterForm(forms.ModelForm):
         }
         labels = {
             'username': 'Username',
-            'email': 'Email',
-            'birth_date': 'Birth date',
-            'first_name': 'First Name',
-            'last_name': 'Last Name',
             'picture': 'Profile Picture'
         }
 

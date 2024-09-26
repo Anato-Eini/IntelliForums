@@ -17,6 +17,6 @@ urlpatterns = [
     path('forum/<int:pk>/<int:page_number>/', views.fetch_posts, name='posts_forum'),
     path('post_detail/<int:pk>/<int:page_number>/', views.post_detail, name='post_detail'),
     path('profile/', views.render_profile, name='profile'),
-    path('', LogoutView.as_view(next_page='login'), name='logout'),
+    path('login/', LogoutView.as_view(next_page='login'), name='logout'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -168,10 +168,6 @@ def render_profile(request):
     user = User.objects.get(id=request.user.id)
     return render(request, 'profile.html', {
         'username' : user.username,
-        'email' : user.email,
-        'birth_date' : user.birth_date,
-        'first_name' : user.first_name,
-        'last_name' : user.last_name,
         'is_staff' : user.is_staff,
         'picture' : user.picture.url,
     })

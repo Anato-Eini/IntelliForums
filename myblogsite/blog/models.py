@@ -1,5 +1,3 @@
-from datetime import date
-
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
 
@@ -19,10 +17,6 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True)
-    email = models.EmailField()
-    birth_date = models.DateField(default=date.today)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
     picture = models.ImageField(
         upload_to='profile/',
         default='profile/blank-profile-picture-973460_128012234212.png',
@@ -32,7 +26,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
 
     objects = UserManager()
 

@@ -60,10 +60,6 @@ class UserAdmin(admin.ModelAdmin):
         'id',
         'username',
         'password',
-        'email',
-        'birth_date',
-        'first_name',
-        'last_name',
         'picture'
     )
 
