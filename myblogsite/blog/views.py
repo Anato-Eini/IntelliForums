@@ -152,15 +152,17 @@ def post_vote(request):
     post_pk = int(request.POST.get('pk')) #UserPost.id
     vote_type = int(request.POST.get('type')) # 1-Upvote 0-Downvote
     is_upvote = vote_type == 1
-    vote_object = VotePost.objects.get(user_post_ref__id=post_pk, user_post_ref__user_ref__id=request.user.id)
+    vote_object = VotePost.objects.filter(user_post_ref__id=post_pk, user_ref__id=request.user.id).first()
     if vote_object:
         if vote_object.is_upvote == is_upvote:
             vote_object.delete()
         else:
             vote_object.is_upvote = is_upvote
+            vote_object.save()
     else:
         VotePost.objects.create(
             user_post_ref=UserPost.objects.get(pk=post_pk),
+            user_ref = User.objects.get(id=request.user.id),
             is_upvote = is_upvote
         )
 
