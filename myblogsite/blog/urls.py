@@ -19,9 +19,9 @@ urlpatterns = [
     path('profile/', views.render_profile, name='profile'),
     path('login/', LogoutView.as_view(next_page='login'), name='logout'),
 
-
     #Ajax
     path('post_vote/', views.post_vote, name='post_vote'),
+    path('comment_vote/', views.comment_vote, name='comment_vote'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

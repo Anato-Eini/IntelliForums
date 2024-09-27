@@ -18,16 +18,23 @@
     <h5 id="post_upvote">Upvote: {{ post_upvotes }}</h5>
     <h5 id="post_downvote">Downvote: {{ post_downvotes }}</h5>
     <h2>Comments: </h2>
-  {% comment %}TODO Add vote counters in comments and their interactivity 
-    Current plan, use javascript and jqeury{% endcomment %}
+    {% comment %}
+    TODO Add vote counters in comments and their interactivity
+    Current plan, use javascript and jqeury
+    {% endcomment %}
 
     {% for comment in comments %}
         <div class="comments">
-            <div>{{ comment.user_ref__username }}</div>
-            <div>{{ comment.created_at }}</div>
-            <p>{{ comment.content }}</p>
-            <img src="/media/{{ comment.image }}" style="max-width: 700px; max-height: 700px;" alt="{{ comment.title }}">
-            <h5>Upvote:</h5>
+            <div data-value="{{ comment.id }}">
+                <div>{{ comment.user_ref__username }}</div>
+                <div>{{ comment.created_at }}</div>
+                <p>{{ comment.content }}</p>
+                <img src="/media/{{ comment.image }}" style="max-width: 700px; max-height: 700px;" alt="{{ comment.title }}">
+                <div class="comment_votes">
+                    <h5>Upvote: </h5>
+                    <h5>Downvote: </h5>
+                </div>
+            </div>
         </div>
     {% endfor %}
     {% if user.is_authenticated %}
@@ -38,11 +45,12 @@
             <button type="submit">Submit</button>
         </form>
     {% endif %}
-    
 </body>
 <script>
     const csrf_token = '{{ csrf_token }}'
-    function vote(type, pk){
+
+    //Parameter: vote_type, userpost_pk
+    function post_vote(type, pk){
         $.ajax({
             url: '{% url 'post_vote' %}',
             method: "POST",
@@ -53,17 +61,39 @@
             headers: {
                 'X-CSRFToken' : csrf_token
             },
-            success: function(data){
+            success: (data) => {
                 let upvote_div = $('#post_upvote')
                 let downvote_div = $('#post_downvote')
-                upvote_div.text("Upvote: " + data.upvote)
-                downvote_div.text("Downvote: " + data.downvote)
+                upvote_div.text("Upvote: ".concat(data.upvote))
+                downvote_div.text("Downvote: ".concat(data.downvote))
             }
         })
     }
+
+    //Parameter: vote_type, comment_pk
+    function post_comment(type, pk, comment_element){
+        $.ajax({
+            url: '{% url 'comment_vote' %}',
+            method: "POST",
+            data: {
+                type: type,
+                pk: pk
+            },
+            headers: {
+                'X-CSRFTOken' : csrf_token
+            },
+            success: (data) => modify_vote_comment(data.upvote, data.downvote, comment_element.children().lastChild())
+        })
+    }
+
+    function modify_vote_comment(upvote, downvote, vote_element){
+        vote_element.firstChild().text("Upvote: ".concat(upvote))
+        vote_element.lastChild().text("Downvote: ".concat(downvote))
+    }
+
     $(document).ready(() => {
         $('#post_upvote').on('click', () => {
-            vote(1, {{ user_post_pk }})
+            post_vote(1, {{ user_post_pk }})
             let upvote_div = $('#post_upvote')
             if(upvote_div.hasClass('upvoted'))
                 upvote_div.removeClass('upvoted')
@@ -72,7 +102,7 @@
         })
 
         $('#post_downvote').on('click', () => {
-            vote(0, {{ user_post_pk }})
+            post_vote(0, {{ user_post_pk }})
             let downvote_div = $('#post_downvote')
             if(downvote_div.hasClass('downvoted'))
                 downvote_div.removeClass('downvoted')

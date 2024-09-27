@@ -10,7 +10,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib import messages
 
-from .admin import VotePostAdmin
 from .forms import *
 
 def go_default_page(request):
@@ -22,6 +21,15 @@ def fetch_posts(request, pk, page_number):
     Fetch posts
     if forum does exist, it will fetch appropriate posts else it will fetch all posts from all forums
     with 20 results per page
+
+    Parameters:
+        request (HttpRequest): request object
+        pk (int): forum primary key
+        page_number (int): page number
+
+    Returns:
+        HttpResponse: HttpResponse object
+
     """
     if request.method == 'POST':
         form = ForumForm(request.POST)
@@ -74,7 +82,20 @@ def _get_page_object(paginator_object, page_number):
 @csrf_protect
 @login_required(login_url='login')
 def render_new_post(request, forum_pk):
-    """Render general post form is forum_pk does exist else it will render a post particular to that forum"""
+    """
+    Render general post form is forum_pk does exist else it will render a post particular to that forum
+
+    Parameters:
+        request (HttpRequest): request object
+        forum_pk (int): Forum id
+
+    Returns:
+        HttpResponse: HttpResponse
+
+    Raises:
+        ValidationError: If form contains incorrect data
+
+    """
     if request.method == 'POST':
         if Forum.objects.filter(id=forum_pk).exists():
             form = PostForm(request.POST, request.FILES)
@@ -110,6 +131,17 @@ def post_detail(request, pk, page_number):
     """
     Render a particular post, its votes and comments and their votes
     Receives primary key for user_post
+
+    Parameters:
+        request (HttpRequest): HttpRequest object
+        pk (str) : UserPost id
+        page_number (int) : Page number
+
+    Returns:
+        HttpResponse: Http response
+
+    Raises:
+        ValidationError: If form contains incorrect data
     """
     if request.method == "POST":
         form = CommentForm(request.POST, request.FILES)
@@ -148,9 +180,74 @@ def post_detail(request, pk, page_number):
     })
 
 @login_required(login_url='login')
+def render_profile(request):
+    """
+    Renders profile Page
+
+    Parameters:
+        request (HttpRequest): request object
+
+    Returns:
+        HttpResponse: Http response
+
+    """
+    user = User.objects.get(id=request.user.id)
+    return render(request, 'profile.html', {
+        'username' : user.username,
+        'is_staff' : user.is_staff,
+        'picture' : user.picture.url,
+    })
+
+def _get_vote_count_comment(upvote, comment_pk):
+    """Get number of votes of a particular comment"""
+    return (VoteComment.objects.select_related('comment_ref')
+            .filter(comment_ref__id=comment_pk, is_upvote=upvote).count())
+
+def _get_vote_count_upost_(upvote, user_post_pk):
+    """Get number of votes of a particular post"""
+    return (VotePost.objects.select_related('user_post')
+            .filter(user_post_ref__id=user_post_pk, is_upvote=upvote).count())
+
+@csrf_protect
+def render_register(request):
+    """
+    Render a form for register page
+
+    Parameter:
+        request (HttpRequest): request object
+
+    Returns:
+        HttpResponse : Http response
+    """
+    if request.method == 'POST':
+        form = RegisterForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been created!')
+            return redirect('login')
+        else:
+            messages.error(request, 'Incorrect data')
+    else:
+        form = RegisterForm()
+
+    return render(request, 'register_form.html', {'form' : form})
+
+
+#AJAX REQUESTS--------------------------------------------------------------------------------------------------------
+
+@login_required(login_url='login')
 def post_vote(request):
-    post_pk = int(request.POST.get('pk')) #UserPost.id
-    vote_type = int(request.POST.get('type')) # 1-Upvote 0-Downvote
+    """
+    Handles POST request for post's votes
+
+    Parameters:
+        request (HttpRequest): request object
+
+    Returns:
+        JsonResponse: key -> upvote, downvote
+    """
+    post_pk = int(request.POST.get('pk')) #UserPost id
+    vote_type = int(request.POST.get('type')) #1-Upvote 2-Downvote
     is_upvote = vote_type == 1
     vote_object = VotePost.objects.filter(user_post_ref__id=post_pk, user_ref__id=request.user.id).first()
     if vote_object:
@@ -171,38 +268,15 @@ def post_vote(request):
         'downvote' : VotePost.objects.filter(user_post_ref__id=post_pk, is_upvote=False).count(),
     })
 
-
 @login_required(login_url='login')
-def render_profile(request):
-    user = User.objects.get(id=request.user.id)
-    return render(request, 'profile.html', {
-        'username' : user.username,
-        'is_staff' : user.is_staff,
-        'picture' : user.picture.url,
-    })
+def comment_vote(request):
+    """
+    Handles POST request for comment's votes
 
-def _get_vote_count_comment(upvote, comment_pk):
-    """Get number of votes of a particular comment"""
-    return (VoteComment.objects.select_related('comment_ref')
-            .filter(comment_ref__id=comment_pk, is_upvote=upvote).count())
+    Parameters:
+        request (HttpRequest): request object
 
-def _get_vote_count_upost_(upvote, user_post_pk):
-    """Get number of votes of a particular post"""
-    return (VotePost.objects.select_related('user_post')
-            .filter(user_post_ref__id=user_post_pk, is_upvote=upvote).count())
-
-@csrf_protect
-def render_register(request):
-    """Render a form for register page"""
-    if request.method == 'POST':
-        form = RegisterForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Your account has been created!')
-            return redirect('login')
-        else:
-            messages.error(request, 'Incorrect data')
-    else:
-        form = RegisterForm()
-
-    return render(request, 'register_form.html', {'form' : form})
+    Returns:
+        JsonResponse: key -> upvote, downvote
+    """
+    pass
