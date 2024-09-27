@@ -5,6 +5,7 @@
     <title>{{ post.title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    {% load static %}
 </head>
 <body>
     <h1 style="display: inline" onclick="location.href = '{% url 'home' pk=0 page_number=1 %}'">Home</h1>
@@ -23,20 +24,22 @@
     Current plan, use javascript and jqeury
     {% endcomment %}
 
-    {% for comment in comments %}
-        <div class="comments">
-            <div data-value="{{ comment.id }}">
-                <div>{{ comment.user_ref__username }}</div>
-                <div>{{ comment.created_at }}</div>
-                <p>{{ comment.content }}</p>
-                <img src="/media/{{ comment.image }}" style="max-width: 700px; max-height: 700px;" alt="{{ comment.title }}">
-                <div class="comment_votes">
-                    <h5>Upvote: </h5>
-                    <h5>Downvote: </h5>
+    <div id="comment-section">
+        {% for comment in comments %}
+            <div class="comments">
+                <div data-value="{{ comment.id }}">
+                    <div>{{ comment.user_ref__username }}</div>
+                    <div>{{ comment.created_at }}</div>
+                    <p>{{ comment.content }}</p>
+                    <img src="/media/{{ comment.image }}" style="max-width: 700px; max-height: 700px;" alt="{{ comment.title }}">
+                    <div class="comment_votes">
+                        <h5>Upvote: </h5>
+                        <h5>Downvote: </h5>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
     {% if user.is_authenticated %}
         <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -47,68 +50,9 @@
     {% endif %}
 </body>
 <script>
-    const csrf_token = '{{ csrf_token }}'
-
-    //Parameter: vote_type, userpost_pk
-    function post_vote(type, pk){
-        $.ajax({
-            url: '{% url 'post_vote' %}',
-            method: "POST",
-            data: {
-                type: type,
-                pk: pk
-            },
-            headers: {
-                'X-CSRFToken' : csrf_token
-            },
-            success: (data) => {
-                let upvote_div = $('#post_upvote')
-                let downvote_div = $('#post_downvote')
-                upvote_div.text("Upvote: ".concat(data.upvote))
-                downvote_div.text("Downvote: ".concat(data.downvote))
-            }
-        })
-    }
-
-    //Parameter: vote_type, comment_pk
-    function post_comment(type, pk, comment_element){
-        $.ajax({
-            url: '{% url 'comment_vote' %}',
-            method: "POST",
-            data: {
-                type: type,
-                pk: pk
-            },
-            headers: {
-                'X-CSRFTOken' : csrf_token
-            },
-            success: (data) => modify_vote_comment(data.upvote, data.downvote, comment_element.children().lastChild())
-        })
-    }
-
-    function modify_vote_comment(upvote, downvote, vote_element){
-        vote_element.firstChild().text("Upvote: ".concat(upvote))
-        vote_element.lastChild().text("Downvote: ".concat(downvote))
-    }
-
-    $(document).ready(() => {
-        $('#post_upvote').on('click', () => {
-            post_vote(1, {{ user_post_pk }})
-            let upvote_div = $('#post_upvote')
-            if(upvote_div.hasClass('upvoted'))
-                upvote_div.removeClass('upvoted')
-            else
-                upvote_div.addClass('upvoted')
-        })
-
-        $('#post_downvote').on('click', () => {
-            post_vote(0, {{ user_post_pk }})
-            let downvote_div = $('#post_downvote')
-            if(downvote_div.hasClass('downvoted'))
-                downvote_div.removeClass('downvoted')
-            else
-                downvote_div.addClass('downvoted')
-        })
-    })
+    var user_post_pk = {{ user_post_pk }}
+    var csrf_token = '{{ csrf_token }}'
+    var post_vote_url = '{% url 'post_vote' %}'
 </script>
+<script src="{% static 'blog/js/post_detail.js' %}"></script>
 </html>
