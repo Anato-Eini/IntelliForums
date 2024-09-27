@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="jquery" type="javaScript">
+    <properties>
+      <option name="frameworkName" value="jQuery" />
+      <option name="frameworkVersion" value="3.7.1" />
+    </properties>
+    <CLASSES />
+    <DOCUMENTATION>
+      <root url="https://code.jquery.com/jquery-3.7.1.js" />
+    </DOCUMENTATION>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

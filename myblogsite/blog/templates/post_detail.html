@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>{{ post.title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
 <body>
     <h1 style="display: inline" onclick="location.href = '{% url 'home' pk=0 page_number=1 %}'">Home</h1>
@@ -14,11 +15,12 @@
         {{ post.created_at }}</p></span>
     <p>{{ post.content }}</p>
     <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 700px; max-height: 700px;">
-    <h5>Upvote: {{ post_upvotes }}</h5>
-    <h5>Downvote: {{ post_downvotes }}</h5>
+    <h5 id="post_upvote">Upvote: {{ post_upvotes }}</h5>
+    <h5 id="post_downvote">Downvote: {{ post_downvotes }}</h5>
     <h2>Comments: </h2>
   {% comment %}TODO Add vote counters in comments and their interactivity 
     Current plan, use javascript and jqeury{% endcomment %}
+
     {% for comment in comments %}
         <div class="comments">
             <div>{{ comment.user_ref__username }}</div>
@@ -39,6 +41,44 @@
     
 </body>
 <script>
-    
+    const csrf_token = '{{ csrf_token }}'
+    function vote(type, pk){
+        $.ajax({
+            url: '{% url 'post_vote' %}',
+            method: "POST",
+            data: {
+                type: type,
+                pk: pk
+            },
+            headers: {
+                'X-CSRFToken' : csrf_token
+            },
+            success: function(data){
+                let upvote_div = $('#post_upvote')
+                let downvote_div = $('#post_downvote')
+                upvote_div.text("Upvote: " + data.upvote)
+                downvote_div.text("Downvote: " + data.downvote)
+            }
+        })
+    }
+    $(document).ready(() => {
+        $('#post_upvote').on('click', () => {
+            vote(1, {{ user_post_pk }})
+            let upvote_div = $('#post_upvote')
+            if(upvote_div.hasClass('upvoted'))
+                upvote_div.removeClass('upvoted')
+            else
+                upvote_div.addClass('upvoted')
+        })
+
+        $('#post_downvote').on('click', () => {
+            vote(0, {{ user_post_pk }})
+            let downvote_div = $('#post_downvote')
+            if(downvote_div.hasClass('downvoted'))
+                downvote_div.removeClass('downvoted')
+            else
+                downvote_div.addClass('downvoted')
+        })
+    })
 </script>
 </html>

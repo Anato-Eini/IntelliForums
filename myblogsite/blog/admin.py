@@ -18,6 +18,9 @@ class PostAdmin(admin.ModelAdmin):
         'created_at'
     )
 
+    def delete_model(self, request, obj):
+        super().delete_model(request, obj)
+
 class ForumAdmin(admin.ModelAdmin):
     """
     title = models.CharField(max_length=100)
@@ -28,6 +31,10 @@ class ForumAdmin(admin.ModelAdmin):
         'title',
         'description'
     )
+
+    def delete_model(self, request, obj):
+        super().delete_model(request, obj)
+
 
 class CommentAdmin(admin.ModelAdmin):
     """
@@ -46,6 +53,10 @@ class CommentAdmin(admin.ModelAdmin):
         'user_ref'
     )
 
+    def delete_model(self, request, obj):
+        super().delete_model(request, obj)
+
+
 class UserAdmin(admin.ModelAdmin):
     """
     username = models.CharField(max_length=100, unique=True)
@@ -63,6 +74,10 @@ class UserAdmin(admin.ModelAdmin):
         'picture'
     )
 
+    def delete_model(self, request, obj):
+        super().delete_model(request, obj)
+
+
 class UserPostAdmin(admin.ModelAdmin):
     """
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -74,10 +89,12 @@ class UserPostAdmin(admin.ModelAdmin):
         'user_ref'
     )
 
+    def delete_model(self, request, obj):
+        super().delete_model(request, obj)
+
 class VotePostAdmin(admin.ModelAdmin):
     """
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
-    post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
     is_upvote = models.BooleanField()
     """
     list_display = (
@@ -85,6 +102,10 @@ class VotePostAdmin(admin.ModelAdmin):
         'user_post_ref',
         'is_upvote'
     )
+
+    def delete_model(self, request, obj):
+        super().delete_model(request, obj)
+
 
 class VoteCommentAdmin(admin.ModelAdmin):
     """

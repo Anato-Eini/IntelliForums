@@ -56,7 +56,6 @@ class UserPost(models.Model):
 
 class VotePost(models.Model):
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
-    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     is_upvote = models.BooleanField()
 
 class Comment(models.Model):

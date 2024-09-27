@@ -20,6 +20,8 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.12 (IntelliForums)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="jquery" level="project" />
+    <orderEntry type="library" name="jquery-3.7.1" level="application" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

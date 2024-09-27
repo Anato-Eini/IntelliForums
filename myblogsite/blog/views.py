@@ -1,4 +1,6 @@
 from pyexpat.errors import messages
+from django.http import JsonResponse
+import logging
 
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect
@@ -8,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib import messages
 
+from .admin import VotePostAdmin
 from .forms import *
 
 def go_default_page(request):
@@ -121,25 +124,6 @@ def post_detail(request, pk, page_number):
     else:
         form = CommentForm()
 
-    list_comments = _get_page_object(
-            Paginator(
-                Comment.objects.select_related('user_ref')
-                .filter(user_post_ref__id=pk)
-                .values(
-                    'content',
-                    'created_at',
-                    'image',
-                    'user_ref__username',
-                    'id'
-                ),
-                20
-            ),
-            page_number
-        ).object_list
-
-    comment_upvotes = [_get_vote_count_comment(True, comment['id']) for comment in list_comments]
-    comment_downvotes = [_get_vote_count_comment(False, comment['id']) for comment in list_comments]
-
     return render(request, 'post_detail.html', {
         'post': get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id),
         'comments': _get_page_object(
@@ -162,6 +146,29 @@ def post_detail(request, pk, page_number):
         'post_downvotes' : _get_vote_count_upost_(False, pk),
         'user' : request.user
     })
+
+@login_required(login_url='login')
+def post_vote(request):
+    post_pk = int(request.POST.get('pk')) #UserPost.id
+    vote_type = int(request.POST.get('type')) # 1-Upvote 0-Downvote
+    is_upvote = vote_type == 1
+    vote_object = VotePost.objects.get(user_post_ref__id=post_pk, user_post_ref__user_ref__id=request.user.id)
+    if vote_object:
+        if vote_object.is_upvote == is_upvote:
+            vote_object.delete()
+        else:
+            vote_object.is_upvote = is_upvote
+    else:
+        VotePost.objects.create(
+            user_post_ref=UserPost.objects.get(pk=post_pk),
+            is_upvote = is_upvote
+        )
+
+    return JsonResponse({
+        'upvote' : VotePost.objects.filter(user_post_ref__id=post_pk, is_upvote=True).count(),
+        'downvote' : VotePost.objects.filter(user_post_ref__id=post_pk, is_upvote=False).count(),
+    })
+
 
 @login_required(login_url='login')
 def render_profile(request):
