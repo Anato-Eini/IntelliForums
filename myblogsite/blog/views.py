@@ -247,8 +247,7 @@ def post_vote(request):
         JsonResponse: key -> upvote, downvote
     """
     post_pk = int(request.POST.get('pk')) #UserPost id
-    vote_type = int(request.POST.get('type')) #1-Upvote 2-Downvote
-    is_upvote = vote_type == 1
+    is_upvote = int(request.POST.get('type')) == 1
     vote_object = VotePost.objects.filter(user_post_ref__id=post_pk, user_ref__id=request.user.id).first()
     if vote_object:
         if vote_object.is_upvote == is_upvote:
@@ -279,4 +278,26 @@ def comment_vote(request):
     Returns:
         JsonResponse: key -> upvote, downvote
     """
-    pass
+
+    comment_ref_id = int(request.POST.get('pk')) # Comment.id
+    is_upvote = int(request.POST.get('type')) == 1 # 1-Upvote 2-Downvote
+    vote_object = VoteComment.objects.filter(comment_ref__id=comment_ref_id, user_ref__id=request.user.id).first()
+    if request.method == "POST":
+        if vote_object:
+            if vote_object.is_upvote == is_upvote:
+                vote_object.delete()
+            else:
+                vote_object.is_upvote = is_upvote
+                vote_object.save()
+        else:
+            VoteComment.objects.create(
+                comment_ref=Comment.objects.get(pk=comment_ref_id),
+                user_ref=User.objects.get(id=request.user.id),
+                is_upvote = is_upvote
+            )
+
+    return JsonResponse({
+        'upvote' : VoteComment.objects.filter(commend_ref__id=comment_ref_id, is_upvote=True).count(),
+        'downvote' : VoteComment.objects.filter(comment_ref__id=comment_ref_id, is_upvote=False).count(),
+    })
+
