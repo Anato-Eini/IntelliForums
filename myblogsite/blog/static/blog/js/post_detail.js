@@ -3,13 +3,13 @@ $(document).ready(() => {
     /**
      * Initialization of votes in comments
      */
-    $('#comment-section').children().each(child => {
-        let grandchild = child.firstChild
+    $('#comment-section').children().each(function () {
+        let grandchild = $(this).children().first()
         let comment_id = grandchild.data('value');
-        let children_last_child = grandchild.children().lastChild
+        let children_last_child = grandchild.children().last()
 
-        let upvote_element = children_last_child.firstChild
-        let downvote_element = children_last_child.firstChild
+        let upvote_element = children_last_child.children().first()
+        let downvote_element = children_last_child.children().last()
 
         ajax_comment_vote(1, comment_id, "GET", upvote_element, downvote_element)
 
@@ -70,8 +70,8 @@ $(document).ready(() => {
                 'X-CSRFToken' : csrf_token
             },
             success: (data) => {
-                upvote_h5.textContent = "Upvote: ".concat(data.upvote)
-                downvote_h5.textContent = "Downvote: ".concat(data.downvote)
+                upvote_h5.text("Upvote: ".concat(data.upvote))
+                downvote_h5.text("Downvote: ".concat(data.downvote))
             }
         })
     }

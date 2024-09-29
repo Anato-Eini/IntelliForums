@@ -167,6 +167,7 @@ def post_detail(request, pk, page_number):
                     'created_at',
                     'image',
                     'user_ref__username',
+                    'id'
                 ),
                 20
             ),
@@ -270,7 +271,7 @@ def post_vote(request):
 @login_required(login_url='login')
 def comment_vote(request):
     """
-    Handles POST request for comment's votes
+    Handles POST | GET request for comment's votes
 
     Parameters:
         request (HttpRequest): request object
@@ -278,11 +279,10 @@ def comment_vote(request):
     Returns:
         JsonResponse: key -> upvote, downvote
     """
-
-    comment_ref_id = int(request.POST.get('pk')) # Comment.id
-    is_upvote = int(request.POST.get('type')) == 1 # 1-Upvote 2-Downvote
-    vote_object = VoteComment.objects.filter(comment_ref__id=comment_ref_id, user_ref__id=request.user.id).first()
     if request.method == "POST":
+        comment_ref_id = int(request.POST.get('pk'))  # Comment.id
+        is_upvote = int(request.POST.get('type')) == 1  # 1-Upvote 2-Downvote
+        vote_object = VoteComment.objects.filter(comment_ref__id=comment_ref_id, user_ref__id=request.user.id).first()
         if vote_object:
             if vote_object.is_upvote == is_upvote:
                 vote_object.delete()
@@ -295,9 +295,11 @@ def comment_vote(request):
                 user_ref=User.objects.get(id=request.user.id),
                 is_upvote = is_upvote
             )
+    else:
+        comment_ref_id = int(request.GET.get('pk'))
 
     return JsonResponse({
-        'upvote' : VoteComment.objects.filter(commend_ref__id=comment_ref_id, is_upvote=True).count(),
+        'upvote' : VoteComment.objects.filter(comment_ref__id=comment_ref_id, is_upvote=True).count(),
         'downvote' : VoteComment.objects.filter(comment_ref__id=comment_ref_id, is_upvote=False).count(),
     })
 
