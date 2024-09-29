@@ -8,6 +8,12 @@ from . import views
 class CustomLoginView(LoginView):
     template_name = 'login_form.html'
 
+class CustomLogoutView(LogoutView):
+    def dispatch(self, request, *args, **kwargs):
+        self.request.session.flush()
+        response = super().dispatch(request, *args, **kwargs)
+        return response
+
 urlpatterns = [
     path('', views.go_default_page, name='default_page'),
     path('login/', CustomLoginView.as_view(), name='login'),
@@ -17,7 +23,7 @@ urlpatterns = [
     path('forum/<int:pk>/<int:page_number>/', views.fetch_posts, name='posts_forum'),
     path('post_detail/<int:pk>/<int:page_number>/', views.post_detail, name='post_detail'),
     path('profile/', views.render_profile, name='profile'),
-    path('login/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('login/', CustomLogoutView.as_view(next_page='login'), name='logout'),
 
     #Ajax
     path('post_vote/', views.post_vote, name='post_vote'),

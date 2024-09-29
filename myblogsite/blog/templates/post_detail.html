@@ -8,22 +8,20 @@
     {% load static %}
 </head>
 <body>
+
     <h1 style="display: inline" onclick="location.href = '{% url 'home' pk=0 page_number=1 %}'">Home</h1>
     <h2 style="display: inline;"> | {{ post.title }}</h2>
-    <p></p>
     <h4 style="display: inline;">{{ post.user_ref.username }}</h4>
     <span> | <p style="display: inline">
         {{ post.created_at }}</p></span>
     <p>{{ post.content }}</p>
-    <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 700px; max-height: 700px;">
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 700px; max-height: 700px;">
+    {% endif %}
     <h5 id="post_upvote">Upvote: {{ post_upvotes }}</h5>
     <h5 id="post_downvote">Downvote: {{ post_downvotes }}</h5>
+    
     <h2>Comments: </h2>
-    {% comment %}
-    TODO Add vote counters in comments and their interactivity
-    Current plan, use javascript and jqeury
-    {% endcomment %}
-
     <div id="comment-section">
         {% for comment in comments %}
             <div class="comments">
@@ -31,7 +29,9 @@
                     <div>{{ comment.user_ref__username }}</div>
                     <div>{{ comment.created_at }}</div>
                     <p>{{ comment.content }}</p>
-                    <img src="/media/{{ comment.image }}" style="max-width: 700px; max-height: 700px;" alt="{{ comment.title }}">
+                    {% if comment.image %}
+                        <img src="/media/{{ comment.image }}" style="max-width: 700px; max-height: 700px;" alt="{{ comment.title }}">
+                    {% endif %}
                     <div class="comment_votes">
                         <h5>Upvote: </h5>
                         <h5>Downvote: </h5>
@@ -40,6 +40,7 @@
             </div>
         {% endfor %}
     </div>
+    
     {% if user.is_authenticated %}
         <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -48,6 +49,7 @@
             <button type="submit">Submit</button>
         </form>
     {% endif %}
+
 </body>
 <script>
     var user_post_pk = {{ user_post_pk }}
