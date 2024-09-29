@@ -20,7 +20,7 @@
     {% endif %}
     <h5 id="post_upvote">Upvote: {{ post_upvotes }}</h5>
     <h5 id="post_downvote">Downvote: {{ post_downvotes }}</h5>
-    
+
     <h2>Comments: </h2>
     <div id="comment-section">
         {% for comment in comments %}
@@ -40,7 +40,7 @@
             </div>
         {% endfor %}
     </div>
-    
+
     {% if user.is_authenticated %}
         <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}

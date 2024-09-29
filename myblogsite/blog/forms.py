@@ -159,3 +159,21 @@ class RegisterForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class SearchForm(forms.Form):
+    content = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'class' : 'form-control'
+            }
+        )
+    )
+    choices = forms.ChoiceField(
+        label="Filter"
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        list_var = [(0, "General")]
+        list_var.extend([(forum.id, forum.title) for forum in Forum.objects.all()])
+        self.fields['choices'].choices = list_var

@@ -5,7 +5,18 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>Blog Posts</h1>
+    <h1 style="display: inline">Blog Posts</h1>
+    <form action="" method="post" style="display: inline;">
+        {% csrf_token %}
+        
+        {{ search_form.non_field_errors }}
+        
+        {{ search_form.as_p }}
+
+        <input type="hidden" name="form_type" value="search_filter_form">
+        <button type="submit">Filter</button>
+    </form>
+    <p></p>
     {% if user.is_authenticated %}
         <button onclick="location.href = '{% url 'profile' %}'">Profile</button>
         <button onclick="location.href = '{% url 'logout' %}'">Log Out</button>
@@ -22,6 +33,7 @@
             
             {{ form.as_p }}
             
+            <input type="hidden" name="form_type" value="fetch_filter_form">
             <button type="submit">Submit</button>
         </form>
         </div>

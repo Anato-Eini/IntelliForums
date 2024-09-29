@@ -32,14 +32,47 @@ def fetch_posts(request, pk, page_number):
 
     """
     if request.method == 'POST':
-        form = ForumForm(request.POST)
-        if form.is_valid():
-            return redirect('posts_forum', pk=form.cleaned_data.get('choices'), page_number=1)
+        form_type = request.POST.get('form_type')
+        if form_type == 'search_filter_form':
+            form = SearchForm(request.POST)
+            if form.is_valid():
+                substring = form.cleaned_data['substring']
+                posts = _get_page_object(
+                    Paginator(
+                        UserPost.objects.select_related('post_ref')
+                        .filter(post_ref__forum_ref__id=pk, post_ref__title__icontains=)
+                        .values(
+                            'post_ref__id',
+                            'post_ref__user_ref__username',
+                            'post_ref__title',
+                            'post_ref__content',
+                            'post_ref__created_at',
+                            'id'
+                        ) |
+                        UserPost.objects.select_related('post_ref')
+                        .filter(post_ref__forum_ref__id=pk)
+                        .values(
 
-    form = ForumForm()
-
-    return render(request, 'home.html', {
-        'posts' : _get_page_object(
+                        )
+                        if Forum.objects.filter(id=pk).exists()
+                        else UserPost.objects.select_related('post_ref')
+                        .values(
+                            'post_ref__id',
+                            'post_ref__user_ref__username',
+                            'post_ref__title',
+                            'post_ref__content',
+                            'post_ref__created_at',
+                            'id'
+                        ),20
+                    ), page_number
+                ).object_list
+                pass
+        elif form_type == 'fetch_filter_forum':
+            form = ForumForm(request.POST)
+            if form.is_valid():
+                return redirect('posts_forum', pk=form.cleaned_data.get('choices'), page_number=1)
+    else:
+        posts = _get_page_object(
             Paginator(
                 UserPost.objects.select_related('post_ref')
                 .filter(post_ref__forum_ref__id=pk)
@@ -62,10 +95,17 @@ def fetch_posts(request, pk, page_number):
                     'id'
                 ),20
             ), page_number
-        ).object_list,
+        ).object_list
+
+    form = ForumForm()
+    search_form = SearchForm()
+
+    return render(request, 'home.html', {
+        'posts' : posts,
         'page_number' : page_number,
         'forum_pk' : pk,
         'form' : form,
+        'search_form' : search_form,
         'user' : request.user
     })
 
@@ -175,8 +215,10 @@ def post_detail(request, pk, page_number):
         ).object_list,
         "user_post_pk" : pk,
         'form' : form,
-        'post_upvotes' : _get_vote_count_upost_(True, pk),
-        'post_downvotes' : _get_vote_count_upost_(False, pk),
+        'post_upvotes' : VotePost.objects.select_related('user_post')
+                  .filter(user_post_ref__id=pk, is_upvote=True).count(),
+        'post_downvotes' : VotePost.objects.select_related('user_post')
+                  .filter(user_post_ref__id=pk, is_upvote=False).count(),
         'user' : request.user
     })
 
@@ -198,16 +240,6 @@ def render_profile(request):
         'is_staff' : user.is_staff,
         'picture' : user.picture.url,
     })
-
-def _get_vote_count_comment(upvote, comment_pk):
-    """Get number of votes of a particular comment"""
-    return (VoteComment.objects.select_related('comment_ref')
-            .filter(comment_ref__id=comment_pk, is_upvote=upvote).count())
-
-def _get_vote_count_upost_(upvote, user_post_pk):
-    """Get number of votes of a particular post"""
-    return (VotePost.objects.select_related('user_post')
-            .filter(user_post_ref__id=user_post_pk, is_upvote=upvote).count())
 
 @csrf_protect
 def render_register(request):
