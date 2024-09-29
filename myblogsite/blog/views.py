@@ -36,11 +36,11 @@ def fetch_posts(request, pk, page_number):
         if form_type == 'search_filter_form':
             form = SearchForm(request.POST)
             if form.is_valid():
-                substring = form.cleaned_data['substring']
+                substring = form.cleaned_data['content']
                 posts = _get_page_object(
                     Paginator(
                         UserPost.objects.select_related('post_ref')
-                        .filter(post_ref__forum_ref__id=pk, post_ref__title__icontains=)
+                        .filter(post_ref__forum_ref__id=pk, post_ref__title__icontains=substring)
                         .values(
                             'post_ref__id',
                             'post_ref__user_ref__username',
