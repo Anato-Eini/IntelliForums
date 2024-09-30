@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib import messages
+from django.db.models import Q
 
 from .forms import *
 
@@ -31,6 +32,7 @@ def fetch_posts(request, pk, page_number):
         HttpResponse: HttpResponse object
 
     """
+    posts = []
     if request.method == 'POST':
         form_type = request.POST.get('form_type')
         if form_type == 'search_filter_form':
@@ -39,34 +41,17 @@ def fetch_posts(request, pk, page_number):
                 substring = form.cleaned_data['content']
                 posts = _get_page_object(
                     Paginator(
-                        UserPost.objects.select_related('post_ref')
-                        .filter(post_ref__forum_ref__id=pk, post_ref__title__icontains=substring)
-                        .values(
-                            'post_ref__id',
-                            'post_ref__user_ref__username',
-                            'post_ref__title',
-                            'post_ref__content',
-                            'post_ref__created_at',
-                            'id'
-                        ) |
-                        UserPost.objects.select_related('post_ref')
-                        .filter(post_ref__forum_ref__id=pk)
-                        .values(
-
-                        )
+                        get_filtered_posts(UserPost.objects.select_related('post_ref')
+                        .filter(
+                            (Q(post_ref__title__icontains=substring)) |
+                                           Q(post_ref__content__icontains=substring)) & Q(post_ref__forum_ref__id=pk))
                         if Forum.objects.filter(id=pk).exists()
-                        else UserPost.objects.select_related('post_ref')
-                        .values(
-                            'post_ref__id',
-                            'post_ref__user_ref__username',
-                            'post_ref__title',
-                            'post_ref__content',
-                            'post_ref__created_at',
-                            'id'
-                        ),20
+                        else get_filtered_posts(UserPost.objects.select_related('post_ref')
+                                                .filter(Q(post_ref__title__icontains=substring) |
+                                                        Q(post_ref__content__icontains=substring))),
+                        20
                     ), page_number
                 ).object_list
-                pass
         elif form_type == 'fetch_filter_forum':
             form = ForumForm(request.POST)
             if form.is_valid():
@@ -74,26 +59,11 @@ def fetch_posts(request, pk, page_number):
     else:
         posts = _get_page_object(
             Paginator(
-                UserPost.objects.select_related('post_ref')
-                .filter(post_ref__forum_ref__id=pk)
-                .values(
-                    'post_ref__id',
-                    'post_ref__user_ref__username',
-                    'post_ref__title',
-                    'post_ref__content',
-                    'post_ref__created_at',
-                    'id'
-                )
+                get_filtered_posts(UserPost.objects.select_related('post_ref')
+                                   .filter(post_ref__forum_ref__id=pk))
                 if Forum.objects.filter(id=pk).exists()
-                else UserPost.objects.select_related('post_ref')
-                .values(
-                    'post_ref__id',
-                    'post_ref__user_ref__username',
-                    'post_ref__title',
-                    'post_ref__content',
-                    'post_ref__created_at',
-                    'id'
-                ),20
+                else get_filtered_posts(UserPost.objects.select_related('post_ref'))
+                ,20
             ), page_number
         ).object_list
 
@@ -108,6 +78,17 @@ def fetch_posts(request, pk, page_number):
         'search_form' : search_form,
         'user' : request.user
     })
+
+def get_filtered_posts(_object):
+    return _object.values(
+        'post_ref__id',
+        'post_ref__user_ref__username',
+        'post_ref__title',
+        'post_ref__content',
+        'post_ref__created_at',
+        'id'
+    )
+
 
 def _get_page_object(paginator_object, page_number):
     try:
