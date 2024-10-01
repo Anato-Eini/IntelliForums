@@ -1,0 +1,31 @@
+.main_form{
+    width: 20%;
+    height: 50vh;
+    border: 1px solid black;
+    margin: auto;
+    text-align: center;
+    background-color: #333333;
+    color: #F5F5DC;
+    align-content: center;
+}
+
+.already{
+    margin-top: 5vh;
+}
+.form-control{
+    background-color: #F5F5DC;
+    border-radius: 20px;
+}
+
+body{
+    background-color: #00864E;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+button{
+    width: 10vh;
+    background-color: #F5F5DC;
+    border-radius: 20px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    cursor: pointer;
+}

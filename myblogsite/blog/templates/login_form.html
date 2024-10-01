@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Login Form</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'blog/css/login_form.css' %}">
 </head>
 <body>
     <h2>Login Form</h2>
+    
+    <div class = "main_form">
 
     <form method="post">
         {% csrf_token %}
@@ -14,10 +18,11 @@
 
         {{ form.as_p }}
 
-        <input type="hidden" name="next" value="{% url 'home' pk=0 page_number=1 %}" />
+        <input class = "fields" type="hidden" name="next" value="{% url 'home' pk=0 page_number=1 %}" />
 
         <button type="submit">Submit</button>
     </form>
-    <p>Don't have an account? Register <a href="{% url 'register' %}">here</a>.</p>
+    <p class = "already">Don't have an account? Register <a href="{% url 'register' %}">here</a>.</p>
+    </div>
 </body>
 </html>

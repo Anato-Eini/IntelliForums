@@ -118,16 +118,25 @@ class PostForm(forms.ModelForm):
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(
-        widget=forms.PasswordInput,
-        label="Password"
+        widget=forms.PasswordInput(
+            attrs={
+                'class' : 'form-control'
+            }
+        ),
+        label="Password",
+
     )
     confirm_password = forms.CharField(
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(
+            attrs={
+                'class' : 'form-control'
+            }
+        ),
         label="Confirm Password"
     )
     class Meta:
         model = User
-        fields = ['username', 'password', 'picture', 'password']
+        fields = ['username', 'password', 'confirm_password', 'picture']
         widgets = {
             'username': forms.TextInput(
                 attrs={
