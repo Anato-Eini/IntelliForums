@@ -15,17 +15,23 @@
      ```bash
      git checkout -b my-feature-branch
      ```
-4. **Make Changes**
+4. **Add Files**
+   - Stage your changes for commit:
+     ```bash
+     git add .
+     ```
+   - (You can specify individual files instead of `.` if preferred.)
+5. **Make Changes**
    - Make your changes and commit them with a clear message:
      ```bash
      git commit -m "Add a feature"
      ```
-5. **Push Your Changes**
+6. **Push Your Changes**
    - Push your changes to your forked repository:
      ```bash
      git push origin my-feature-branch
      ```
-6. **Create a Pull Request**
+7. **Create a Pull Request**
    - Go to the original repository and click on "New Pull Request." Select your branch and submit the pull request.
 
 ## Guidelines
