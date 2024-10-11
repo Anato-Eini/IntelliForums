@@ -1,26 +1,9 @@
 from django.conf.urls.static import static
-from django.contrib.auth.views import LogoutView, LoginView
 from django.urls import path
 
 from myblogsite import settings
 from . import views
-
-class CustomLoginView(LoginView):
-    template_name = 'login_form.html'
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-
-        form.fields['username'].widget.attrs.update({
-
-        })
-
-
-class CustomLogoutView(LogoutView):
-    def dispatch(self, request, *args, **kwargs):
-        self.request.session.flush()
-        response = super().dispatch(request, *args, **kwargs)
-        return response
+from .views import CustomLoginView, CustomLogoutView
 
 urlpatterns = [
     path('', views.go_default_page, name='default_page'),
