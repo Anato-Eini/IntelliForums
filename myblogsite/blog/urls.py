@@ -8,6 +8,14 @@ from . import views
 class CustomLoginView(LoginView):
     template_name = 'login_form.html'
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+
+        form.fields['username'].widget.attrs.update({
+
+        })
+
+
 class CustomLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         self.request.session.flush()

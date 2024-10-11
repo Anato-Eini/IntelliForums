@@ -46,10 +46,11 @@ def fetch_posts(request, pk, page_number):
                             (Q(post_ref__title__icontains=substring)) |
                                            Q(post_ref__content__icontains=substring)) & Q(post_ref__forum_ref__id=pk))
                         if Forum.objects.filter(id=pk).exists()
-                        else get_filtered_posts(UserPost.objects.select_related('post_ref')
-                                                .filter(Q(post_ref__title__icontains=substring) |
-                                                        Q(post_ref__content__icontains=substring))),
-                        20
+                        else get_filtered_posts(
+                            UserPost.objects.select_related('post_ref')
+                            .filter(Q(post_ref__title__icontains=substring) |
+                                    Q(post_ref__content__icontains=substring))
+                        ), 20
                     ), page_number
                 ).object_list
         elif form_type == 'fetch_filter_forum':
@@ -59,8 +60,9 @@ def fetch_posts(request, pk, page_number):
     else:
         posts = _get_page_object(
             Paginator(
-                get_filtered_posts(UserPost.objects.select_related('post_ref')
-                                   .filter(post_ref__forum_ref__id=pk))
+                get_filtered_posts(
+                    UserPost.objects.select_related('post_ref').filter(post_ref__forum_ref__id=pk)
+                )
                 if Forum.objects.filter(id=pk).exists()
                 else get_filtered_posts(UserPost.objects.select_related('post_ref'))
                 ,20
