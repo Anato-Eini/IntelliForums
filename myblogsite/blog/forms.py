@@ -145,7 +145,7 @@ class RegisterForm(forms.ModelForm):
             ),
             'image' : forms.ClearableFileInput(
                 attrs={
-                    'class' : 'form-control'
+                    'class' : 'button'
                 }
             )
         }
