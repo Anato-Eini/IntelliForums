@@ -2,8 +2,6 @@ from pyexpat.errors import messages
 
 from django.contrib.auth import login, authenticate
 from django.http import JsonResponse
-import logging
-
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
