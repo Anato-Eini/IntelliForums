@@ -72,7 +72,7 @@
                         <div class="simplebar-wrapper" style="margin: -16px;">
                             <div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div>
                             <div class="simplebar-mask">
-                                <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                                <div class="simplebar-offset" style="right: 0; bottom: 0;">
                                     <div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden scroll;">
                                         <div class="simplebar-content" style="padding: 16px;">
                                             <nav class="nav nav-pills nav-gap-y-1 flex-column">
@@ -89,7 +89,7 @@
                             </div>
                             <div class="simplebar-placeholder" style="width: 234px; height: 292px;"></div>
                         </div>
-                        <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0px; display: none;"></div></div>
+                        <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0; display: none;"></div></div>
                         <div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 151px; display: block; transform: translate3d(0px, 0px, 0px);"></div></div>
                     </div>
                 </div>
@@ -119,6 +119,7 @@
                     {% for post in posts %}
 {#                        <h3 onclick="location.href = '{% url 'post_detail' pk=post.id page_number=1 %}'">{{ post.post_ref__title }}</h3>#}
                         <div class="card mb-2">
+                            <input type="hidden" name="user_post_id" value="{{ post.id }}">
                             <div class="card-body p-2 p-sm-3">
                                 <div class="media forum-item">
                                     <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="/media/{{ post.post_ref__user_ref__picture }}" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
@@ -130,8 +131,12 @@
                                         <p class="text-muted"><a href="javascript:void(0)">drewdan</a> replied <span class="text-secondary font-weight-bold">13 minutes ago</span></p>
                                     </div>
                                     <div class="text-muted small text-center align-self-center">
-                                    <span class="d-none d-sm-inline-block"><i class="far fa-eye">
-                                    </i> 19</span><span><i class="far fa-comment ml-2"></i> 3</span>
+                                    <span class="d-none d-sm-inline-block">
+
+                                    </span>
+                                        <span>
+
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -369,6 +374,7 @@
 <script>
     {#var get_user_img_url = '{% url 'get_user_image' %}'#}
     var csrf_token = '{% csrf_token %}'
+    var url_view_num = '{% url 'fetch_post_view' %}'
 </script>
 <script src="{% static 'blog/js/home.js' %}"></script>
 </body>

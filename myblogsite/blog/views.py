@@ -1,9 +1,8 @@
-import logging
 from pyexpat.errors import messages
 
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
@@ -14,8 +13,26 @@ from django.db.models import Q
 from .forms import *
 from .views_classes import *
 
-def go_default_page(request):
-    return redirect('home', pk=0, page_number=1)
+def num_view(request):
+    """
+    Fetch view count of a particular post
+
+    Parameters:
+        request (HttpRequest): request object
+
+    Ajax Parameters:
+        pk (int): UserPost id
+
+    Returns:
+        JsonResponse: returns a JsonResponse of views of a particular post
+    """
+
+    pk = request.GET.get('pk')
+
+    return JsonResponse({
+        'view_count' : PostView.objects.filter(user_post_ref__id=pk).count(),
+    })
+
 
 @csrf_protect
 def fetch_posts(request, pk, page_number):
@@ -75,8 +92,6 @@ def fetch_posts(request, pk, page_number):
 
     posts = posts[::-1]
 
-    # post_form = new_post_form(request, pk)
-
     return render(request, 'home.html', {
         'posts' : posts,
         'page_number' : page_number,
@@ -84,7 +99,6 @@ def fetch_posts(request, pk, page_number):
         'form' : form,
         'search_form' : search_form,
         'user' : request.user,
-        # 'new_post_form' : post_form,
     })
 
 def get_filtered_posts(_object):
@@ -99,6 +113,17 @@ def get_filtered_posts(_object):
     )
 
 def _get_page_object(paginator_object, page_number):
+    """
+    Pagination of object given a page number
+
+    Parameters:
+        paginator_object (paginator): Object to be paginated
+        page_number (int): page number
+
+    Returns:
+        Page: paged object
+    """
+
     try:
         page_object = paginator_object.page(page_number)
     except PageNotAnInteger:
@@ -281,6 +306,9 @@ def render_register(request):
         form = RegisterForm()
 
     return render(request, 'register_form.html', {'form' : form})
+
+def go_default_page(request):
+    return redirect('home', pk=0, page_number=1)
 
 
 #AJAX REQUESTS--------------------------------------------------------------------------------------------------------
