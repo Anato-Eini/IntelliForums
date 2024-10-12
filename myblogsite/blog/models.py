@@ -158,3 +158,10 @@ class VoteComment(models.Model):
     comment_ref = models.ForeignKey(Comment, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     is_upvote = models.BooleanField()
+
+class PostView(models.Model):
+    """
+    Represents a posts viewed by users.
+    """
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)

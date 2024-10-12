@@ -9,14 +9,13 @@ urlpatterns = [
     path('', views.go_default_page, name='default_page'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('register/', views.render_register, name='register'),
-    path('new_post/<int:forum_pk>/', views.render_new_post, name='new_post'),
+    path('new_post/<int:forum_pk>/', views.new_post_form, name='new_post'),
     path('home/<int:pk>/<int:page_number>/', views.fetch_posts,name='home'),
-    path('forum/<int:pk>/<int:page_number>/', views.fetch_posts, name='posts_forum'),
     path('post_detail/<int:pk>/<int:page_number>/', views.post_detail, name='post_detail'),
     path('profile/', views.render_profile, name='profile'),
     path('login/', CustomLogoutView.as_view(next_page='login'), name='logout'),
 
-    #Ajax
+    #AJAX
     path('post_vote/', views.post_vote, name='post_vote'),
     path('comment_vote/', views.comment_vote, name='comment_vote'),
 

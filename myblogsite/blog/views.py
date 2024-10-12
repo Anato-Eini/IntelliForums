@@ -1,6 +1,6 @@
+import logging
 from pyexpat.errors import messages
 
-from django.contrib.auth import login, authenticate
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect
@@ -10,62 +10,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib import messages
 from django.db.models import Q
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.views import LogoutView, LoginView
 
 from .forms import *
-
-class CustomAuthenticationForm(AuthenticationForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def as_custom(self):
-        return (
-            f"<div class='form-group'>"
-            f"<div class='username_label'>{self.fields['username'].label}</div>"
-            f"{self['username']}</div>"
-            f"<div class='form-group'>"
-            f"<div class='password_label'>{self.fields['password'].label}</div>"
-            f"{self['password']}</div>"
-        )
-
-class CustomLoginView(LoginView):
-    """
-    Custom Login View inherited from Django LoginView
-    """
-
-    template_name = 'login_form.html'
-    form_class = CustomAuthenticationForm
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'form': self.form_class()})
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('home', pk=0, page_number=1)
-            else:
-                form.add_error(None, "Invalid credentials")
-
-        return render(request, self.template_name, {'form': form})
-
-
-class CustomLogoutView(LogoutView):
-    """
-    Custom Logout View inherited from Django LogoutView
-    """
-
-    def dispatch(self, request, *args, **kwargs):
-        self.request.session.flush()
-        response = super().dispatch(request, *args, **kwargs)
-        return response
+from .views_classes import *
 
 def go_default_page(request):
     return redirect('home', pk=0, page_number=1)
@@ -126,13 +73,18 @@ def fetch_posts(request, pk, page_number):
     form = ForumForm()
     search_form = SearchForm()
 
+    posts = posts[::-1]
+
+    # post_form = new_post_form(request, pk)
+
     return render(request, 'home.html', {
         'posts' : posts,
         'page_number' : page_number,
         'forum_pk' : pk,
         'form' : form,
         'search_form' : search_form,
-        'user' : request.user
+        'user' : request.user,
+        # 'new_post_form' : post_form,
     })
 
 def get_filtered_posts(_object):
@@ -142,6 +94,7 @@ def get_filtered_posts(_object):
         'post_ref__title',
         'post_ref__content',
         'post_ref__created_at',
+        'post_ref__user_ref__picture',
         'id'
     )
 
@@ -157,7 +110,7 @@ def _get_page_object(paginator_object, page_number):
 
 @csrf_protect
 @login_required(login_url='login')
-def render_new_post(request, forum_pk):
+def new_post_form(request, forum_pk):
     """
     Render general post form is forum_pk does exist else it will render a post particular to that forum
 
@@ -201,7 +154,7 @@ def render_new_post(request, forum_pk):
             if not Forum.objects.filter(id=forum_pk).exists() \
             else PostForm()
 
-    return render(request, 'post_form.html', {'form' : form})
+    return render(request, 'post_form.html', {'form': form})
 
 def post_detail(request, pk, page_number):
     """
@@ -232,6 +185,8 @@ def post_detail(request, pk, page_number):
     else:
         form = CommentForm()
 
+    handle_view_post(request.user.id, int(pk))
+
     return render(request, 'post_detail.html', {
         'post': get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id),
         'comments': _get_page_object(
@@ -257,6 +212,32 @@ def post_detail(request, pk, page_number):
                   .filter(user_post_ref__id=pk, is_upvote=False).count(),
         'user' : request.user
     })
+
+def handle_view_post(user_pk, user_post_id):
+    """
+    Handles query of user viewing a post.
+    If user haven't viewed post A, then this will insert a new row
+    indicating that the user has already viewed post A
+
+    Parameters:
+        user_pk (int): User id
+        user_post_id (int): UserPost id
+
+    Returns:
+        None
+    """
+
+    query = PostView.objects.filter(user_ref__id=user_pk, user_post_ref__id=user_post_id)
+
+    if not query.exists():
+        user_ref = get_object_or_404(User, id=user_pk)
+        user_post_ref = get_object_or_404(UserPost, id=user_post_id)
+        PostView.objects.create(
+            user_ref=user_ref,
+            user_post_ref=user_post_ref
+        ).save()
+
+
 
 @login_required(login_url='login')
 def render_profile(request):
