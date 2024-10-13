@@ -122,20 +122,25 @@
                             <input type="hidden" name="user_post_id" value="{{ post.id }}">
                             <div class="card-body p-2 p-sm-3">
                                 <div class="media forum-item">
-                                    <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="/media/{{ post.post_ref__user_ref__picture }}" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
+                                    <a href="#" data-toggle="collapse" data-target=".forum-content">
+                                        <img src="/media/{{ post.post_ref__user_ref__picture }}" class="mr-3 rounded-circle" width="50" height="50" alt="User" />
+                                    </a>
                                     <div class="media-body">
-                                        <h6><a href="{% url 'post_detail' pk=post.id page_number=1 %}" data-toggle="collapse" data-target=".forum-content" class="text-body">{{ post.post_ref__title }}</a></h6>
+                                        <h6>
+                                            <a href="{% url 'post_detail' pk=post.id page_number=1 %}"  class="text-body">{{ post.post_ref__title }}</a>
+                                        </h6>
                                         <p class="text-secondary">
                                             {{ post.post_ref__content }}
                                         </p>
                                         <p class="text-muted"><a href="javascript:void(0)">drewdan</a> replied <span class="text-secondary font-weight-bold">13 minutes ago</span></p>
                                     </div>
                                     <div class="text-muted small text-center align-self-center">
-                                    <span class="d-none d-sm-inline-block">
+                                        <span class="d-none d-sm-inline-block">
+                                            <i class="far fa-eye"></i>
+                                        </span>
 
-                                    </span>
                                         <span>
-
+                                            <i class="far fa-comment ml-2"></i>
                                         </span>
                                     </div>
                                 </div>

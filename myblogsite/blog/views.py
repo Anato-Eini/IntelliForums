@@ -1,3 +1,4 @@
+import logging
 from pyexpat.errors import messages
 
 from django.http import JsonResponse
@@ -12,27 +13,6 @@ from django.db.models import Q
 
 from .forms import *
 from .views_classes import *
-
-def num_view(request):
-    """
-    Fetch view count of a particular post
-
-    Parameters:
-        request (HttpRequest): request object
-
-    Ajax Parameters:
-        pk (int): UserPost id
-
-    Returns:
-        JsonResponse: returns a JsonResponse of views of a particular post
-    """
-
-    pk = request.GET.get('pk')
-
-    return JsonResponse({
-        'view_count' : PostView.objects.filter(user_post_ref__id=pk).count(),
-    })
-
 
 @csrf_protect
 def fetch_posts(request, pk, page_number):
@@ -181,6 +161,7 @@ def new_post_form(request, forum_pk):
 
     return render(request, 'post_form.html', {'form': form})
 
+@login_required(login_url='login')
 def post_detail(request, pk, page_number):
     """
     Render a particular post, its votes and comments and their votes
@@ -380,3 +361,21 @@ def comment_vote(request):
         'downvote' : VoteComment.objects.filter(comment_ref__id=comment_ref_id, is_upvote=False).count(),
     })
 
+def num_view(request):
+    """
+    Fetch view count of a particular post
+
+    Parameters:
+        request (HttpRequest): request object
+
+    Ajax Parameters:
+        pk (int): UserPost id
+
+    Returns:
+        JsonResponse: returns a JsonResponse of views of a particular post
+    """
+
+    pk = request.GET.get('pk')
+    return JsonResponse({
+        'view_count' : PostView.objects.filter(user_post_ref__id=pk).count(),
+    })

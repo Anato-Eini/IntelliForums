@@ -54,9 +54,3 @@ class CustomLogoutView(LogoutView):
         self.request.session.flush()
         response = super().dispatch(request, *args, **kwargs)
         return response
-
-class PostView:
-
-    def __init__(self, post, user_pk, image):
-        self.post = post
-        self.user_pk = user_pk

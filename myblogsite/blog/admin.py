@@ -1,6 +1,17 @@
 from django.contrib import admin
 from .models import *
 
+class PostViewAdmin(admin.ModelAdmin):
+    """
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+    """
+    list_display = (
+        'id',
+        'user_ref',
+        'user_post_ref'
+    )
+
 class PostAdmin(admin.ModelAdmin):
     """
     forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
@@ -127,3 +138,4 @@ admin.site.register(Forum, ForumAdmin)
 admin.site.register(UserPost, UserPostAdmin)
 admin.site.register(VotePost, VotePostAdmin)
 admin.site.register(VoteComment, VoteCommentAdmin)
+admin.site.register(PostView, PostViewAdmin)
