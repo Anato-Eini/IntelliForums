@@ -12,13 +12,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-{% if user.is_authenticated %}
+<!--{% if user.is_authenticated %}
     <button onclick="location.href = '{% url 'profile' %}'">Profile</button>
     <button onclick="location.href = '{% url 'logout' %}'">Log Out</button>
 {% else %}
     <button onclick="location.href = '{% url 'login' %}'">Log In</button>
     <button onclick="location.href = '{% url 'register' %}'">Register</button>
-{% endif %}
+{% endif %} -->
+{% include 'header.html' %}
 <button onclick= "location.href = '{% url 'new_post' forum_pk=forum_pk %}'">New Post</button>
 <div class="container">
     <div class="main-body p-0">

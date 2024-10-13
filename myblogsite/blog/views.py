@@ -1,7 +1,7 @@
 import logging
 from pyexpat.errors import messages
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -399,6 +399,7 @@ def num_comments(request):
         'comment_count' : Comment.objects.filter(user_post_ref__id=pk).count(),
     })
 
+<<<<<<< HEAD
 def edit_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     form = CommentForm(instance=comment)
@@ -417,4 +418,57 @@ def delete_comment(request, comment_id):
     comment.delete()
 
     return redirect(reverse('home', args=[0, 1]))
+=======
+#UPDATE POST
+#title
+def update_post_title(request, pk):
+    user_post = get_object_or_404(UserPost, pk=pk) 
+    post = user_post.post_ref  
+
+    if request.user != post.user_ref:
+        return HttpResponseForbidden("You are not allowed to edit this post.")
+
+    if request.method == 'POST':
+        new_title = request.POST.get('new_title')
+        if new_title:
+            post.title = new_title
+            post.save()
+            return redirect('post_detail', pk=user_post.pk, page_number=1)  
+
+    return redirect('post_detail', pk=user_post.pk, page_number=1)
+
+#content
+def update_post_content(request, pk):
+
+    #pk refers to UserPost PK
+    user_post = get_object_or_404(UserPost, pk=pk) 
+    post = user_post.post_ref  
+
+    if request.user != post.user_ref:
+        return HttpResponseForbidden("You are not allowed to edit this post.")
+
+    if request.method == 'POST':
+        new_content = request.POST.get('new_content')
+        if new_content:
+            post.content = new_content
+            post.save()
+            return redirect('post_detail', pk=user_post.pk, page_number=1) 
+
+    return redirect('post_detail', pk=user_post.pk, page_number=1)
+
+#DELETE POST
+def delete_post(request, pk):
+    #pk refers to UserPost PK
+    user_post = get_object_or_404(UserPost, pk=pk)  
+    post = user_post.post_ref  
+    if request.user != post.user_ref:
+        return HttpResponseForbidden("You are not allowed to delete this post.")
+
+    if request.method == 'POST':
+        user_post.delete()
+        post.delete()
+        return redirect('home', pk=0, page_number=1)
+
+    return redirect('home', pk=0, page_number=1) #redirect to home with default forum, adjust later
+>>>>>>> 62bc02ffb93366a91cddb8b152749180b39961f2
 
