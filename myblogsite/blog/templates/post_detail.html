@@ -75,9 +75,9 @@
                                         <img src="/media/{{ comment.image }}" style="max-width: 700px; max-height: 700px;" alt="{{ comment.title }}">
                                     {% endif %}
 
-                                    {% if user.id == comment.user_ref %}
-                                        <a href="{% url 'edit_comment' comment_id=comment.id %}">(edit)</a>
-                                        <a href="{% url 'delete_comment' comment_id=comment.id %}" onclick="return confirm('Are you sure you want to delete this piece?');">(delete)</a>
+                                    {% if user.id == comment.user_ref__id %}
+                                        <a href="{% url 'edit_comment' comment_id=comment.id  user_post_id=user_post_pk%}">(edit)</a>
+                                        <a href="{% url 'delete_comment' comment_id=comment.id  user_post_id=user_post_pk %}" onclick="return confirm('Are you sure you want to delete this piece?');">(delete)</a>
                                     {% endif %}
                                     <div class="comment_votes">
                                         <h5>Upvote: </h5>

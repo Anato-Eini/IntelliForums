@@ -204,6 +204,7 @@ def post_detail(request, pk, page_number):
                     'created_at',
                     'image',
                     'user_ref__username',
+                    'user_ref__id',
                     'id'
                 ),
                 20
@@ -216,7 +217,8 @@ def post_detail(request, pk, page_number):
                   .filter(user_post_ref__id=pk, is_upvote=True).count(),
         'post_downvotes' : VotePost.objects.select_related('user_post')
                   .filter(user_post_ref__id=pk, is_upvote=False).count(),
-        'user' : request.user
+        'user' : request.user,
+
     })
 
 def handle_view_post(user_pk, user_post_id):
@@ -399,24 +401,28 @@ def num_comments(request):
         'comment_count' : Comment.objects.filter(user_post_ref__id=pk).count(),
     })
 
-def edit_comment(request, comment_id):
+def edit_comment(request, comment_id, user_post_id):
     comment = get_object_or_404(Comment, id=comment_id)
     form = CommentForm(instance=comment)
 
     if request.method == 'POST':
         form = CommentForm(request.POST, instance=comment)
 
-        if(form.is_valid):
+        if form.is_valid:
             form.save()
-            return redirect(reverse('home', args=[0, 1]))
+            return redirect(reverse('post_detail', args=[user_post_id, 1]))
 
-    return render(request, 'edit_comment.html', {'form': form, 'comment': comment})
+    return render(request, 'edit_comment.html', {
+        'form': form,
+        'comment': comment,
+        'user_post_id': user_post_id,
+    })
 
-def delete_comment(request, comment_id):
+def delete_comment(request, comment_id, user_post_id):
     comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
 
-    return redirect(reverse('home', args=[0, 1]))
+    return redirect(reverse('post_detail', args=[user_post_id, 0]))
 
 #UPDATE POST
 #title

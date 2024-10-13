@@ -24,8 +24,8 @@ urlpatterns = [
     path('post/<int:pk>/update_content/', views.update_post_content, name='update_post_content'), #UserPost pk
     path('post/<int:pk>/delete/', views.delete_post, name='delete_post'),
 
-    path('edit_comment/<int:comment_id>', views.edit_comment, name='edit_comment'),
-    path('delete_comment/<int:comment_id>/', views.delete_comment, name="delete_comment")
+    path('edit_comment/<int:comment_id>/<int:user_post_id>', views.edit_comment, name='edit_comment'),
+    path('delete_comment/<int:comment_id>/<int:user_post_id>/', views.delete_comment, name="delete_comment")
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
