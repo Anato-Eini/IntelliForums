@@ -18,7 +18,8 @@ urlpatterns = [
     #AJAX
     path('post_vote/', views.post_vote, name='post_vote'),
     path('comment_vote/', views.comment_vote, name='comment_vote'),
-    path('view_num/', views.num_view, name='fetch_post_view'),
+    path('view_num/', views.num_view, name='fetch_view_num'),
+    path('comment_num/', views.num_comments, name='fetch_comment_num'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -372,10 +372,29 @@ def num_view(request):
         pk (int): UserPost id
 
     Returns:
-        JsonResponse: returns a JsonResponse of views of a particular post
+        JsonResponse: returns a JsonResponse number of views of a particular post
     """
 
     pk = request.GET.get('pk')
     return JsonResponse({
         'view_count' : PostView.objects.filter(user_post_ref__id=pk).count(),
+    })
+
+def num_comments(request):
+    """
+    Fetch comment count of a particular post
+
+    Parameters:
+        request (HttpRequest): request object
+
+    Ajax Parameters:
+        pk (int): UserPost id
+
+    Returns:
+        JsonResponse: returns a JsonResponse number of comments of a particular post
+    """
+
+    pk = request.GET.get('pk')
+    return JsonResponse({
+        'comment_count' : Comment.objects.filter(user_post_ref__id=pk).count(),
     })
