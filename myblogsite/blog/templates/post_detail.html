@@ -15,6 +15,7 @@
     {% load static %}
 </head>
 <body>
+    {% include 'header.html' %}
     <div class="container">
         <div class="main-body p-0">
             <div class="inner-wrapper"> 
@@ -62,6 +63,39 @@
                     {% endif %}
                     <h5 id="post_upvote">Upvote: {{ post_upvotes }}</h5>
                     <h5 id="post_downvote">Downvote: {{ post_downvotes }}</h5>
+
+                    <div class="delete-post">
+                        {% if user.pk == post.user_ref.pk %}
+                            <form method="POST" action="{% url 'delete_post' user_post_pk %}"> 
+                                {% csrf_token %}
+                                <button type="submit">Delete post</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                    
+
+                    <div class="update-post">
+                        {% if user.pk == post.user_ref.pk %}
+                            <h3>You are the author of this post!</h3>
+                    
+                            <!-- update title -->
+                            <form method="POST" action="{% url 'update_post_title' user_post_pk %}">
+                                {% csrf_token %}
+                                <label for="new_title">New Title:</label>
+                                <input type="text" id="new_title" name="new_title" value="{{ post.title }}">
+                                <button type="submit">Update Title</button>
+                            </form>
+                    
+                            <!-- update content -->
+                            <form method="POST" action="{% url 'update_post_content' user_post_pk %}">
+                                {% csrf_token %}
+                                <label for="new_content">New Content:</label>
+                                <textarea id="new_content" name="new_content">{{ post.content }}</textarea>
+                                <button type="submit">Update Content</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                    
 
                     <h2>Comments: </h2>
                     <div id="comment-section">
