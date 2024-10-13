@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    </head>
+    <body>
+        <div class = "header">
+            <a href = "/">Home</a>
+            {% if user.is_authenticated %}
+                <!--<button onclick="location.href = '{% url 'profile' %}'">Profile</button>
+                <button onclick="location.href = '{% url 'logout' %}'">Log Out</button> -->
+                <a href = "/profile/">Profile</a>
+                <a href = "/login/">Logout</a>
+            {% else %}
+                <!--<button onclick="location.href = '{% url 'login' %}'">Log In</button> 
+                <button onclick="location.href = '{% url 'register' %}'">Register</button> -->
+                <a href = "/login/">Login</a>
+                <a href = "/register/">Register</a>
+            {% endif %}
+        </div>
+    </body>
+</html>
