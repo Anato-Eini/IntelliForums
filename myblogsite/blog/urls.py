@@ -21,5 +21,8 @@ urlpatterns = [
     path('view_num/', views.num_view, name='fetch_view_num'),
     path('comment_num/', views.num_comments, name='fetch_comment_num'),
 
+    path('edit_comment/<int:comment_id>', views.edit_comment, name='edit_comment'),
+    path('delete_comment/<int:comment_id>/', views.delete_comment, name="delete_comment")
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

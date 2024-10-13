@@ -398,3 +398,23 @@ def num_comments(request):
     return JsonResponse({
         'comment_count' : Comment.objects.filter(user_post_ref__id=pk).count(),
     })
+
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    form = CommentForm(instance=comment)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+
+        if(form.is_valid):
+            form.save()
+            return redirect(reverse('home', args=[0, 1]))
+
+    return render(request, 'edit_comment.html', {'form': form, 'comment': comment})
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.delete()
+
+    return redirect(reverse('home', args=[0, 1]))
+

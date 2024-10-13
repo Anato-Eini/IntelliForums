@@ -4,51 +4,107 @@
     <meta charset="UTF-8">
     <title>{{ post.title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'blog/css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/home.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
+    
    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
     {% load static %}
 </head>
 <body>
 
-    <h1 style="display: inline" onclick="location.href = '{% url 'home' pk=0 page_number=1 %}'">Home</h1>
-    <h2 style="display: inline;"> | {{ post.title }}</h2>
-    <h4 style="display: inline;">{{ post.user_ref.username }}</h4>
-    <span> | <p style="display: inline">
-        {{ post.created_at }}</p></span>
-    <p>{{ post.content }}</p>
-    {% if post.image %}
-        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 700px; max-height: 700px;">
-    {% endif %}
-    <h5 id="post_upvote">Upvote: {{ post_upvotes }}</h5>
-    <h5 id="post_downvote">Downvote: {{ post_downvotes }}</h5>
-
-    <h2>Comments: </h2>
-    <div id="comment-section">
-        {% for comment in comments %}
-            <div class="comments">
-                <div data-value="{{ comment.id }}">
-                    <div>{{ comment.user_ref__username }}</div>
-                    <div>{{ comment.created_at }}</div>
-                    <p>{{ comment.content }}</p>
-                    {% if comment.image %}
-                        <img src="/media/{{ comment.image }}" style="max-width: 700px; max-height: 700px;" alt="{{ comment.title }}">
-                    {% endif %}
-                    <div class="comment_votes">
-                        <h5>Upvote: </h5>
-                        <h5>Downvote: </h5>
+    <div class="container">
+        <div class="main-body p-0">
+            <div class="inner-wrapper"> 
+                <div class="inner-sidebar">
+                    <div class="inner-sidebar-body p-0">
+                        <div class="p-3 h-100" data-simplebar="init">
+                            <div class="simplebar-wrapper" style="margin: -16px;">
+                                <div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div>
+                                <div class="simplebar-mask">
+                                    <div class="simplebar-offset" style="right: 0; bottom: 0;">
+                                        <div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden scroll;">
+                                            <div class="simplebar-content" style="padding: 16px;">
+                                                <nav class="nav nav-pills nav-gap-y-1 flex-column">
+                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon active">All Threads</a>
+                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Popular this week</a>
+                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Popular all time</a>
+                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Solved</a>
+                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Unsolved</a>
+                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">No replies yet</a>
+                                                </nav>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="simplebar-placeholder" style="width: 234px; height: 292px;"></div>
+                            </div>
+                            <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0; display: none;"></div></div>
+                            <div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 151px; display: block; transform: translate3d(0px, 0px, 0px);"></div></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
 
-    {% if user.is_authenticated %}
-        <form action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            {{ form.as_p }}
-            <button type="submit">Submit</button>
-        </form>
-    {% endif %}
+                <div class="inner-main">
+                    <div class="inner-main-header">
+
+                    </div>
+
+
+                    <h1 style="display: inline" onclick="location.href = '{% url 'home' pk=0 page_number=1 %}'">Home</h1>
+                    <h2 style="display: inline;"> | {{ post.title }}</h2>
+                    <h4 style="display: inline;">{{ post.user_ref.username }}</h4>
+                    <span><p style="display: inline"> {{ post.created_at }}</p></span>
+                    <p>{{ post.content }}</p>
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 700px; max-height: 700px;">
+                    {% endif %}
+                    <h5 id="post_upvote">Upvote: {{ post_upvotes }}</h5>
+                    <h5 id="post_downvote">Downvote: {{ post_downvotes }}</h5>
+
+                    <h2>Comments: </h2>
+                    <div id="comment-section">
+                        {% for comment in comments %}
+                            <div class="comments">
+                                <div data-value="{{ comment.id }}">
+                                    <div>{{ comment.user_ref__username }}</div>
+                                    <div>{{ comment.created_at }}</div>
+                                    <p>{{ comment.content }}</p>
+                                    {% if comment.image %}
+                                        <img src="/media/{{ comment.image }}" style="max-width: 700px; max-height: 700px;" alt="{{ comment.title }}">
+                                    {% endif %}
+
+                                    {% if user.id == comment.user_ref %}
+                                        <a href="{% url 'edit_comment' comment_id=comment.id %}">(edit)</a>
+                                        <a href="{% url 'delete_comment' comment_id=comment.id %}" onclick="return confirm('Are you sure you want to delete this piece?');">(delete)</a>
+                                    {% endif %}
+                                    <div class="comment_votes">
+                                        <h5>Upvote: </h5>
+                                        <h5>Downvote: </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            {{ form.as_p }}
+                            <button type="submit">Submit</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
 
 </body>
 <script>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Comment</title>
+</head>
+<body>
+    <h1>Current Comment Here</h1>
+
+    {{ comment.content }}
+    {{ comment.image }}
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {{ form.content }}
+        {{ form.image }}
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
