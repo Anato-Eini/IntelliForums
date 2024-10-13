@@ -399,7 +399,6 @@ def num_comments(request):
         'comment_count' : Comment.objects.filter(user_post_ref__id=pk).count(),
     })
 
-<<<<<<< HEAD
 def edit_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     form = CommentForm(instance=comment)
@@ -418,7 +417,7 @@ def delete_comment(request, comment_id):
     comment.delete()
 
     return redirect(reverse('home', args=[0, 1]))
-=======
+
 #UPDATE POST
 #title
 def update_post_title(request, pk):
@@ -470,5 +469,5 @@ def delete_post(request, pk):
         return redirect('home', pk=0, page_number=1)
 
     return redirect('home', pk=0, page_number=1) #redirect to home with default forum, adjust later
->>>>>>> 62bc02ffb93366a91cddb8b152749180b39961f2
+
 
