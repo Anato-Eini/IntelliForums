@@ -20,6 +20,7 @@ urlpatterns = [
     path('comment_vote/', views.comment_vote, name='comment_vote'),
     path('view_num/', views.num_view, name='fetch_view_num'),
     path('comment_num/', views.num_comments, name='fetch_comment_num'),
+    path('post/<int:pk>/update_post/', views.update_post, name='update_post'), 
     path('post/<int:pk>/update_title/', views.update_post_title, name='update_post_title'), #UserPost pk
     path('post/<int:pk>/update_content/', views.update_post_content, name='update_post_content'), #UserPost pk
     path('post/<int:pk>/delete/', views.delete_post, name='delete_post'),

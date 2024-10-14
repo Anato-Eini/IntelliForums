@@ -425,6 +425,19 @@ def delete_comment(request, comment_id, user_post_id):
     return redirect(reverse('post_detail', args=[user_post_id, 0]))
 
 #UPDATE POST
+
+def update_post(request,pk):
+    if request.method == 'POST':
+        user_post = get_object_or_404(UserPost, pk=pk)
+        post = user_post.post_ref 
+        if request.user != post.user_ref:
+            return HttpResponseForbidden("You are not allowed to edit this post.")
+        
+        return render(request, 'update_post.html', {
+            'user_post_pk': user_post.pk,
+            'post': post,
+        })
+
 #title
 def update_post_title(request, pk):
     user_post = get_object_or_404(UserPost, pk=pk) 
@@ -440,7 +453,10 @@ def update_post_title(request, pk):
             post.save()
             return redirect('post_detail', pk=user_post.pk, page_number=1)  
 
-    return redirect('post_detail', pk=user_post.pk, page_number=1)
+    return render(request,'update_post.html',{
+        'user_post_pk' : user_post.pk,
+        'post' : post,
+    })
 
 #content
 def update_post_content(request, pk):

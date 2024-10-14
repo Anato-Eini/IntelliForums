@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        {% include 'header.html' %}
+        <div class="update-post">
+            
+                <h3>You are the author of this post!</h3>
+        
+                <!-- update title -->
+                <form method="POST" action="{% url 'update_post_title' user_post_pk %}">
+                    {% csrf_token %}
+                    <label for="new_title">New Title:</label>
+                    <input type="text" id="new_title" name="new_title" value="{{ post.title }}">
+                    <button type="submit">Update Title</button>
+                </form>
+        
+                <!-- update content -->
+                <form method="POST" action="{% url 'update_post_content' user_post_pk %}">
+                    {% csrf_token %}
+                    <label for="new_content">New Content:</label>
+                    <textarea id="new_content" name="new_content">{{ post.content }}</textarea>
+                    <button type="submit">Update Content</button>
+                </form>
+            
+        </div>
+    </body>
+</html>

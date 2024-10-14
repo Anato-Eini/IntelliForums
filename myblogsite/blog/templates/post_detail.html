@@ -8,10 +8,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'blog/css/global.css' %}">
     <link rel="stylesheet" href="{% static 'blog/css/home.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
-   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
+   
     {% load static %}
 </head>
 <body>
@@ -19,34 +16,7 @@
     <div class="container">
         <div class="main-body p-0">
             <div class="inner-wrapper"> 
-                <div class="inner-sidebar">
-                    <div class="inner-sidebar-body p-0">
-                        <div class="p-3 h-100" data-simplebar="init">
-                            <div class="simplebar-wrapper" style="margin: -16px;">
-                                <div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div>
-                                <div class="simplebar-mask">
-                                    <div class="simplebar-offset" style="right: 0; bottom: 0;">
-                                        <div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden scroll;">
-                                            <div class="simplebar-content" style="padding: 16px;">
-                                                <nav class="nav nav-pills nav-gap-y-1 flex-column">
-                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon active">All Threads</a>
-                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Popular this week</a>
-                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Popular all time</a>
-                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Solved</a>
-                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Unsolved</a>
-                                                    <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">No replies yet</a>
-                                                </nav>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="simplebar-placeholder" style="width: 234px; height: 292px;"></div>
-                            </div>
-                            <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0; display: none;"></div></div>
-                            <div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 151px; display: block; transform: translate3d(0px, 0px, 0px);"></div></div>
-                        </div>
-                    </div>
-                </div>
+                {% include 'sidebar.html' %}
 
                 <div class="inner-main">
                     <div class="inner-main-header">
@@ -72,30 +42,13 @@
                             </form>
                         {% endif %}
                     </div>
-                    
-
-                    <div class="update-post">
-                        {% if user.pk == post.user_ref.pk %}
-                            <h3>You are the author of this post!</h3>
-                    
-                            <!-- update title -->
-                            <form method="POST" action="{% url 'update_post_title' user_post_pk %}">
-                                {% csrf_token %}
-                                <label for="new_title">New Title:</label>
-                                <input type="text" id="new_title" name="new_title" value="{{ post.title }}">
-                                <button type="submit">Update Title</button>
-                            </form>
-                    
-                            <!-- update content -->
-                            <form method="POST" action="{% url 'update_post_content' user_post_pk %}">
-                                {% csrf_token %}
-                                <label for="new_content">New Content:</label>
-                                <textarea id="new_content" name="new_content">{{ post.content }}</textarea>
-                                <button type="submit">Update Content</button>
-                            </form>
-                        {% endif %}
-                    </div>
-                    
+                    {% if user.pk == post.user_ref.pk %}
+                        <form method = "POST" action = "{% url 'update_post' user_post_pk %}">
+                            {% csrf_token %}
+                            <button type = 'submit'>Update post</button>
+                        </form>
+                    {% endif %}
+                
 
                     <h2>Comments: </h2>
                     <div id="comment-section">
