@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="{% static 'blog/css/home.css' %}">
    
     {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     {% include 'header.html' %}
@@ -22,33 +26,32 @@
                     <div class="inner-main-header">
 
                     </div>
-
-                    <h1 style="display: inline" onclick="location.href = '{% url 'home' pk=0 page_number=1 %}'">Home</h1>
                     <h2 style="display: inline;"> | {{ post.title }}</h2>
-                    <h4 style="display: inline;">{{ post.user_ref.username }}</h4>
+                    <h5 style="display: inline;">by {{ post.user_ref.username }}</h4>
                     <span><p style="display: inline"> {{ post.created_at }}</p></span>
+                    <br>
                     <p>{{ post.content }}</p>
                     {% if post.image %}
                         <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 700px; max-height: 700px;">
                     {% endif %}
-                    <h5 id="post_upvote">Upvote: {{ post_upvotes }}</h5>
-                    <h5 id="post_downvote">Downvote: {{ post_downvotes }}</h5>
+                    <p id="post_upvote">Upvote: {{ post_upvotes }}</h5>
+                    <p id="post_downvote">Downvote: {{ post_downvotes }}</h5>
 
-                    <div class="delete-post">
+                    <div class = "update-delete-buttons">
+
+                        
                         {% if user.pk == post.user_ref.pk %}
-                            <form method="POST" action="{% url 'delete_post' user_post_pk %}"> 
+                                <form method="POST" action="{% url 'delete_post' user_post_pk %}"> 
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Delete post</button>
+                                </form>
+                                <br>
+                            <form method = "POST" action = "{% url 'update_post' user_post_pk %}">
                                 {% csrf_token %}
-                                <button type="submit">Delete post</button>
+                                <button type = 'submit' class="btn btn-dark">Update post</button>
                             </form>
                         {% endif %}
                     </div>
-                    {% if user.pk == post.user_ref.pk %}
-                        <form method = "POST" action = "{% url 'update_post' user_post_pk %}">
-                            {% csrf_token %}
-                            <button type = 'submit'>Update post</button>
-                        </form>
-                    {% endif %}
-                
 
                     <h2>Comments: </h2>
                     <div id="comment-section">

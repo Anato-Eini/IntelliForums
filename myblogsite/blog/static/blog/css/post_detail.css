@@ -1,0 +1,12 @@
+.update-delete-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+    align-items: center; 
+}
+
+.update-delete-buttons form {
+    flex: 0 0 auto; 
+    margin: 0; 
+    padding: 0; 
+}

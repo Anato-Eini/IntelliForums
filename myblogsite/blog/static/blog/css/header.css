@@ -15,3 +15,9 @@
     padding-top: 0.1rem !important;
     padding-bottom: 0.1rem !important;
 }
+
+.profile-img {
+    max-width: 50px !important;
+    max-height: 50px !important;
+    border-radius: 50% !important; 
+}

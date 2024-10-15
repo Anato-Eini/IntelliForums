@@ -12,6 +12,7 @@
             <a class="nav-link text-light" href="/">Home</a>
             <div class="d-flex">
                 {% if user.is_authenticated %}
+                    <img src="{{ user.picture.url }}" class="profile-img" style = "height:30px;width:30px;border-radius:50%;">
                     <a class="nav-link text-light" href="/profile/">Profile</a>
                     <a class="nav-link text-light" href="/login/">Logout</a>
                 {% else %}

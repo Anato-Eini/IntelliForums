@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'blog/css/update_post.css' %}">
     </head>
     <body>
         {% include 'header.html' %}
         <div class="update-post">
-            
-                <h3>You are the author of this post!</h3>
-        
+            <h3>Update Post</h3>
+            <div class = "form-group row">
                 <!-- update title -->
-                <form method="POST" action="{% url 'update_post_title' user_post_pk %}">
+                <form class="form-inline" method="POST" action="{% url 'update_post_title' user_post_pk %}">
                     {% csrf_token %}
-                    <label for="new_title">New Title:</label>
-                    <input type="text" id="new_title" name="new_title" value="{{ post.title }}">
-                    <button type="submit">Update Title</button>
+                    <label class="col-sm-2 col-form-label" for="new_title">New Title:</label>
+                    <input class="form-control" type="text" id="new_title" name="new_title" value="{{ post.title }}">
+                    <button type="submit" class = "btn btn-dark">Update Title</button>
                 </form>
-        
+            </div>
+            <div class = "form-group row">
                 <!-- update content -->
-                <form method="POST" action="{% url 'update_post_content' user_post_pk %}">
+                <form class="form-inline" method="POST" action="{% url 'update_post_content' user_post_pk %}">
                     {% csrf_token %}
-                    <label for="new_content">New Content:</label>
-                    <textarea id="new_content" name="new_content">{{ post.content }}</textarea>
-                    <button type="submit">Update Content</button>
+                    <label class="col-sm-2 col-form-label" for="new_content">New Content:</label>
+                    <textarea class="form-control" id="new_content" name="new_content">{{ post.content }}</textarea>
+                    <button type="submit" class = "btn btn-dark">Update Content</button>
                 </form>
+            </div>
             
         </div>
     </body>
