@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Comment</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'blog/css/global.css' %}">
 </head>
 <body>
     {% include 'header.html' %}
-    <h1>Current Comment Here</h1>
+    <h3>Edit comment</h3>
 
     {{ comment.content }}
     {{ comment.image }}
@@ -16,8 +18,8 @@
         
         {{ form.content }}
         {{ form.image }}
-
-        <button type="submit">Submit</button>
+        <br>
+        <button type="submit" class="btn btn-dark">Submit</button>
     </form>
 </body>
 </html>

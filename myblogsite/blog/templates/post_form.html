@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Post Form</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'blog/css/global.css' %}">
 </head>
 <body>
+    {% include 'header.html' %}
     <h1>Post Here</h1>
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -13,7 +16,7 @@
         
         {{ form.as_p }}
 
-        <button type="submit">Submit</button>
+        <button type="submit" class="btn btn-dark">Submit</button>
     </form>
 </body>
 </html>

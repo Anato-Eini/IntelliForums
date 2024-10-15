@@ -29,6 +29,7 @@ class CommentForm(forms.ModelForm):
             'content': forms.Textarea(
                 attrs={
                     'class': 'form-control',
+                    'placeholder' : 'Enter your comment',
                 }
             ),
             'image': forms.ClearableFileInput(

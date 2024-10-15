@@ -10,3 +10,17 @@
     margin: 0; 
     padding: 0; 
 }
+
+.comments{
+    border: 1px solid black;
+    margin-top:5px;
+}
+
+.create-comment{
+    margin-top:10px;
+    border: 1px solid black;
+}
+
+.post-content{
+    border: 1px solid black;
+}
