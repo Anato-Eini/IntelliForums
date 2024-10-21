@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import *
 
+@admin.register(PostView)
 class PostViewAdmin(admin.ModelAdmin):
     """
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -12,6 +13,7 @@ class PostViewAdmin(admin.ModelAdmin):
         'user_post_ref'
     )
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     """
     forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
@@ -32,6 +34,7 @@ class PostAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
+@admin.register(Forum)
 class ForumAdmin(admin.ModelAdmin):
     """
     title = models.CharField(max_length=100)
@@ -46,7 +49,7 @@ class ForumAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
-
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     """
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
@@ -67,7 +70,7 @@ class CommentAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
-
+@admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     """
     username = models.CharField(max_length=100, unique=True)
@@ -88,7 +91,7 @@ class UserAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
-
+@admin.register(UserPost)
 class UserPostAdmin(admin.ModelAdmin):
     """
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -117,7 +120,7 @@ class VotePostAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
-
+@admin.register(VoteComment)
 class VoteCommentAdmin(admin.ModelAdmin):
     """
     comment_ref = models.ForeignKey(Comment, on_delete=models.CASCADE)
@@ -131,11 +134,14 @@ class VoteCommentAdmin(admin.ModelAdmin):
         'is_upvote'
     )
 
-admin.site.register(Post, PostAdmin)
-admin.site.register(Comment, CommentAdmin)
-admin.site.register(User, UserAdmin)
-admin.site.register(Forum, ForumAdmin)
-admin.site.register(UserPost, UserPostAdmin)
-admin.site.register(VotePost, VotePostAdmin)
-admin.site.register(VoteComment, VoteCommentAdmin)
-admin.site.register(PostView, PostViewAdmin)
+@admin.register(FavoritePost)
+class FavoritePostAdmin(admin.ModelAdmin):
+    """
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+    """
+    list_display = (
+        'id',
+        'user_ref',
+        'user_post_ref'
+    )

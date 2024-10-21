@@ -123,6 +123,7 @@ class UserPost(models.Model):
     """
     post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_deleted = models.BooleanField(default=False)
 
 class VotePost(models.Model):
     """
@@ -162,6 +163,13 @@ class VoteComment(models.Model):
 class PostView(models.Model):
     """
     Represents a posts viewed by users.
+    """
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+
+class FavoritePost(models.Model):
+    """
+    Represents the favorite post marked by the user.
     """
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
