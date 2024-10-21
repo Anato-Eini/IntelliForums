@@ -36,14 +36,30 @@
 </head>
 <body>
     {% include 'header.html' %}
-    <div class="profile-container">
-        <h2>Profile</h2>
-        <img src="{{ picture }}" alt="Profile Picture" class="profile-pic">
-        
-        <div class="profile-info">
-            <h5>Username: <i>{{ username }}</i></h5>
-            <h5>Is Staff: <i>{{ is_staff }}</i></h5>
+    
+
+        {% include 'Profile/profile_count.html' %}
+
+        <div class="container-fluid">
+            <div class="row d-flex">
+                <div class="left-column p-2 border border-primary" style="flex: 0 0 20%; max-width: 20%;">
+                    <!-- 20% content here -->
+                    <div class="profile-container">
+                        <h2>Profile</h2>
+                        <img src="{{ picture }}" alt="Profile Picture" class="profile-pic">
+                        
+                        <div class="profile-info">
+                            <h5>Username: <i>{{ username }}</i></h5>
+                            <h5>Is Staff: <i>{{ is_staff }}</i></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col p-2 border border-secondary">
+                    {% include 'Profile/profile_dashboard.html' %}
+                </div>
+            </div>
         </div>
-    </div>
+        
+        
 </body>
 </html>
