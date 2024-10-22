@@ -493,3 +493,6 @@ def delete_post(request, pk):
     return redirect('home', pk=0, page_number=1) #redirect to home with default forum, adjust later
 
 
+def add_favorite(request, post_id):
+    
+    pass

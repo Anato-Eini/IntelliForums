@@ -55,11 +55,33 @@
                     </div>
                 </div>
                 <div class="col p-2 border border-secondary">
-                    {% include 'Profile/profile_dashboard.html' %}
+                    <div>
+                        <button id="showOverview">Overview</button>
+                        <button id="showFavorites">Favorites</button>
+                    </div>
+                
+                    <div id="OverviewDashboard" style="display: block;">
+                        {% include 'Profile/profile_dashboard.html' %}
+                    </div>
+                
+                    <div id="FavoritesDashboard" style="display: none;">
+                        {% include 'Profile/profile_test.html' %}
+                    </div>
                 </div>
             </div>
         </div>
-        
-        
 </body>
 </html>
+
+
+<script>
+    document.getElementById('showOverview').onclick = function() {
+        document.getElementById('OverviewDashboard').style.display = 'block';
+        document.getElementById('FavoritesDashboard').style.display = 'none';
+    };
+
+    document.getElementById('showFavorites').onclick = function() {
+        document.getElementById('FavoritesDashboard').style.display = 'block';
+        document.getElementById('OverviewDashboard').style.display = 'none';
+    };
+</script>
