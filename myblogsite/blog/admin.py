@@ -100,12 +100,14 @@ class UserPostAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'post_ref',
-        'user_ref'
+        'user_ref',
+        'is_deleted'
     )
 
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
+@admin.register(VotePost)
 class VotePostAdmin(admin.ModelAdmin):
     """
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
