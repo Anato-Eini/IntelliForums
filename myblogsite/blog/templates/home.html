@@ -24,23 +24,21 @@
                         <select class="custom-select custom-select-sm w-auto mr-1">
                             <option selected>Latest</option>
                             <option value="1">Popular</option>
-                            <option value="3">Solved</option>
-                            <option value="3">Unsolved</option>
                             <option value="3">No Replies Yet</option>
                         </select>
                     </label>
                     <button type="button" class="btn btn-dark" onclick= "location.href = '{% url 'new_post' forum_pk=forum_pk %}'">New Post</button>
                     <span class="input-icon input-icon-sm ml-auto w-auto">
-                        <input type="text" class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none mb-4 mt-4" placeholder="Search forum" />
-                    </span> <!-- butngi button -->
-                    
-
+                        <form action="" method="post" class="d-flex align-items-center">
+                            {% csrf_token %}
+                            {{ search_form}}
+                            <button class="btn btn-primary ml-2" type="submit">Submit</button>
+                        </form>
+                    </span> 
                 </div>
-
 
                 <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
                     {% for post in posts %}
-{#                        <h3 onclick="location.href = '{% url 'post_detail' pk=post.id page_number=1 %}'">{{ post.post_ref__title }}</h3>#}
                         <div class="card mb-2" onclick="window.location.href='{% url 'post_detail' pk=post.id page_number=1 %}'" style="cursor: pointer;">
                             <input type="hidden" name="user_post_id" value="{{ post.id }}">
                             <div class="card-body p-2 p-sm-3">

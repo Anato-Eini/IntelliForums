@@ -172,18 +172,11 @@ class RegisterForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     content = forms.CharField(
-        widget=forms.Textarea(
+        widget=forms.TextInput(
             attrs={
-                'class' : 'form-control'
-            }
-        )
+                'class' : 'form-control form-control-sm bg-gray-200 border-gray-200 shadow-none mb-4 mt-4',
+                'placeholder' : 'Search forum',
+            },
+        ),
+        label="",
     )
-    choices = forms.ChoiceField(
-        label="Filter"
-    )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        list_var = [(0, "General")]
-        list_var.extend([(forum.id, forum.title) for forum in Forum.objects.all()])
-        self.fields['choices'].choices = list_var

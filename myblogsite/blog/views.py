@@ -32,29 +32,23 @@ def fetch_posts(request, pk, page_number):
     """
     posts = []
     if request.method == 'POST':
-        form_type = request.POST.get('form_type')
-        if form_type == 'search_filter_form':
-            form = SearchForm(request.POST)
-            if form.is_valid():
-                substring = form.cleaned_data['content']
-                posts = _get_page_object(
-                    Paginator(
-                        get_filtered_posts(UserPost.objects.select_related('post_ref')
-                        .filter(
-                            (Q(post_ref__title__icontains=substring)) |
-                                           Q(post_ref__content__icontains=substring)) & Q(post_ref__forum_ref__id=pk))
-                        if Forum.objects.filter(id=pk).exists()
-                        else get_filtered_posts(
-                            UserPost.objects.select_related('post_ref')
-                            .filter(Q(post_ref__title__icontains=substring) |
-                                    Q(post_ref__content__icontains=substring))
-                        ), 20
-                    ), page_number
-                ).object_list
-        elif form_type == 'fetch_filter_forum':
-            form = ForumForm(request.POST)
-            if form.is_valid():
-                return redirect('posts_forum', pk=form.cleaned_data.get('choices'), page_number=1)
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            substring = form.cleaned_data['content']
+            posts = _get_page_object(
+                Paginator(
+                    get_filtered_posts(UserPost.objects.select_related('post_ref')
+                                       .filter(
+                        (Q(post_ref__title__icontains=substring)) |
+                        Q(post_ref__content__icontains=substring)) & Q(post_ref__forum_ref__id=pk))
+                    if Forum.objects.filter(id=pk).exists()
+                    else get_filtered_posts(
+                        UserPost.objects.select_related('post_ref')
+                        .filter(Q(post_ref__title__icontains=substring) |
+                                Q(post_ref__content__icontains=substring))
+                    ), 20
+                ), page_number
+            ).object_list
     else:
         posts = _get_page_object(
             Paginator(
@@ -67,7 +61,6 @@ def fetch_posts(request, pk, page_number):
             ), page_number
         ).object_list
 
-    form = ForumForm()
     search_form = SearchForm()
 
     posts = posts[::-1]
@@ -76,7 +69,6 @@ def fetch_posts(request, pk, page_number):
         'posts' : posts,
         'page_number' : page_number,
         'forum_pk' : pk,
-        'form' : form,
         'search_form' : search_form,
         'user' : request.user,
     })
