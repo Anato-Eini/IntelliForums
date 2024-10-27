@@ -19,6 +19,7 @@ $(document).ready(function () {
             console.error("Error fetching comments count", error)
         })
     })
+
 })
 
 function get_views(user_post_id){

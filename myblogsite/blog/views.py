@@ -62,8 +62,8 @@ def fetch_posts(request, pk, page_number):
         ).object_list
 
     search_form = SearchForm()
-
     posts = posts[::-1]
+    forums = Forum.objects.all()
 
     return render(request, 'home.html', {
         'posts' : posts,
@@ -71,6 +71,7 @@ def fetch_posts(request, pk, page_number):
         'forum_pk' : pk,
         'search_form' : search_form,
         'user' : request.user,
+        'forums' : forums
     })
 
 def get_filtered_posts(_object):
