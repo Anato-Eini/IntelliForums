@@ -38,6 +38,16 @@
                     </div>
                     <p id="post_upvote" style = "cursor:pointer;">Upvote: {{ post_upvotes }}</h5>
                     <p id="post_downvote" style = "cursor:pointer;">Downvote: {{ post_downvotes }}</h5>
+                    <br>
+
+                    <div>
+                        <a href="{% url 'add_favorite' user_post_pk %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"></path>
+                            </svg>
+                        </a>
+                    </div>
+                        
 
                     <div class = "update-delete-buttons">
 
@@ -74,6 +84,7 @@
                                     <div class="comment_votes">
                                         <h5>Upvote: </h5>
                                         <h5>Downvote: </h5>
+                                        
                                     </div>
                                 </div>
                             </div>
