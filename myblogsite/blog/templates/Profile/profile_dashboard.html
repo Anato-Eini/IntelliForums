@@ -25,13 +25,14 @@
     <div class="col-lg">
         <h5>Comments</h5>
         <hr>
-
+        
+        {% for user_comment in user_comments %}
         <div class="card mb-2">
             <div class="card-body p-2 p-sm-3">
                 <div class="media forum-item">
                     <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="{{ picture }}" class="mr-3 rounded-circle" width="50" alt="User" /></a>
                     <div class="media-body align-self-center">
-                        <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">Realtime fetching data</a></h6>
+                        <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">{{ user_comment.content }}</a></h6>
                     </div>
                     <div class="text-muted small text-center align-self-center">
                         <span class="d-none d-sm-inline-block"><i class="far fa-eye"></i> 19</span>
@@ -40,5 +41,6 @@
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
