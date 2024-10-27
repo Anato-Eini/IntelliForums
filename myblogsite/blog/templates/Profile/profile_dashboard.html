@@ -4,21 +4,22 @@
         <h5>Posts</h5>
         <hr>
 
+        {% for user_post in user_posts %}
         <div class="card mb-2">
             <div class="card-body p-2 p-sm-3">
                 <div class="media forum-item">
-                    <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                    <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="{{ picture }}" class="mr-3 rounded-circle" width="50" alt="User" /></a>
                     <div class="media-body align-self-center">
-                        <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">Realtime fetching data</a></h6>
+                        <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">{{ user_post.title }}</a></h6>
                     </div>
                     <div class="text-muted small text-center align-self-center">
-                        <span class="d-none d-sm-inline-block"><i class="far fa-eye"></i> 19</span>
-                        <span><i class="far fa-comment ml-2"></i> 3</span>
+                        <span class="d-none d-sm-inline-block"><i class="far fa-eye"></i></span>
+                        <span><i class="far fa-comment ml-2"></i></span>
                     </div>
                 </div>
             </div>
         </div>
-
+        {% endfor %}
     </div>
 
     <div class="col-lg">
@@ -28,7 +29,7 @@
         <div class="card mb-2">
             <div class="card-body p-2 p-sm-3">
                 <div class="media forum-item">
-                    <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                    <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="{{ picture }}" class="mr-3 rounded-circle" width="50" alt="User" /></a>
                     <div class="media-body align-self-center">
                         <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">Realtime fetching data</a></h6>
                     </div>

@@ -253,10 +253,12 @@ def render_profile(request):
 
     """
     user = User.objects.get(id=request.user.id)
+    user_posts = Post.objects.filter(user_ref_id=request.user.id)
     return render(request, 'profile.html', {
         'username' : user.username,
         'is_staff' : user.is_staff,
         'picture' : user.picture.url,
+        'user_posts' : user_posts
     })
 
 @csrf_protect
