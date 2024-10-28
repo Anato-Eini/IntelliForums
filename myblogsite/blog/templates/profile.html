@@ -58,6 +58,9 @@
                     <div>
                         <button id="showOverview">Overview</button>
                         <button id="showFavorites">Favorites</button>
+                        <form action="{% url 'profile_deleted_posts' user_id=request.user.id %}">
+                            <button type="submit">Deleted posts</button>
+                        </form>
                     </div>
                 
                     <div id="OverviewDashboard" style="display: block;">

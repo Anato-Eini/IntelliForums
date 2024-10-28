@@ -40,12 +40,12 @@ def fetch_posts(request, pk, page_number):
                     get_filtered_posts(UserPost.objects.select_related('post_ref')
                                        .filter(
                         (Q(post_ref__title__icontains=substring)) |
-                        Q(post_ref__content__icontains=substring)) & Q(post_ref__forum_ref__id=pk))
+                        Q(post_ref__content__icontains=substring)) & Q(post_ref__forum_ref__id=pk)& Q(is_deleted=False))
                     if Forum.objects.filter(id=pk).exists()
                     else get_filtered_posts(
                         UserPost.objects.select_related('post_ref')
                         .filter(Q(post_ref__title__icontains=substring) |
-                                Q(post_ref__content__icontains=substring))
+                                Q(post_ref__content__icontains=substring) & Q(is_deleted=False))
                     ), 20
                 ), page_number
             ).object_list
@@ -53,10 +53,10 @@ def fetch_posts(request, pk, page_number):
         posts = _get_page_object(
             Paginator(
                 get_filtered_posts(
-                    UserPost.objects.select_related('post_ref').filter(post_ref__forum_ref__id=pk)
+                    UserPost.objects.select_related('post_ref').filter(post_ref__forum_ref__id=pk,is_deleted = False)
                 )
                 if Forum.objects.filter(id=pk).exists()
-                else get_filtered_posts(UserPost.objects.select_related('post_ref'))
+                else get_filtered_posts(UserPost.objects.select_related('post_ref').filter(is_deleted = False))
                 ,20
             ), page_number
         ).object_list
@@ -64,6 +64,7 @@ def fetch_posts(request, pk, page_number):
     search_form = SearchForm()
     posts = posts[::-1]
     forums = Forum.objects.all()
+    
 
     return render(request, 'home.html', {
         'posts' : posts,
@@ -485,8 +486,8 @@ def delete_post(request, pk):
         return HttpResponseForbidden("You are not allowed to delete this post.")
 
     if request.method == 'POST':
-        user_post.delete()
-        post.delete()
+        user_post.is_deleted = True  # Set is_deleted to True instead of deleting
+        user_post.save()
         return redirect('home', pk=0, page_number=1)
 
     return redirect('home', pk=0, page_number=1) #redirect to home with default forum, adjust later
@@ -503,3 +504,12 @@ def add_favorite(request, post_id):
         )
 
     return redirect(reverse('post_detail', args=[post_id, 0]))
+
+@csrf_protect
+def fetch_deleted_posts(request, user_id):
+ 
+    posts = UserPost.objects.filter(is_deleted = True, user_ref = user_id)
+    return render(request, 'Profile/profile_deleted_posts.html', {
+            'user_id': user_id,
+            'posts': posts,
+        })

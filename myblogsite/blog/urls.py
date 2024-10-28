@@ -28,7 +28,8 @@ urlpatterns = [
     path('edit_comment/<int:comment_id>/<int:user_post_id>', views.edit_comment, name='edit_comment'),
     path('delete_comment/<int:comment_id>/<int:user_post_id>/', views.delete_comment, name="delete_comment"),
 
-    path('add_favorite/<int:post_id>', views.add_favorite, name="add_favorite")
+    path('add_favorite/<int:post_id>', views.add_favorite, name="add_favorite"),
+    path('profile_deleted_posts/<int:user_id>', views.fetch_deleted_posts, name="profile_deleted_posts"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
