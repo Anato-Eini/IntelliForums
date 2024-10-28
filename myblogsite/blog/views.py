@@ -253,9 +253,9 @@ def render_profile(request):
 
     """
     user = User.objects.get(id=request.user.id)
-    user_posts = Post.objects.filter(user_ref_id=request.user.id)
-    user_comments = Comment.objects.filter(user_ref_id=request.user.id)
-    user_favorites = FavoritePost.objects.filter(user_ref_id=request.user.id)
+    user_posts = Post.objects.filter(user_ref__id=request.user.id)
+    user_comments = Comment.objects.filter(user_ref__id=request.user.id)
+    user_favorites = FavoritePost.objects.filter(user_ref__id=request.user.id)
     return render(request, 'profile.html', {
         'username' : user.username,
         'is_staff' : user.is_staff,
