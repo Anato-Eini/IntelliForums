@@ -1,3 +1,8 @@
+.main-container{
+    display: grid;
+    grid-template-columns: repeat(11, 100px);
+    grid-template-rows: 1fr 2fr 1fr;
+}
 
 .profile-container {
 max-width: 600px;

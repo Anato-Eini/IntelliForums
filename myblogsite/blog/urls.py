@@ -24,12 +24,14 @@ urlpatterns = [
     path('post/<int:pk>/update_title/', views.update_post_title, name='update_post_title'), #UserPost pk
     path('post/<int:pk>/update_content/', views.update_post_content, name='update_post_content'), #UserPost pk
     path('post/<int:pk>/delete/', views.delete_post, name='delete_post'),
+    path('post/<int:pk>/perma_delete/', views.perma_delete, name='perma_delete'),
 
     path('edit_comment/<int:comment_id>/<int:user_post_id>', views.edit_comment, name='edit_comment'),
     path('delete_comment/<int:comment_id>/<int:user_post_id>/', views.delete_comment, name="delete_comment"),
 
     path('add_favorite/<int:post_id>', views.add_favorite, name="add_favorite"),
     path('profile_deleted_posts/<int:user_id>', views.fetch_deleted_posts, name="profile_deleted_posts"),
+    path('post/<int:pk>/restore_post/', views.restore_post, name='restore_post'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

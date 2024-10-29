@@ -254,7 +254,7 @@ def render_profile(request):
 
     """
     user = User.objects.get(id=request.user.id)
-    user_posts = Post.objects.filter(user_ref__id=request.user.id)
+    user_posts = Post.objects.filter(user_ref__id=request.user.id) #use userpost table para ma filter ang isDeleted
     user_comments = Comment.objects.filter(user_ref__id=request.user.id)
     user_favorites = FavoritePost.objects.filter(user_ref__id=request.user.id)
     return render(request, 'profile.html', {
@@ -492,6 +492,15 @@ def delete_post(request, pk):
 
     return redirect('home', pk=0, page_number=1) #redirect to home with default forum, adjust later
 
+def perma_delete(request,pk):
+    user_post = get_object_or_404(UserPost, pk=pk)  
+    post = user_post.post_ref  
+    post.delete()
+
+    return redirect('profile_deleted_posts', user_id = request.user.id)
+    
+
+
 
 def add_favorite(request, post_id):
     favorite_object = FavoritePost.objects.filter(user_post_ref__id=post_id, user_ref__id=request.user.id).first()
@@ -513,3 +522,10 @@ def fetch_deleted_posts(request, user_id):
             'user_id': user_id,
             'posts': posts,
         })
+
+def restore_post(request, pk): #pk is userpost pk
+    user_post = get_object_or_404(UserPost, pk=pk) 
+    user_post.is_deleted = False  
+    user_post.save()
+    return redirect('profile_deleted_posts', user_id = request.user.id)
+

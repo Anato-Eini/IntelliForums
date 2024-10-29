@@ -30,9 +30,19 @@
                                         </h6>
                                         
                                     </div>
-                                    <div class="text-muted small text-center align-self-center">
+                                    <div class="text-muted small text-center align-self-center" style = "display: flex;">
                                         <span class="d-none d-sm-inline-block"><i class="far fa-eye"></i> 19</span>
-                                        <span><i class="far fa-comment ml-2"></i> 3</span>
+                                        <span><i class="far fa-comment ml-2"></i> 3</span> 
+                                            <div style = "flex-direction:column;">
+                                                <form action="{% url 'perma_delete' pk=post.pk %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-dark" style = "margin-bottom:10px;">Delete post</button>
+                                                </form> 
+                                                <form action="{% url 'restore_post' pk=post.pk %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-dark">Restore</button>
+                                                </form>
+                                            </div>
                                     </div>
                                 </div>
                             </div>

@@ -46,7 +46,7 @@
                     <!-- 20% content here -->
                     <div class="profile-container">
                         <h2>Profile</h2>
-                        <img src="{{ picture }}" alt="Profile Picture" class="profile-pic">
+                        <img src="{{ picture }}" alt="Profile Picture" class="profile-pic" style="height: 100px;">
                         
                         <div class="profile-info">
                             <h5>Username: <i>{{ username }}</i></h5>
@@ -55,11 +55,11 @@
                     </div>
                 </div>
                 <div class="col p-2 border border-secondary">
-                    <div>
-                        <button id="showOverview">Overview</button>
-                        <button id="showFavorites">Favorites</button>
+                    <div style="display: flex;">
+                        <button id="showOverview" class="btn btn-dark" style="margin: 10px;">Overview</button>
+                        <button id="showFavorites" class="btn btn-dark" style="margin: 10px;">Favorites</button>
                         <form action="{% url 'profile_deleted_posts' user_id=request.user.id %}">
-                            <button type="submit">Deleted posts</button>
+                            <button type="submit" class="btn btn-dark" style="margin: 10px;">Deleted posts</button>
                         </form>
                     </div>
                 
