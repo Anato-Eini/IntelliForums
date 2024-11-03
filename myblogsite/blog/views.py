@@ -254,7 +254,7 @@ def render_profile(request):
 
     """
     user = User.objects.get(id=request.user.id)
-    user_posts = Post.objects.filter(user_ref__id=request.user.id) #use userpost table para ma filter ang isDeleted
+    user_posts = UserPost.objects.filter(user_ref__id=request.user.id, is_deleted=False) #use userpost table para ma filter ang isDeleted
     user_comments = Comment.objects.filter(user_ref__id=request.user.id)
     user_favorites = FavoritePost.objects.filter(user_ref__id=request.user.id)
     return render(request, 'profile.html', {
