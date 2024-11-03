@@ -37,7 +37,6 @@
 <body>
     {% include 'header.html' %}
     
-
         {% include 'Profile/profile_count.html' %}
 
         <div class="container-fluid">
@@ -73,18 +72,6 @@
                 </div>
             </div>
         </div>
+    <script type="module" src="{% static 'blog/js/profile.js' %}"></script>
 </body>
 </html>
-
-
-<script>
-    document.getElementById('showOverview').onclick = function() {
-        document.getElementById('OverviewDashboard').style.display = 'block';
-        document.getElementById('FavoritesDashboard').style.display = 'none';
-    };
-
-    document.getElementById('showFavorites').onclick = function() {
-        document.getElementById('FavoritesDashboard').style.display = 'block';
-        document.getElementById('OverviewDashboard').style.display = 'none';
-    };
-</script>
