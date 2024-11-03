@@ -36,33 +36,35 @@
                             <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 300px; max-height: 300px;">
                         {% endif %}
                     </div>
-                    <p id="post_upvote" style = "cursor:pointer;">Upvote: {{ post_upvotes }}</h5>
-                    <p id="post_downvote" style = "cursor:pointer;">Downvote: {{ post_downvotes }}</h5>
-                    <br>
-
-                    <div>
-                        <a href="{% url 'add_favorite' user_post_pk %}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"></path>
-                            </svg>
-                        </a>
-                    </div>
-                        
-
-                    <div class = "update-delete-buttons">
-
-                        
-                        {% if user.pk == post.user_ref.pk %}
-                                <form method="POST" action="{% url 'delete_post' user_post_pk %}"> 
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger">Delete post</button>
-                                </form>
-                                <br>
-                            <form method = "POST" action = "{% url 'update_post' user_post_pk %}">
-                                {% csrf_token %}
-                                <button type = 'submit' class="btn btn-dark">Update post</button>
-                            </form>
-                        {% endif %}
+                    <div class="container">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <p id="post_upvote" style="cursor:pointer; margin-right: 10px;">Upvote: {{ post_upvotes }}</p>
+                                <p id="post_downvote" style="cursor:pointer;">Downvote: {{ post_downvotes }}</p>
+                            </div>
+                    
+                            <div class="d-flex align-items-center">
+                                <div class="mr-2">
+                                    <a href="{% url 'add_favorite' user_post_pk %}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="update-delete-buttons">
+                                    {% if user.pk == post.user_ref.pk %}
+                                        <form method="POST" action="{% url 'delete_post' user_post_pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Delete post</button>
+                                        </form>
+                                        <form method="POST" action="{% url 'update_post' user_post_pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-dark">Update post</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <h2>Comments: </h2>
