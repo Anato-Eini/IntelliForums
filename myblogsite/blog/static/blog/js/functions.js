@@ -22,7 +22,7 @@ export function get_views(user_post_id){
 export function get_comments_count(user_post_id){
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: url_comment_num,
+            url: '/comment_num/',
             method: "GET",
             data:{
                 'pk': user_post_id
