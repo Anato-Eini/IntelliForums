@@ -291,7 +291,229 @@ def render_register(request):
     return render(request, 'register_form.html', {'form' : form})
 
 def go_default_page(request):
+    """
+    Redirect to the home page
+    Args:
+        request:
+
+    Returns:
+
+    """
     return redirect('home', pk=0, page_number=1)
+
+def edit_comment(request, comment_id, user_post_id):
+    """
+    Edits comments
+    Args:
+        request:
+        comment_id:
+        user_post_id:
+
+    Returns:
+
+    """
+    comment = get_object_or_404(Comment, id=comment_id)
+    form = CommentForm(instance=comment)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+
+        if form.is_valid:
+            form.save()
+            return redirect(reverse('post_detail', args=[user_post_id, 1]))
+
+    return render(request, 'edit_comment.html', {
+        'form': form,
+        'comment': comment,
+        'user_post_id': user_post_id,
+    })
+
+def delete_comment(request, comment_id, user_post_id):
+    """
+    Deletes comments
+    Args:
+        request:
+        comment_id: Comment id
+        user_post_id: UserPost id
+
+    Returns:
+
+    """
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.delete()
+
+    return redirect(reverse('post_detail', args=[user_post_id, 0]))
+
+def update_post(request, pk):
+    """
+    Renders a page for updating post
+    Args:
+        request:
+        pk: UserPost pk
+
+    Returns:
+
+    """
+    if request.method == 'POST':
+        user_post = get_object_or_404(UserPost, pk=pk)
+        post = user_post.post_ref
+        if request.user != post.user_ref:
+            return HttpResponseForbidden("You are not allowed to edit this post.")
+
+        return render(request, 'update_post.html', {
+            'user_post_pk': user_post.pk,
+            'post': post,
+        })
+
+def update_post_title(request, pk):
+    """
+    Update post title
+    Args:
+        request:
+        pk: UserPost pk
+
+    Returns:
+
+    """
+    user_post = get_object_or_404(UserPost, pk=pk)
+    post = user_post.post_ref
+
+    if request.user != post.user_ref:
+        return HttpResponseForbidden("You are not allowed to edit this post.")
+
+    if request.method == 'POST':
+        new_title = request.POST.get('new_title')
+        if new_title:
+            post.title = new_title
+            post.save()
+            return redirect('post_detail', pk=user_post.pk, page_number=1)
+
+    return render(request, 'update_post.html', {
+        'user_post_pk': user_post.pk,
+        'post': post,
+    })
+
+def update_post_content(request, pk):
+    """
+    Update post's content
+    Args:
+        request:
+        pk: UserPost pk
+
+    Returns:
+
+    """
+    user_post = get_object_or_404(UserPost, pk=pk)
+    post = user_post.post_ref
+
+    if request.user != post.user_ref:
+        return HttpResponseForbidden("You are not allowed to edit this post.")
+
+    if request.method == 'POST':
+        new_content = request.POST.get('new_content')
+        if new_content:
+            post.content = new_content
+            post.save()
+            return redirect('post_detail', pk=user_post.pk, page_number=1)
+
+    return redirect('post_detail', pk=user_post.pk, page_number=1)
+
+def delete_post(request, pk):
+    """
+    Deletes post
+    Args:
+        request:
+        pk: UserPost pk
+
+    Returns:
+        HttpResponseRedirect:
+
+    """
+    user_post = get_object_or_404(UserPost, pk=pk)
+    post = user_post.post_ref
+    if request.user != post.user_ref:
+        return HttpResponseForbidden("You are not allowed to delete this post.")
+
+    if request.method == 'POST':
+        user_post.is_deleted = True  # Set is_deleted to True instead of deleting
+        user_post.save()
+        return redirect('home', pk=0, page_number=1)
+
+    return redirect('home', pk=0, page_number=1)  # redirect to home with default forum, adjust later
+
+def perma_delete(request, pk):
+    """
+    Permanent deletion of a post
+    Args:
+        request:
+        pk:
+
+    Returns:
+        HttpResponseRedirect:
+
+    """
+    user_post = get_object_or_404(UserPost, pk=pk)
+    post = user_post.post_ref
+    post.delete()
+
+    return redirect('profile_deleted_posts', user_id=request.user.id)
+
+
+def add_favorite(request, post_id):
+    """
+    Adds a post to favorites
+    Args:
+        request:
+        post_id: Post id
+
+    Returns:
+        HttpResponseRedirect:
+
+    """
+    favorite_object = FavoritePost.objects.filter(user_post_ref__id=post_id, user_ref__id=request.user.id).first()
+    if favorite_object:
+        favorite_object.delete()
+    else:
+        FavoritePost.objects.create(
+            user_post_ref=UserPost.objects.get(pk=post_id),
+            user_ref=User.objects.get(id=request.user.id),
+        )
+
+    return redirect(reverse('post_detail', args=[post_id, 0]))
+
+
+@csrf_protect
+def fetch_deleted_posts(request, user_id):
+    """
+    Fetches deleted posts
+    Args:
+        request:
+        user_id: User id
+
+    Returns:
+
+    """
+    posts = UserPost.objects.filter(is_deleted=True, user_ref=user_id)
+    return render(request, 'Profile/profile_deleted_posts.html', {
+        'user_id': user_id,
+        'posts': posts,
+    })
+
+
+def restore_post(request, pk):
+    """
+    Restores a post
+    Args:
+        request:
+        pk: UserPost pk
+
+    Returns:
+
+    """
+    user_post = get_object_or_404(UserPost, pk=pk)
+    user_post.is_deleted = False
+    user_post.save()
+    return redirect('profile_deleted_posts', user_id=request.user.id)
 
 
 #AJAX REQUESTS--------------------------------------------------------------------------------------------------------
@@ -400,132 +622,4 @@ def num_comments(request):
     return JsonResponse({
         'comment_count' : Comment.objects.filter(user_post_ref__id=pk).count(),
     })
-
-def edit_comment(request, comment_id, user_post_id):
-    comment = get_object_or_404(Comment, id=comment_id)
-    form = CommentForm(instance=comment)
-
-    if request.method == 'POST':
-        form = CommentForm(request.POST, instance=comment)
-
-        if form.is_valid:
-            form.save()
-            return redirect(reverse('post_detail', args=[user_post_id, 1]))
-
-    return render(request, 'edit_comment.html', {
-        'form': form,
-        'comment': comment,
-        'user_post_id': user_post_id,
-    })
-
-def delete_comment(request, comment_id, user_post_id):
-    comment = get_object_or_404(Comment, id=comment_id)
-    comment.delete()
-
-    return redirect(reverse('post_detail', args=[user_post_id, 0]))
-
-#UPDATE POST
-
-def update_post(request,pk):
-    if request.method == 'POST':
-        user_post = get_object_or_404(UserPost, pk=pk)
-        post = user_post.post_ref 
-        if request.user != post.user_ref:
-            return HttpResponseForbidden("You are not allowed to edit this post.")
-        
-        return render(request, 'update_post.html', {
-            'user_post_pk': user_post.pk,
-            'post': post,
-        })
-
-#title
-def update_post_title(request, pk):
-    user_post = get_object_or_404(UserPost, pk=pk) 
-    post = user_post.post_ref  
-
-    if request.user != post.user_ref:
-        return HttpResponseForbidden("You are not allowed to edit this post.")
-
-    if request.method == 'POST':
-        new_title = request.POST.get('new_title')
-        if new_title:
-            post.title = new_title
-            post.save()
-            return redirect('post_detail', pk=user_post.pk, page_number=1)  
-
-    return render(request,'update_post.html',{
-        'user_post_pk' : user_post.pk,
-        'post' : post,
-    })
-
-#content
-def update_post_content(request, pk):
-
-    #pk refers to UserPost PK
-    user_post = get_object_or_404(UserPost, pk=pk) 
-    post = user_post.post_ref  
-
-    if request.user != post.user_ref:
-        return HttpResponseForbidden("You are not allowed to edit this post.")
-
-    if request.method == 'POST':
-        new_content = request.POST.get('new_content')
-        if new_content:
-            post.content = new_content
-            post.save()
-            return redirect('post_detail', pk=user_post.pk, page_number=1) 
-
-    return redirect('post_detail', pk=user_post.pk, page_number=1)
-
-#DELETE POST
-def delete_post(request, pk):
-    #pk refers to UserPost PK
-    user_post = get_object_or_404(UserPost, pk=pk)  
-    post = user_post.post_ref  
-    if request.user != post.user_ref:
-        return HttpResponseForbidden("You are not allowed to delete this post.")
-
-    if request.method == 'POST':
-        user_post.is_deleted = True  # Set is_deleted to True instead of deleting
-        user_post.save()
-        return redirect('home', pk=0, page_number=1)
-
-    return redirect('home', pk=0, page_number=1) #redirect to home with default forum, adjust later
-
-def perma_delete(request,pk):
-    user_post = get_object_or_404(UserPost, pk=pk)  
-    post = user_post.post_ref  
-    post.delete()
-
-    return redirect('profile_deleted_posts', user_id = request.user.id)
-    
-
-
-
-def add_favorite(request, post_id):
-    favorite_object = FavoritePost.objects.filter(user_post_ref__id=post_id, user_ref__id=request.user.id).first()
-    if favorite_object:
-        favorite_object.delete()
-    else:
-        FavoritePost.objects.create(
-            user_post_ref=UserPost.objects.get(pk=post_id),
-            user_ref = User.objects.get(id=request.user.id),
-        )
-
-    return redirect(reverse('post_detail', args=[post_id, 0]))
-
-@csrf_protect
-def fetch_deleted_posts(request, user_id):
- 
-    posts = UserPost.objects.filter(is_deleted = True, user_ref = user_id)
-    return render(request, 'Profile/profile_deleted_posts.html', {
-            'user_id': user_id,
-            'posts': posts,
-        })
-
-def restore_post(request, pk): #pk is userpost pk
-    user_post = get_object_or_404(UserPost, pk=pk) 
-    user_post.is_deleted = False  
-    user_post.save()
-    return redirect('profile_deleted_posts', user_id = request.user.id)
 
