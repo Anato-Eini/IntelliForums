@@ -56,8 +56,6 @@
                         <button id="showOverview" class="btn btn-dark" style="margin: 10px;">Overview</button>
                         <button id="showFavorites" class="btn btn-dark" style="margin: 10px;">Favorites</button>
                         <button id="showDeleted" class="btn btn-dark" style="margin: 10px;">Deleted</button>
-                        
-                        
                     </div>
                 
                     <div id="OverviewDashboard" style="display: block;">
@@ -75,23 +73,6 @@
         </div>
     <script>
         var csrf_token = '{% csrf_token %}'
-        document.getElementById('showOverview').onclick = function() {
-            document.getElementById('OverviewDashboard').style.display = 'block';
-            document.getElementById('FavoritesDashboard').style.display = 'none';
-            document.getElementById('DeleteDashboard').style.display = 'none';
-        };
-
-    document.getElementById('showFavorites').onclick = function() {
-        document.getElementById('FavoritesDashboard').style.display = 'block';
-        document.getElementById('OverviewDashboard').style.display = 'none';
-        document.getElementById('DeleteDashboard').style.display = 'none';
-    };
-
-    document.getElementById('showDeleted').onclick = function() {
-        document.getElementById('DeleteDashboard').style.display = 'block';
-        document.getElementById('FavoritesDashboard').style.display = 'none';
-        document.getElementById('OverviewDashboard').style.display = 'none';
-    };
     </script>
     <script type="module" src="{% static 'blog/js/profile.js' %}"></script>
 </body>

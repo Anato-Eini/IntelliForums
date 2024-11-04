@@ -1,7 +1,8 @@
 import { get_views, get_comments_count } from './functions.js'
 
 $(document).ready(function () {
-    /*document.getElementById('showOverview').onclick = function() {
+
+    document.getElementById('showOverview').onclick = function() {
         document.getElementById('OverviewDashboard').style.display = 'block';
         document.getElementById('FavoritesDashboard').style.display = 'none';
         document.getElementById('DeleteDashboard').style.display = 'none';
@@ -17,7 +18,7 @@ $(document).ready(function () {
         document.getElementById('DeleteDashboard').style.display = 'block';
         document.getElementById('FavoritesDashboard').style.display = 'none';
         document.getElementById('OverviewDashboard').style.display = 'none';
-    };*/
+    };
 
     $('.favorite-views').each(function () {
         let this_element = $(this);
