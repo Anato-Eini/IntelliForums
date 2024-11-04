@@ -255,6 +255,7 @@ def render_profile(request):
     """
     user = User.objects.get(id=request.user.id)
     user_posts = UserPost.objects.filter(user_ref__id=request.user.id, is_deleted=False) #use userpost table para ma filter ang isDeleted
+    deleted_user_posts = UserPost.objects.filter(user_ref__id=request.user.id, is_deleted=True)
     user_comments = Comment.objects.filter(user_ref__id=request.user.id)
     user_favorites = FavoritePost.objects.filter(user_ref__id=request.user.id)
     return render(request, 'profile.html', {
@@ -263,7 +264,8 @@ def render_profile(request):
         'picture' : user.picture.url,
         'user_posts' : user_posts,
         'user_comments' : user_comments,
-        'user_favorites' : user_favorites
+        'user_favorites' : user_favorites,
+        'deleted_user_posts': deleted_user_posts,
     })
 
 @csrf_protect
@@ -456,7 +458,7 @@ def perma_delete(request, pk):
     post = user_post.post_ref
     post.delete()
 
-    return redirect('profile_deleted_posts', user_id=request.user.id)
+    return redirect('profile')
 
 
 def add_favorite(request, post_id):
@@ -483,21 +485,7 @@ def add_favorite(request, post_id):
 
 
 @csrf_protect
-def fetch_deleted_posts(request, user_id):
-    """
-    Fetches deleted posts
-    Args:
-        request:
-        user_id: User id
 
-    Returns:
-
-    """
-    posts = UserPost.objects.filter(is_deleted=True, user_ref=user_id)
-    return render(request, 'Profile/profile_deleted_posts.html', {
-        'user_id': user_id,
-        'posts': posts,
-    })
 
 
 def restore_post(request, pk):
@@ -513,7 +501,7 @@ def restore_post(request, pk):
     user_post = get_object_or_404(UserPost, pk=pk)
     user_post.is_deleted = False
     user_post.save()
-    return redirect('profile_deleted_posts', user_id=request.user.id)
+    return redirect('profile')
 
 
 #AJAX REQUESTS--------------------------------------------------------------------------------------------------------
