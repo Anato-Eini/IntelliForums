@@ -147,3 +147,15 @@ class FavoritePostAdmin(admin.ModelAdmin):
         'user_ref',
         'user_post_ref'
     )
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    """
+    forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
+    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+    """
+    list_display = (
+        'id',
+        'forum_ref',
+        'user_post_ref'
+    )
