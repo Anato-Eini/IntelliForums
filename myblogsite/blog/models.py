@@ -1,6 +1,5 @@
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
-
 class UserManager(BaseUserManager):
     """
     Custom manager model
@@ -100,7 +99,6 @@ class Post(models.Model):
     """
     Represents a post within a forum created by a user.
     """
-    forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField(blank=True, null=True)

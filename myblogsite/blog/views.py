@@ -40,7 +40,7 @@ def fetch_posts(request, pk, page_number):
                     get_filtered_posts(UserPost.objects.select_related('post_ref')
                                        .filter(
                         (Q(post_ref__title__icontains=substring)) |
-                        Q(post_ref__content__icontains=substring)) & Q(post_ref__forum_ref__id=pk)& Q(is_deleted=False))
+                        Q(post_ref__content__icontains=substring)) & Q(post_ref__forum_ref__id=pk) & Q(is_deleted=False))
                     if Forum.objects.filter(id=pk).exists()
                     else get_filtered_posts(
                         UserPost.objects.select_related('post_ref')
