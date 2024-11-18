@@ -32,5 +32,7 @@ urlpatterns = [
     path('add_favorite/<int:post_id>', views.add_favorite, name="add_favorite"),
     path('post/<int:pk>/restore_post/', views.restore_post, name='restore_post'),
 
+    path('admin_panel/', views.render_admin, name='admin_panel')
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

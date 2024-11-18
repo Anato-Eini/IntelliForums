@@ -15,7 +15,7 @@ from .forms import *
 from .views_classes import *
 
 @csrf_protect
-def fetch_posts(request, pk, page_number):
+def fetch_posts(request, pk, page_number, is_admin=False):
     """
     Fetch posts
     if forum does exist, it will fetch appropriate posts else it will fetch all posts from all forums
@@ -65,8 +65,9 @@ def fetch_posts(request, pk, page_number):
     posts = posts[::-1]
     forums = Forum.objects.all()
     
+    template = "admin_dashboard.html" if is_admin else "home.html"
 
-    return render(request, 'home.html', {
+    return render(request, template, {
         'posts' : posts,
         'page_number' : page_number,
         'forum_pk' : pk,
@@ -612,4 +613,18 @@ def num_comments(request):
     return JsonResponse({
         'comment_count' : Comment.objects.filter(user_post_ref__id=pk).count(),
     })
+
+def render_admin(request):
+    """
+    ADDED users
+
+    to add:
+    comments and posts
+    """
+    users = User.objects.filter(is_active=1)
+
+    return render(request, 'Admin/admin_panel.html', {
+            'users' : users,
+        })
+    pass
 
