@@ -73,11 +73,11 @@
                     </div>
                 
                     <div id="PostsDashboard" style="display: none;">
-                        
+                        {% include 'Admin/reported_posts.html'%}
                     </div>
                     
                     <div id="CommentsDashboard" style="display: none;">
-                        
+                        {% include 'Admin/reported_Comments.html'%}
                     </div>
                 </div>
             </div>
@@ -95,6 +95,20 @@
             $("#UsersDashboard").css("display", "none")
             $("#BannedDashboard").css("display", "block")
             $("#CommentsDashboard").css("display", "none")
+            $("#PostsDashboard").css("display", "none")
+        })
+
+        $("#showPosts").on('click',function(){
+            $("#UsersDashboard").css("display", "none")
+            $("#BannedDashboard").css("display", "none")
+            $("#CommentsDashboard").css("display", "none")
+            $("#PostsDashboard").css("display", "block")
+        })
+
+        $("#showComments").on('click',function(){
+            $("#UsersDashboard").css("display", "none")
+            $("#BannedDashboard").css("display", "none")
+            $("#CommentsDashboard").css("display", "block")
             $("#PostsDashboard").css("display", "none")
         })
     </script>
