@@ -1,6 +1,5 @@
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
-
 class UserManager(BaseUserManager):
     """
     Custom manager model
@@ -30,7 +29,6 @@ class UserManager(BaseUserManager):
     def create_superuser(self, username, password, **extra_fields):
         """
         Creates and returns a superuser with the given username and password.
-
         Parameters:
             username (str): The username of the superuser
             password (str): The password of the superuser
@@ -101,7 +99,6 @@ class Post(models.Model):
     """
     Represents a post within a forum created by a user.
     """
-    forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField(blank=True, null=True)
@@ -125,20 +122,26 @@ class UserPost(models.Model):
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)
 
-class VotePost(models.Model):
+class User_UserPost(models.Model):
+    """
+    Connect UserPost and User
+    """
+    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+class VotePost(User_UserPost):
     """
     Represents a vote on a post by a user.
     """
-    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
-    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     is_upvote = models.BooleanField()
 
-class Comment(models.Model):
+class Comment(User_UserPost):
     """
     Represents a comment made by a user on a specific user post.
     """ 
-    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
-    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to=upload_path, blank=True, null=True)
@@ -160,16 +163,19 @@ class VoteComment(models.Model):
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     is_upvote = models.BooleanField()
 
-class PostView(models.Model):
+class PostView(User_UserPost):
     """
     Represents a posts viewed by users.
     """
-    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
 
-class FavoritePost(models.Model):
+class FavoritePost(User_UserPost):
     """
     Represents the favorite post marked by the user.
     """
-    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Tag(models.Model):
+    """
+    Tags (Forums) for posts
+    """
+    forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)

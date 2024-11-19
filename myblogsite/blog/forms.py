@@ -45,50 +45,56 @@ class CommentForm(forms.ModelForm):
 
 
 class GeneralPostForm(forms.ModelForm):
-    choices = forms.ChoiceField(
-        label="Upload to:"
+    choices = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                'class': 'form-check-input'
+            }
+        ),
     )
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'image']
+        fields = ['title', 'content', 'image', 'choices']
         widgets = {
             'title': forms.TextInput(
                 attrs={
-                    'class' : 'form-control'
+                    'class': 'form-control'
                 }
             ),
             'content': forms.Textarea(
                 attrs={
-                    'class' : 'form-control'
+                    'class': 'form-control'
                 }
             ),
             'image': forms.ClearableFileInput(
                 attrs={
-                    'class' : 'form-control'
+                    'class': 'form-control'
                 }
             )
         }
         labels = {
             'title': 'Title',
             'content': 'Content',
-            'image': 'Image'
+            'image': 'Image',
+            'choices': "Upload to"
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['choices'].choices = [ (forum.id, forum.title) for forum in Forum.objects.all() ]
+        self.fields['choices'].choices = [(forum.id, forum.title) for forum in Forum.objects.all()]
+        self.fields['choices'].widget.attrs.update({'class': 'form-check-inline'})
 
-class ForumForm(forms.Form):
-    choices = forms.ChoiceField(
-        label = "Switch Forum"
-    )
+# class ForumForm(forms.Form):
+#     choices = forms.ChoiceField(
+#         label = "Switch Forum"
+#     )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        list_var = [(0, "General")]
-        list_var.extend([(forum.id, forum.title) for forum in Forum.objects.all()])
-        self.fields['choices'].choices = list_var
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         list_var = [(0, "General")]
+#         list_var.extend([(forum.id, forum.title) for forum in Forum.objects.all()])
+#         self.fields['choices'].choices = list_var
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -180,3 +186,14 @@ class SearchForm(forms.Form):
         ),
         label="",
     )
+
+    choices = forms.ChoiceField(
+        label=""
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        list_var = [(0, "General")]
+        list_var.extend([(forum.id, forum.title) for forum in Forum.objects.all()])
+        self.fields['choices'].choices = list_var
+        self.fields['choices'].widget.attrs.update({'class': 'custom-select custom-select-sm w-auto mr-1'})

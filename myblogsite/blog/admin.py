@@ -16,7 +16,6 @@ class PostViewAdmin(admin.ModelAdmin):
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     """
-    forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -24,7 +23,6 @@ class PostAdmin(admin.ModelAdmin):
     """
     list_display = (
         'id',
-        'forum_ref',
         'user_ref',
         'title',
         'content',
@@ -145,5 +143,17 @@ class FavoritePostAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'user_ref',
+        'user_post_ref'
+    )
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    """
+    forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
+    user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+    """
+    list_display = (
+        'id',
+        'forum_ref',
         'user_post_ref'
     )

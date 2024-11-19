@@ -35,29 +35,46 @@ def fetch_posts(request, pk, page_number):
         form = SearchForm(request.POST)
         if form.is_valid():
             substring = form.cleaned_data['content']
+            choice = form.cleaned_data['choices']
             posts = _get_page_object(
                 Paginator(
-                    get_filtered_posts(UserPost.objects.select_related('post_ref')
-                                       .filter(
-                        (Q(post_ref__title__icontains=substring)) |
-                        Q(post_ref__content__icontains=substring)) & Q(post_ref__forum_ref__id=pk)& Q(is_deleted=False))
-                    if Forum.objects.filter(id=pk).exists()
+                    get_filtered_posts(
+                        UserPost.objects.filter(
+                                (Q(post_ref__title__icontains=substring) | Q(post_ref__content__icontains=substring)) &
+                                Q(is_deleted=False))
+                            .filter(id__in=Tag.objects.filter(forum_ref__id=choice)).values(
+                                'post_ref__id',
+                                'post_ref__user_ref__username',
+                                'post_ref__title',
+                                'post_ref__content',
+                                'post_ref__created_at',
+                                'post_ref__user_ref__picture',
+                                'id'),
+                            )
+                    if Forum.objects.filter(id=choice).exists()
                     else get_filtered_posts(
-                        UserPost.objects.select_related('post_ref')
-                        .filter(Q(post_ref__title__icontains=substring) |
-                                Q(post_ref__content__icontains=substring) & Q(is_deleted=False))
-                    ), 20
-                ), page_number
+                        UserPost.objects.filter(
+                            Q(post_ref__title__icontains=substring) | 
+                            Q(post_ref__content__icontains=substring) & 
+                            Q(is_deleted=False)
+                        )
+                    ), 
+                    20
+                ), 
+                page_number
             ).object_list
     else:
         posts = _get_page_object(
             Paginator(
                 get_filtered_posts(
-                    UserPost.objects.select_related('post_ref').filter(post_ref__forum_ref__id=pk,is_deleted = False)
+                    UserPost.objects.filter(
+                        id__in=Tag.objects.filter(forum_ref__id=pk)
+                    )
                 )
+
                 if Forum.objects.filter(id=pk).exists()
                 else get_filtered_posts(UserPost.objects.select_related('post_ref').filter(is_deleted = False))
-                ,20
+                , 20
             ), page_number
         ).object_list
 
@@ -65,7 +82,6 @@ def fetch_posts(request, pk, page_number):
     posts = posts[::-1]
     forums = Forum.objects.all()
     
-
     return render(request, 'home.html', {
         'posts' : posts,
         'page_number' : page_number,
@@ -136,17 +152,29 @@ def new_post_form(request, forum_pk):
             form = GeneralPostForm(request.POST, request.FILES)
             if form.is_valid():
                 post = form.save(commit=False)
-                post.forum_ref = get_object_or_404(Forum, id=form.cleaned_data['choices'])
+                # post.forum_ref = get_object_or_404(Forum, id=form.cleaned_data['choices'][0])
+
             else:
                 raise ValidationError("Incorrect data")
 
         user_instance = User.objects.get(id=request.user.id)
         post.user_ref = user_instance
         post.save()
+        # TODO store in a variable for line 169
         UserPost.objects.create(
             post_ref=post,
             user_ref=user_instance
         )
+
+        # TODO USE TRANSACTION instead for loop
+        for choice in form.cleaned_data['choices']:
+            Tag.objects.create(
+                user_post_ref=UserPost.objects.get(post_ref=post),
+                forum_ref=Forum.objects.get(
+                    id=choice
+                )
+            )
+
         return redirect(reverse('home', args=[0, 1]))
     else:
         form = GeneralPostForm() \
