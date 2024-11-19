@@ -221,6 +221,12 @@ def ban_user(request,pk):
     user.is_active = False
     user.save()
     return redirect('home', pk=0, page_number=1)
+
+def unban_user(request,pk):
+    user = get_object_or_404(User, id=pk)
+    user.is_active = True
+    user.save()
+    return redirect('home', pk=0, page_number=1)
     
 
 def handle_view_post(user_pk, user_post_id):
