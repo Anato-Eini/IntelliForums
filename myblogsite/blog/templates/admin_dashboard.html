@@ -11,7 +11,10 @@
                         <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">{{ user.username }}</a></h6>
                     </div>
                     <div class="text-muted small text-center align-self-center">
-                        <a href="" onclick="return confirm('Are you sure you want to ban this user?');">Ban</a>
+                        <form method="POST" action="{% url 'ban_user' user.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Ban user</button>
+                        </form>
                     </div>
                 </div>
             </div>
