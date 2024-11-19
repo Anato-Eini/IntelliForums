@@ -40,16 +40,15 @@ def fetch_posts(request, pk, page_number):
                 Paginator(
                     get_filtered_posts(
                         UserPost.objects.filter(
-                                (Q(user_post_ref__post_ref__title__icontains=substring) | Q(user_post_ref__post_ref__content__icontains=substring)) &
-                                Q(forum_ref__id=pk) & 
-                                Q(user_post_ref__is_deleted=False))
+                                (Q(post_ref__title__icontains=substring) | Q(post_ref__content__icontains=substring)) &
+                                Q(is_deleted=False))
                             .filter(id__in=Tag.objects.filter(forum_ref__id=choice)).values(
-                                'user_post_ref__post_ref__id',
-                                'user_post_ref__post_ref__user_ref__username',
-                                'user_post_ref__post_ref__title',
-                                'user_post_ref__post_ref__content',
-                                'user_post_ref__post_ref__created_at',
-                                'user_post_ref__post_ref__user_ref__picture',
+                                'post_ref__id',
+                                'post_ref__user_ref__username',
+                                'post_ref__title',
+                                'post_ref__content',
+                                'post_ref__created_at',
+                                'post_ref__user_ref__picture',
                                 'id'),
                             )
                     if Forum.objects.filter(id=choice).exists()
