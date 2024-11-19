@@ -15,7 +15,7 @@ from .forms import *
 from .views_classes import *
 
 @csrf_protect
-def fetch_posts(request, pk, page_number):
+def fetch_posts(request, pk, page_number, is_admin=False):
     """
     Fetch posts
     if forum does exist, it will fetch appropriate posts else it will fetch all posts from all forums
@@ -666,3 +666,15 @@ def num_comments(request):
         'comment_count' : Comment.objects.filter(user_post_ref__id=pk).count(),
     })
 
+def render_admin(request):
+    """
+    ADDED users
+
+    to add:
+    comments and posts
+    """
+    users = User.objects.filter(is_active=1)
+
+    return render(request, 'Admin/admin_panel.html', {
+            'users' : users,
+        })
