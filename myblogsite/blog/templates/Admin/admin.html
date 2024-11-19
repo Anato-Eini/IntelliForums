@@ -65,7 +65,11 @@
                     
                 
                     <div id="UsersDashboard" style="display: block;">
-                        {% include 'admin_dashboard.html' %}
+                        {% include 'Admin/admin_dashboard.html' %}
+                    </div>
+
+                    <div id="BannedDashboard" style="display: none;">
+                        {% include 'Admin/banned_dashboard.html' %}
                     </div>
                 
                     <div id="PostsDashboard" style="display: none;">
@@ -82,12 +86,14 @@
         var csrf_token = '{% csrf_token %}'
         $("#showUsers").on('click',function(){
             $("#UsersDashboard").css("display", "block")
+            $("#BannedDashboard").css("display", "none")
             $("#CommentsDashboard").css("display", "none")
             $("#PostsDashboard").css("display", "none")
         })
 
-        $("#showUsers").on('click',function(){
-            $("#UsersDashboard").css("display", "block")
+        $("#showBannedUsers").on('click',function(){
+            $("#UsersDashboard").css("display", "none")
+            $("#BannedDashboard").css("display", "block")
             $("#CommentsDashboard").css("display", "none")
             $("#PostsDashboard").css("display", "none")
         })

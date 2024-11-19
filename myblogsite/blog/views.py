@@ -308,7 +308,7 @@ def render_adminpanel(request):
     users = User.objects.filter(is_active=True)
     banned_users = User.objects.filter(is_active=False)
 
-    return render(request, 'admin.html', {
+    return render(request, 'Admin/admin.html', {
             'users' : users,
             'banned_users' : banned_users,
         })
