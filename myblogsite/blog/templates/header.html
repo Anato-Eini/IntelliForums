@@ -19,7 +19,7 @@
                 {% if user.is_authenticated %}
                     <img src="{{ user.picture.url }}" alt="Profile Picture" class="profile-img" style="height:30px;width:30px;border-radius:50%;">
                     {% if user.is_staff %}
-
+                    <a class="nav-link text-light ml-2" href="/adminpanel/">Admin</a>
                     {% endif %}
                     <a class="nav-link text-light ml-2" href="/profile/">Profile</a>
                     <a class="nav-link text-light ml-2" href="/login/">Logout</a>

@@ -215,6 +215,14 @@ def post_detail(request, pk, page_number):
 
     })
 
+
+def ban_user(request,pk):
+    user = get_object_or_404(User, id=pk)
+    user.is_active = False
+    user.save()
+    return redirect('home', pk=0, page_number=1)
+    
+
 def handle_view_post(user_pk, user_post_id):
     """
     Handles query of user viewing a post.
@@ -293,6 +301,17 @@ def render_register(request):
         form = RegisterForm()
 
     return render(request, 'register_form.html', {'form' : form})
+
+
+@csrf_protect
+def render_adminpanel(request):
+    users = User.objects.filter(is_active=True)
+    banned_users = User.objects.filter(is_active=False)
+
+    return render(request, 'admin.html', {
+            'users' : users,
+            'banned_users' : banned_users,
+        })
 
 def go_default_page(request):
     """

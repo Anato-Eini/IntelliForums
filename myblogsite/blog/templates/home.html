@@ -9,6 +9,11 @@
 </head>
 <body>
 
+{% if not user.is_active %}
+    <p>BANNED</p>
+
+{% else %}
+
 {% include 'header.html' %}
 
 <div class="container">
@@ -69,5 +74,6 @@
     var csrf_token = '{% csrf_token %}'
 </script>
 <script type="module" src="{% static 'blog/js/home.js' %}"></script>
+{% endif %}
 </body>
 </html>
