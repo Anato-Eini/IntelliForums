@@ -186,3 +186,14 @@ class SearchForm(forms.Form):
         ),
         label="",
     )
+
+    choices = forms.ChoiceField(
+        label=""
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        list_var = [(0, "General")]
+        list_var.extend([(forum.id, forum.title) for forum in Forum.objects.all()])
+        self.fields['choices'].choices = list_var
+        self.fields['choices'].widget.attrs.update({'class': 'custom-select custom-select-sm w-auto mr-1'})
