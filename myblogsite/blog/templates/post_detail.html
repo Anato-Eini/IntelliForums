@@ -29,7 +29,7 @@
 
                         <h2 class="d-inline-block">{{ post.title }}</h2>
                         <div class="d-inline-block ml-2">
-                            <img src="/media/{{ user.picture }}" alt="{{ post.user_ref.username }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                            <img src="/media/{{ post.user_ref.picture }}" alt="{{ post.user_ref.username }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
                         </div>
                         <h5 class="d-inline-block ml-2 text-muted">by {{ post.user_ref.username }}</h5>
                         <span class="d-inline-block ml-2 text-muted">{{ post.created_at }}</span>
@@ -56,7 +56,7 @@
                                     </button>
                                 </div>
                                 {% if user.is_staff and post.user_ref.id != user.id %}
-                                    <form method="POST" action="{% url 'ban_user' post.user_ref.id %}">
+                                    <form method="POST" action="{% url 'ban_user' post.user_ref.id %}" onsubmit="return confirm('Are you sure you want to ban this user?')">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-outline-danger">
                                             <i class="fas fa-ban"></i> Ban user
@@ -81,7 +81,7 @@
                                 </div>
                                 <div class="ml-auto update-delete-buttons">
                                     {% if user.pk == post.user_ref.pk %}
-                                        <form method="POST" action="{% url 'delete_post' user_post_pk %}" class="mr-2">
+                                        <form method="POST" action="{% url 'delete_post' user_post_pk %}" onsubmit="return confirm('Are you sure you want to delete this post?')" class="mr-2">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger">
                                                 <i class="fas fa-trash-alt"></i> Delete post

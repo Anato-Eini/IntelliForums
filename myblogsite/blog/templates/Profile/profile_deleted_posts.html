@@ -21,11 +21,11 @@
                                     <span class="d-none d-sm-inline-block favorite-views"><i class="far fa-eye"></i></span>
                                     <span class="favorite-comments-num"><i class="far fa-comment ml-2"></i></span>
                                     <div style = "display: flex;">
-                                        <form action="{% url 'perma_delete' pk=post.pk %}" method="POST">
+                                        <form action="{% url 'perma_delete' pk=post.pk %}" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this post?')">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-dark" style = "margin: 0 10px;">Delete post</button>
                                         </form>
-                                        <form action="{% url 'restore_post' pk=post.pk %}" method="POST">
+                                        <form action="{% url 'restore_post' pk=post.pk %}" method="POST" onsubmit="return confirm('Are you sure you want to restore this post?')">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-dark">Restore</button>
                                         </form>
