@@ -5,18 +5,7 @@ from myblogsite import settings
 from . import views
 from .views import CustomLoginView, CustomLogoutView
 
-"""
-TODO: CHANGE BACKEND 
-Reason: Forums -> Tags
-
-How: 
-1. Change url patterns to omit forum_pk
-2. Change views to not use forum_ref from Post and query instead from Tag model
-3. Change html redirections to omit forum_pk
-4. UI/UX for tags probably use an ajax for dynamic tag display in home.html
-5. Change logic for creating new posts to use tags instead of forums
-6. Fix search functionality to adapt changes being made above
-"""
+#TODO Fetch posts with no replies
 
 urlpatterns = [
     path('', views.go_default_page, name='default_page'),

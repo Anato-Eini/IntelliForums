@@ -26,7 +26,11 @@
 
                 <div class="inner-main">
                     <div class="inner-main-header mb-4">
+
                         <h2 class="d-inline-block">{{ post.title }}</h2>
+                        <div class="d-inline-block ml-2">
+                            <img src="/media/{{ user.picture }}" alt="{{ post.user_ref.username }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                        </div>
                         <h5 class="d-inline-block ml-2 text-muted">by {{ post.user_ref.username }}</h5>
                         <span class="d-inline-block ml-2 text-muted">{{ post.created_at }}</span>
                     </div>
@@ -102,6 +106,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
                                         <div>
+                                            <img src="/media/{{ comment.user_ref__picture }}" alt="{{ comment.user_ref__username }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
                                             <h5 class="card-title mb-1">{{ comment.user_ref__username }}</h5>
                                             <h6 class="card-subtitle mb-2 text-muted">{{ comment.created_at }}</h6>
                                         </div>

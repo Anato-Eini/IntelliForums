@@ -13,9 +13,11 @@ from django.db.models import Q
 
 from .forms import *
 from .views_classes import *
+from django.db import transaction
+
 
 @csrf_protect
-def fetch_posts(request, pk, page_number, is_admin=False):
+def fetch_posts(request, pk, page_number):
     """
     Fetch posts
     if forum does exist, it will fetch appropriate posts else it will fetch all posts from all forums
@@ -91,6 +93,7 @@ def fetch_posts(request, pk, page_number, is_admin=False):
         'forums' : forums
     })
 
+
 def get_filtered_posts(_object):
     return _object.values(
         'post_ref__id',
@@ -101,6 +104,7 @@ def get_filtered_posts(_object):
         'post_ref__user_ref__picture',
         'id'
     )
+
 
 def _get_page_object(paginator_object, page_number):
     """
@@ -123,11 +127,12 @@ def _get_page_object(paginator_object, page_number):
 
     return page_object
 
+
 @csrf_protect
 @login_required(login_url='login')
 def new_post_form(request, forum_pk):
     """
-    Render general post form is forum_pk does exist else it will render a post particular to that forum
+    Renders a form for creating a new post
 
     Parameters:
         request (HttpRequest): request object
@@ -152,36 +157,31 @@ def new_post_form(request, forum_pk):
             form = GeneralPostForm(request.POST, request.FILES)
             if form.is_valid():
                 post = form.save(commit=False)
-                # post.forum_ref = get_object_or_404(Forum, id=form.cleaned_data['choices'][0])
-
             else:
                 raise ValidationError("Incorrect data")
 
         user_instance = User.objects.get(id=request.user.id)
         post.user_ref = user_instance
         post.save()
-        # TODO store in a variable for line 169
-        UserPost.objects.create(
+        
+        user_post = UserPost.objects.create(
             post_ref=post,
             user_ref=user_instance
         )
 
-        # TODO USE TRANSACTION instead for loop
-        for choice in form.cleaned_data['choices']:
-            Tag.objects.create(
-                user_post_ref=UserPost.objects.get(post_ref=post),
-                forum_ref=Forum.objects.get(
-                    id=choice
+        with transaction.atomic():
+            for choice in form.cleaned_data['choices']:
+                Tag.objects.create(
+                    user_post_ref=user_post,
+                    forum_ref=Forum.objects.get(id=choice)
                 )
-            )
 
         return redirect(reverse('home', args=[0, 1]))
     else:
-        form = GeneralPostForm() \
-            if not Forum.objects.filter(id=forum_pk).exists() \
-            else PostForm()
+        form = GeneralPostForm() 
 
     return render(request, 'post_form.html', {'form': form})
+
 
 @login_required(login_url='login')
 def post_detail(request, pk, page_number):
@@ -215,9 +215,6 @@ def post_detail(request, pk, page_number):
 
     handle_view_post(request.user.id, int(pk))
 
-    # for votes in VotePost.objects.all():
-    #     logging.error(votes.user_post_ref.id)
-
     return render(request, 'post_detail.html', {
         'post': get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id),
         'comments': _get_page_object(
@@ -230,7 +227,8 @@ def post_detail(request, pk, page_number):
                     'image',
                     'user_ref__username',
                     'user_ref__id',
-                    'id'
+                    'id',
+                    'user_ref__picture'
                 ),
                 20
             ),
@@ -313,6 +311,7 @@ def render_profile(request):
         'deleted_user_posts': deleted_user_posts,
     })
 
+
 @csrf_protect
 def render_register(request):
     """
@@ -348,6 +347,7 @@ def render_adminpanel(request):
             'banned_users' : banned_users,
         })
 
+
 def go_default_page(request):
     """
     Redirect to the home page
@@ -358,6 +358,7 @@ def go_default_page(request):
         HttpResponseRedirect : Redirects to the home page
     """
     return redirect('home', pk=0, page_number=1)
+
 
 def edit_comment(request, comment_id, user_post_id):
     """
@@ -386,6 +387,7 @@ def edit_comment(request, comment_id, user_post_id):
         'user_post_id': user_post_id,
     })
 
+
 def delete_comment(request, comment_id, user_post_id):
     """
     Deletes comments
@@ -401,6 +403,7 @@ def delete_comment(request, comment_id, user_post_id):
     comment.delete()
 
     return redirect(reverse('post_detail', args=[user_post_id, 0]))
+
 
 def update_post(request, pk):
     """
@@ -422,6 +425,7 @@ def update_post(request, pk):
             'user_post_pk': user_post.pk,
             'post': post,
         })
+
 
 def update_post_title(request, pk):
     """
@@ -451,6 +455,7 @@ def update_post_title(request, pk):
         'post': post,
     })
 
+
 def update_post_content(request, pk):
     """
     Update post's content
@@ -476,6 +481,7 @@ def update_post_content(request, pk):
 
     return redirect('post_detail', pk=user_post.pk, page_number=1)
 
+
 def delete_post(request, pk):
     """
     Deletes post
@@ -498,6 +504,7 @@ def delete_post(request, pk):
         return redirect('home', pk=0, page_number=1)
 
     return redirect('home', pk=0, page_number=1)  # redirect to home with default forum, adjust later
+
 
 def perma_delete(request, pk):
     """
@@ -541,9 +548,6 @@ def add_favorite(request, post_id):
 
 
 @csrf_protect
-
-
-
 def restore_post(request, pk):
     """
     Restores a post
@@ -616,6 +620,7 @@ def post_vote(request):
         'downvote' : VotePost.objects.filter(user_post_ref__id=post_pk, is_upvote=False).count(),
     })
 
+
 @login_required(login_url='login')
 def comment_vote(request):
     """
@@ -651,6 +656,7 @@ def comment_vote(request):
         'downvote' : VoteComment.objects.filter(comment_ref__id=comment_ref_id, is_upvote=False).count(),
     })
 
+
 def num_view(request):
     """
     Fetch view count of a particular post
@@ -668,6 +674,7 @@ def num_view(request):
     return JsonResponse({
         'view_count' : PostView.objects.filter(user_post_ref__id=request.GET.get('pk')).count(),
     })
+
 
 def num_comments(request):
     """

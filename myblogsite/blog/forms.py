@@ -21,6 +21,7 @@ class LoginForm(forms.Form):
         max_length=255,
     )
 
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -83,18 +84,8 @@ class GeneralPostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['choices'].choices = [(forum.id, forum.title) for forum in Forum.objects.all()]
-        self.fields['choices'].widget.attrs.update({'class': 'form-check-inline'})
+        self.fields['choices'].widget.attrs.update({'class': 'form-check form-check-inline'})
 
-# class ForumForm(forms.Form):
-#     choices = forms.ChoiceField(
-#         label = "Switch Forum"
-#     )
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         list_var = [(0, "General")]
-#         list_var.extend([(forum.id, forum.title) for forum in Forum.objects.all()])
-#         self.fields['choices'].choices = list_var
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -175,6 +166,7 @@ class RegisterForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
 
 class SearchForm(forms.Form):
     content = forms.CharField(
