@@ -215,6 +215,9 @@ def post_detail(request, pk, page_number):
 
     handle_view_post(request.user.id, int(pk))
 
+    # for votes in VotePost.objects.all():
+    #     logging.error(votes.user_post_ref.id)
+
     return render(request, 'post_detail.html', {
         'post': get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id),
         'comments': _get_page_object(
@@ -235,12 +238,10 @@ def post_detail(request, pk, page_number):
         ).object_list,
         "user_post_pk" : pk,
         'form' : form,
-        'post_upvotes' : VotePost.objects.select_related('user_post')
-                  .filter(user_post_ref__id=pk, is_upvote=True).count(),
-        'post_downvotes' : VotePost.objects.select_related('user_post')
-                  .filter(user_post_ref__id=pk, is_upvote=False).count(),
+        'post_upvotes' : VotePost.objects.filter(user_post_ref__id=pk, is_upvote=True).count(),
+        'post_downvotes' : VotePost.objects.filter(user_post_ref__id=pk, is_upvote=False).count(),
         'user' : request.user,
-
+        'tags': Tag.objects.filter(user_post_ref__id=pk),
     })
 
 
@@ -249,6 +250,7 @@ def ban_user(request,pk):
     user.is_active = False
     user.save()
     return redirect('home', pk=0, page_number=1)
+
 
 def unban_user(request,pk):
     user = get_object_or_404(User, id=pk)
@@ -280,7 +282,6 @@ def handle_view_post(user_pk, user_post_id):
             user_ref=user_ref,
             user_post_ref=user_post_ref
         ).save()
-
 
 
 @login_required(login_url='login')
@@ -354,7 +355,7 @@ def go_default_page(request):
         request:
 
     Returns:
-
+        HttpResponseRedirect : Redirects to the home page
     """
     return redirect('home', pk=0, page_number=1)
 
@@ -558,8 +559,29 @@ def restore_post(request, pk):
     user_post.save()
     return redirect('profile')
 
+def render_admin(request):
+    """
+    ADDED users
 
-#AJAX REQUESTS--------------------------------------------------------------------------------------------------------
+    to add:
+    comments and posts
+    """
+    users = User.objects.filter(is_active=1)
+
+    return render(request, 'Admin/admin_panel.html', {
+            'users' : users,
+        })
+
+#NEW FUNCTIONS HERE
+
+
+"""
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    AJAX HANDLERS
+
+    Description:
+        Starting from here are the ajax requests handlers for the project
+"""
 
 @login_required(login_url='login')
 def post_vote(request):
@@ -575,6 +597,7 @@ def post_vote(request):
     post_pk = int(request.POST.get('pk')) #UserPost id
     is_upvote = int(request.POST.get('type')) == 1
     vote_object = VotePost.objects.filter(user_post_ref__id=post_pk, user_ref__id=request.user.id).first()
+
     if vote_object:
         if vote_object.is_upvote == is_upvote:
             vote_object.delete()
@@ -642,9 +665,8 @@ def num_view(request):
         JsonResponse: returns a JsonResponse number of views of a particular post
     """
 
-    pk = request.GET.get('pk')
     return JsonResponse({
-        'view_count' : PostView.objects.filter(user_post_ref__id=pk).count(),
+        'view_count' : PostView.objects.filter(user_post_ref__id=request.GET.get('pk')).count(),
     })
 
 def num_comments(request):
@@ -661,20 +683,6 @@ def num_comments(request):
         JsonResponse: returns a JsonResponse number of comments of a particular post
     """
 
-    pk = request.GET.get('pk')
     return JsonResponse({
-        'comment_count' : Comment.objects.filter(user_post_ref__id=pk).count(),
+        'comment_count' : Comment.objects.filter(user_post_ref__id=request.GET.get('pk')).count(),
     })
-
-def render_admin(request):
-    """
-    ADDED users
-
-    to add:
-    comments and posts
-    """
-    users = User.objects.filter(is_active=1)
-
-    return render(request, 'Admin/admin_panel.html', {
-            'users' : users,
-        })
