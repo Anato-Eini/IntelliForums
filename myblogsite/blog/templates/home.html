@@ -23,9 +23,8 @@
           
             <div class="inner-main">
                 <div class="inner-main-header">
-                    <a class="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none" href="#" data-toggle="inner-sidebar">
-                        <i class="material-icons">arrow_forward_ios</i></a>
-                    <button type="button" class="btn btn-dark" onclick= "location.href = '{% url 'new_post' forum_pk=forum_pk %}'">New Post</button>
+                    <a class="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none" href="#" data-toggle="inner-sidebar"> <i class="material-icons">arrow_forward_ios</i></a>
+                    <button type="button" class="btn btn-dark" onclick= "location.href = '{% url 'new_post' %}'">New Post</button>
                     <span class="input-icon input-icon-sm ml-auto w-auto">
                         <form action="" method="post" class="d-flex align-items-center">
                             {% csrf_token %}

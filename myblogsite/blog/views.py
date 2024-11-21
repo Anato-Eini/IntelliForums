@@ -130,7 +130,7 @@ def _get_page_object(paginator_object, page_number):
 
 @csrf_protect
 @login_required(login_url='login')
-def new_post_form(request, forum_pk):
+def new_post_form(request):
     """
     Renders a form for creating a new post
 
@@ -146,19 +146,12 @@ def new_post_form(request, forum_pk):
 
     """
     if request.method == 'POST':
-        if Forum.objects.filter(id=forum_pk).exists():
-            form = PostForm(request.POST, request.FILES)
-            if form.is_valid():
-                post = form.save(commit=False)
-                post.forum_ref = get_object_or_404(Forum, id=forum_pk)
-            else:
-                raise ValidationError("Incorrect data")
+        form = GeneralPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
         else:
-            form = GeneralPostForm(request.POST, request.FILES)
-            if form.is_valid():
-                post = form.save(commit=False)
-            else:
-                raise ValidationError("Incorrect data")
+            messages.error(request, "Incorrect data")
+            return render(request, 'post_form.html', {'form': form})
 
         user_instance = User.objects.get(id=request.user.id)
         post.user_ref = user_instance

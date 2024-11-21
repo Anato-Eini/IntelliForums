@@ -52,6 +52,10 @@ class GeneralPostForm(forms.ModelForm):
                 'class': 'form-check-input'
             }
         ),
+        required=True,
+        error_messages={
+            'required': 'You must select at least one option.'
+        }
     )
 
     class Meta:
