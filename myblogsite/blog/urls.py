@@ -38,6 +38,4 @@ urlpatterns = [
     path('ban_user/<int:pk>',views.ban_user,name = "ban_user"),
     path('unban_user/<int:pk>',views.unban_user,name = "unban_user"),
 
-    path('admin_panel/', views.render_admin, name='admin_panel')
-
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

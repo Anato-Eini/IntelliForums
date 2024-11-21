@@ -3,6 +3,7 @@ from pyexpat.errors import messages
 
 from django.http import JsonResponse, HttpResponseForbidden
 from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
@@ -237,17 +238,30 @@ def post_detail(request, pk, page_number):
 
 
 def ban_user(request,pk):
-    user = get_object_or_404(User, id=pk)
-    user.is_active = False
-    user.save()
-    return redirect('home', pk=0, page_number=1)
+    if request.method == 'POST':
+        if request.user.is_staff:
+            user = get_object_or_404(User, id=pk)
+            user.is_active = False
+            user.save()
+            return redirect('home', pk=0, page_number=1)
+        else:
+            raise PermissionDenied
+    else:
+        return redirect('home', pk=0, page_number=1)
+
 
 
 def unban_user(request,pk):
-    user = get_object_or_404(User, id=pk)
-    user.is_active = True
-    user.save()
-    return redirect('home', pk=0, page_number=1)
+    if request.method == 'POST':
+        if request.user.is_staff:
+            user = get_object_or_404(User, id=pk)
+            user.is_active = True
+            user.save()
+            return redirect('home', pk=0, page_number=1)
+        else:
+            raise PermissionDenied
+    else:
+        return redirect('home', pk=0, page_number=1)
     
 
 def handle_view_post(user_pk, user_post_id):
@@ -332,6 +346,9 @@ def render_register(request):
 
 @csrf_protect
 def render_adminpanel(request):
+    if not request.user.is_staff:
+        raise PermissionDenied
+    
     users = User.objects.filter(is_active=True)
     banned_users = User.objects.filter(is_active=False)
 
@@ -412,7 +429,7 @@ def update_post(request, pk):
         user_post = get_object_or_404(UserPost, pk=pk)
         post = user_post.post_ref
         if request.user != post.user_ref:
-            return HttpResponseForbidden("You are not allowed to edit this post.")
+            raise PermissionDenied
 
         return render(request, 'update_post.html', {
             'user_post_pk': user_post.pk,
@@ -434,7 +451,7 @@ def update_post_title(request, pk):
     post = user_post.post_ref
 
     if request.user != post.user_ref:
-        return HttpResponseForbidden("You are not allowed to edit this post.")
+        raise PermissionDenied
 
     if request.method == 'POST':
         new_title = request.POST.get('new_title')
@@ -463,7 +480,7 @@ def update_post_content(request, pk):
     post = user_post.post_ref
 
     if request.user != post.user_ref:
-        return HttpResponseForbidden("You are not allowed to edit this post.")
+        raise PermissionDenied
 
     if request.method == 'POST':
         new_content = request.POST.get('new_content')
@@ -479,7 +496,7 @@ def delete_post(request, pk):
     """
     Deletes post
     Args:
-        request:
+        request: POST
         pk: UserPost pk
 
     Returns:
@@ -488,31 +505,35 @@ def delete_post(request, pk):
     """
     user_post = get_object_or_404(UserPost, pk=pk)
     post = user_post.post_ref
-    if request.user != post.user_ref:
-        return HttpResponseForbidden("You are not allowed to delete this post.")
+    if request.user != post.user_ref and not request.user.is_staff:
+        raise PermissionDenied
 
     if request.method == 'POST':
-        user_post.is_deleted = True  # Set is_deleted to True instead of deleting
+        user_post.is_deleted = True  
         user_post.save()
-        return redirect('home', pk=0, page_number=1)
 
-    return redirect('home', pk=0, page_number=1)  # redirect to home with default forum, adjust later
+    return redirect('home', pk=0, page_number=1)  
 
 
 def perma_delete(request, pk):
     """
     Permanent deletion of a post
     Args:
-        request:
-        pk:
+        request: POST
+        pk: userpost pk
 
     Returns:
         HttpResponseRedirect:
 
     """
-    user_post = get_object_or_404(UserPost, pk=pk)
-    post = user_post.post_ref
-    post.delete()
+    if request.method == 'POST':
+        user_post = get_object_or_404(UserPost, pk=pk)
+
+        if request.user == user_post.user_ref or request.user.is_staff:
+            post = user_post.post_ref
+            post.delete()
+        else:
+            raise PermissionDenied
 
     return redirect('profile')
 
@@ -545,29 +566,21 @@ def restore_post(request, pk):
     """
     Restores a post
     Args:
-        request:
+        request: POST
         pk: UserPost pk
 
     Returns:
 
     """
-    user_post = get_object_or_404(UserPost, pk=pk)
-    user_post.is_deleted = False
-    user_post.save()
+    if request.method == 'POST':
+        user_post = get_object_or_404(UserPost, pk=pk)
+        if user_post.user_ref == request.user or user_post.user_ref.is_staff:
+            user_post.is_deleted = False
+            user_post.save()
+        else:
+            raise PermissionDenied
+
     return redirect('profile')
-
-def render_admin(request):
-    """
-    ADDED users
-
-    to add:
-    comments and posts
-    """
-    users = User.objects.filter(is_active=1)
-
-    return render(request, 'Admin/admin_panel.html', {
-            'users' : users,
-        })
 
 #NEW FUNCTIONS HERE
 
