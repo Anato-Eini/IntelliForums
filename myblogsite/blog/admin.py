@@ -157,3 +157,27 @@ class TagAdmin(admin.ModelAdmin):
         'forum_ref',
         'user_post_ref'
     )
+
+@admin.register(ReportPost)
+class ReportPostAdmin(admin.ModelAdmin):
+    """
+    post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
+    reason = models.TextField()
+    """
+    list_display = (
+        'id',
+        'post_ref',
+        'user_ref'
+    )
+
+@admin.register(ReportComment)
+class ReportCommentAdmin(admin.ModelAdmin):
+    """
+    comment_ref = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    reason = models.TextField()
+    """
+    list_display = (
+        'id',
+        'comment_ref',
+        'user_ref'
+    )

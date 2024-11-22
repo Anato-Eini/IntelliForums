@@ -1,5 +1,6 @@
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
+
 class UserManager(BaseUserManager):
     """
     Custom manager model
@@ -179,3 +180,19 @@ class Tag(models.Model):
     """
     forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+
+class ReportPost(models.Model):
+    """
+    Represents a report on a post by a user.
+    """
+    post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    reason = models.TextField()
+
+class ReportComment(models.Model):
+    """
+    Represents a report on a comment by a user.
+    """
+    comment_ref = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    reason = models.TextField()
