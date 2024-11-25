@@ -37,5 +37,9 @@ urlpatterns = [
     path('adminpanel/',views.render_adminpanel,name = "adminpanel"),
     path('ban_user/<int:pk>',views.ban_user,name = "ban_user"),
     path('unban_user/<int:pk>',views.unban_user,name = "unban_user"),
+    path('post/report_post/<int:userpost_id>/', views.report_post, name='report_post'),
+    path('post/ban_user_from_post_report/<int:user_pk>/<int:userpost_pk>/', views.ban_user_from_post_report, name='ban_user_from_post_report'), #pk is userpost_id
+    path('post/perma_delete_from_post_report/<int:pk>/', views.perma_delete_from_post_report, name='perma_delete_from_post_report'),
+    path('post/delete_reportpost/<int:pk>/', views.delete_reportpost, name='delete_reportpost'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

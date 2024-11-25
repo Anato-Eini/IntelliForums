@@ -93,6 +93,12 @@
                                                 <i class="fas fa-edit"></i> Update post
                                             </button>
                                         </form>
+                                    {% else %}
+                                        <form action = "{% url 'report_post' user_post_pk %}">
+                                            <button type="submit" class="btn btn-dark">
+                                                <i class="fas fa-edit"></i> Report post
+                                            </button>
+                                        </form>
                                     {% endif %}
                                 </div>
                             </div>
