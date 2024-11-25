@@ -201,3 +201,11 @@ class ReportPostForm(forms.ModelForm):
         widgets = {
             'reason': forms.Textarea(attrs={'placeholder': 'Describe the reason for reporting...', 'rows': 4}),
         }
+
+class ReportCommentForm(forms.ModelForm):
+    class Meta:
+        model = ReportComment
+        fields = ['reason']
+        widgets = {
+            'reason' : forms.Textarea(attrs={'placeholder': 'Describe the reason for reporting...', 'rows': 4}),
+        }

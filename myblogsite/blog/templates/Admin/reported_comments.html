@@ -1,1 +1,46 @@
-<p>reported comments here</p>
+<div class="row">
+    <div class="col-lg">
+        <h5>Reported Comments</h5>
+        <hr>
+        {% if reported_comments %}
+                {% for report in reported_comments %}
+                    <div class="card mb-2">
+                        <div class="card-body p-2 p-sm-3">
+                            <div class="media forum-item">
+                                <a href="#" data-toggle="collapse" data-target=".forum-content">
+                                    <img src="/media/{{ report.comment_ref.user_ref.picture }}" class="mr-3 rounded-circle" width="50" alt="User" />
+                                </a>
+                                <div class="media-body align-self-center">
+                                    <h6>
+                                        <a href="#" class="text-body">Reported by: {{ report.user_ref.username }}</a><br>
+                                        <a href="#" class="text-body">{{report.comment_ref.content }}</a><br>
+                                        <a href="#" class="text-body">Report reason: {{ report.reason }}</a>
+                                    </h6>
+                                </div>
+                                <div class="text-muted small text-center align-self-center">
+                                    <span class="d-none d-sm-inline-block favorite-views"><i class="far fa-eye"></i></span>
+                                    <span class="favorite-comments-num"><i class="far fa-comment ml-2"></i></span>
+                                    <div style = "display: flex;">
+                                        <form action="" method="POST" onsubmit="return confirm('Are you sure you want to ban this user and delete the post?')">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-dark" style = "margin: 0 10px;">Ban and delete</button>
+                                        </form>
+                                        <form action="" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?')">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-dark">Delete comment</button>
+                                        </form>
+                                        <form action="" method="POST" onsubmit="return confirm('Are you sure you want to delete this report?')">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-dark">Do nothing</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No reported posts found.</p>
+            {% endif %}
+    </div>
+</div>

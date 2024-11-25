@@ -351,7 +351,7 @@ def render_adminpanel(request):
     users = User.objects.filter(is_active=True)
     banned_users = User.objects.filter(is_active=False)
     reported_posts = ReportPost.objects.all()
-    reported_comments = []
+    reported_comments = ReportComment.objects.all()
 
     return render(request, 'Admin/admin.html', {
             'users' : users,
@@ -626,6 +626,21 @@ def perma_delete_from_post_report(request,pk): #pk is from UserPost
     perma_delete_helper(request,pk)
     return redirect('adminpanel')
 
+def report_comment(request, comment_id, user_post_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    if request.method == 'POST':
+        form = ReportCommentForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.comment_ref = comment
+            report.user_ref = request.user
+            report.save()
+            return redirect('home', pk=0, page_number=1)   
+    else:
+        form = ReportCommentForm()
+
+    return render(request, 'report_comment.html', {'form': form, 'comment': comment})
 
 """
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------

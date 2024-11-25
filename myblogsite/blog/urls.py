@@ -42,4 +42,6 @@ urlpatterns = [
     path('post/perma_delete_from_post_report/<int:pk>/', views.perma_delete_from_post_report, name='perma_delete_from_post_report'),
     path('post/delete_reportpost/<int:pk>/', views.delete_reportpost, name='delete_reportpost'),
 
+    path('post/report_comment/<int:comment_id>/<int:user_post_id>', views.report_comment, name='report_comment'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
