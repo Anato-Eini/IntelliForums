@@ -18,18 +18,16 @@
                                     </h6>
                                 </div>
                                 <div class="text-muted small text-center align-self-center">
-                                    <span class="d-none d-sm-inline-block favorite-views"><i class="far fa-eye"></i></span>
-                                    <span class="favorite-comments-num"><i class="far fa-comment ml-2"></i></span>
                                     <div style = "display: flex;">
-                                        <form action="" method="POST" onsubmit="return confirm('Are you sure you want to ban this user and delete the post?')">
+                                        <form action="{% url 'ban_user_from_comment_report' user_id=report.comment_ref.user_ref.id comment_id=report.comment_ref.id%}" method="POST" onsubmit="return confirm('Are you sure you want to ban this user and delete the comment?')">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-dark" style = "margin: 0 10px;">Ban and delete</button>
                                         </form>
-                                        <form action="" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?')">
+                                        <form action="{% url 'delete_comment_from_comment_report' comment_id=report.comment_ref.id%}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-dark">Delete comment</button>
+                                            <button type="submit" class="btn btn-dark" style = "margin: 0 10px;">Delete comment</button>
                                         </form>
-                                        <form action="" method="POST" onsubmit="return confirm('Are you sure you want to delete this report?')">
+                                        <form action="{% url 'delete_reportcomment' report_id=report.id %}" method="POST" onsubmit="return confirm('Are you sure you want to delete this report?')">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-dark">Do nothing</button>
                                         </form>

@@ -626,7 +626,7 @@ def perma_delete_from_post_report(request,pk): #pk is from UserPost
     perma_delete_helper(request,pk)
     return redirect('adminpanel')
 
-def report_comment(request, comment_id, user_post_id):
+def report_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     
     if request.method == 'POST':
@@ -642,6 +642,25 @@ def report_comment(request, comment_id, user_post_id):
 
     return render(request, 'report_comment.html', {'form': form, 'comment': comment})
 
+def delete_reportcomment(request, report_id): #do nothing
+    report = get_object_or_404(ReportComment, id=report_id)
+    
+    report.delete()
+    return redirect('adminpanel')
+
+def delete_comment_from_comment_report(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    comment.delete()
+    return redirect('adminpanel')
+
+def ban_user_from_comment_report(request, user_id, comment_id):
+    ban_user_helper(request, user_id)
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    comment.delete()
+    return redirect('adminpanel')
+    
 """
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
     AJAX HANDLERS

@@ -42,6 +42,9 @@ urlpatterns = [
     path('post/perma_delete_from_post_report/<int:pk>/', views.perma_delete_from_post_report, name='perma_delete_from_post_report'),
     path('post/delete_reportpost/<int:pk>/', views.delete_reportpost, name='delete_reportpost'),
 
-    path('post/report_comment/<int:comment_id>/<int:user_post_id>', views.report_comment, name='report_comment'),
+    path('post/report_comment/<int:comment_id>', views.report_comment, name='report_comment'),
+    path('post/delete_reportcomment/<int:report_id>/', views.delete_reportcomment, name='delete_reportcomment'),
+    path('post/delete_comment_from_report/<int:comment_id>/', views.delete_comment_from_comment_report, name='delete_comment_from_comment_report'),
+    path('post/ban_user_from_comment_report/<int:user_id>/<int:comment_id>/', views.ban_user_from_comment_report, name="ban_user_from_comment_report"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
