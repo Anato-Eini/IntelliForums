@@ -74,7 +74,6 @@ def fetch_posts(request, pk, page_number):
                         id__in=Tag.objects.filter(forum_ref__id=pk)
                     )
                 )
-
                 if Forum.objects.filter(id=pk).exists()
                 else get_filtered_posts(UserPost.objects.select_related('post_ref').filter(is_deleted = False))
                 , 20
@@ -84,11 +83,10 @@ def fetch_posts(request, pk, page_number):
     search_form = SearchForm()
     posts = posts[::-1]
     forums = Forum.objects.all()
-    
+
     return render(request, 'home.html', {
         'posts' : posts,
         'page_number' : page_number,
-        'forum_pk' : pk,
         'search_form' : search_form,
         'user' : request.user,
         'forums' : forums
@@ -103,6 +101,7 @@ def get_filtered_posts(_object):
         'post_ref__content',
         'post_ref__created_at',
         'post_ref__user_ref__picture',
+        'user_ref__id',
         'id'
     )
 
@@ -290,32 +289,33 @@ def handle_view_post(user_pk, user_post_id):
 
 
 @login_required(login_url='login')
-def render_profile(request):
+def render_profile(request, pk):
     """
     Renders profile Page
 
     Parameters:
         request (HttpRequest): request object
+        pk (int): User id, owner of the profile
 
     Returns:
         HttpResponse: Http response
 
     """
-    user = User.objects.get(id=request.user.id)
-    user_posts = UserPost.objects.filter(user_ref__id=request.user.id, is_deleted=False) #use userpost table para ma filter ang isDeleted
-    deleted_user_posts = UserPost.objects.filter(user_ref__id=request.user.id, is_deleted=True)
-    user_comments = Comment.objects.filter(user_ref__id=request.user.id)
-    user_favorites = FavoritePost.objects.filter(user_ref__id=request.user.id, user_post_ref__is_deleted=False)
+    user = User.objects.get(id=pk)
+    user_posts = UserPost.objects.filter(user_ref__id=pk, is_deleted=False)
+    deleted_user_posts = UserPost.objects.filter(user_ref__id=pk, is_deleted=True)
+    user_comments = Comment.objects.filter(user_ref__id=pk)
+    user_favorites = FavoritePost.objects.filter(user_ref__id=pk, user_post_ref__is_deleted=False)
 
+    logging.error(request.user.id == user.id)
     
     return render(request, 'profile.html', {
-        'username' : user.username,
-        'is_staff' : user.is_staff,
-        'picture' : user.picture.url,
         'user_posts' : user_posts,
         'user_comments' : user_comments,
         'user_favorites' : user_favorites,
         'deleted_user_posts': deleted_user_posts,
+        'user' : user,
+        'current_user' : request.user,
     })
 
 

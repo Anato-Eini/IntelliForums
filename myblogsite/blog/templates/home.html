@@ -10,8 +10,27 @@
 <body>
 
 {% if not user.is_active %}
-    <p>BANNED</p>
-
+    <style>
+        .banned-message {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .banned-message h1 {
+            color: red;
+            font-size: 2em;
+        }
+        .banned-message p {
+            font-size: 1.2em;
+        }
+        .banned-message .btn {
+            margin-top: 20px;
+        }
+    </style>
+    <div class="banned-message">
+        <h1>Access Denied</h1>
+        <p>Your account has been banned. Please contact support for more information.</p>
+        <a href="mailto:jeremybrad.lee@cit.edu" class="btn btn-primary">Contact Support</a>
+    </div>
 {% else %}
 
 {% include 'header.html' %}
@@ -41,11 +60,11 @@
                             <div class="card-body p-2 p-sm-3">
                                 <div class="media forum-item">
                                     <a href="#" data-toggle="collapse" data-target=".forum-content">
-                                        <img src="/media/{{ post.post_ref__user_ref__picture }}" class="mr-3 rounded-circle" width="50" height="50" alt="User" />
+                                        <img src="/media/{{ post.post_ref__user_ref__picture }}" class="mr-3 rounded-circle" width="50" height="50" alt="User" onclick="event.stopPropagation(); window.location.href='/profile/{{ post.user_ref__id }}/'"/>
                                     </a>
                                     <div class="media-body">
                                         <h6>
-                                            <p href="#"  class="text-body">{{ post.post_ref__title }}</p>
+                                            <p class="text-body">{{ post.post_ref__title }}</p>
                                         </h6>
                                         <p class="text-secondary">
                                             {{ post.post_ref__content }}
@@ -55,7 +74,6 @@
                                         <span class="d-none d-sm-inline-block">
                                             <i class="far fa-eye"></i>
                                         </span>
-
                                         <span>
                                             <i class="far fa-comment ml-2"></i>
                                         </span>

@@ -5,7 +5,7 @@ from myblogsite import settings
 from . import views
 from .views import CustomLoginView, CustomLogoutView
 
-#TODO Fetch posts with no replies
+#TODO View other user's profile
 
 urlpatterns = [
     path('', views.go_default_page, name='default_page'),
@@ -14,7 +14,7 @@ urlpatterns = [
     path('new_post/', views.new_post_form, name='new_post'),
     path('home/<int:pk>/<int:page_number>/', views.fetch_posts,name='home'),
     path('post_detail/<int:pk>/<int:page_number>/', views.post_detail, name='post_detail'),
-    path('profile/', views.render_profile, name='profile'),
+    path('profile/<int:pk>/', views.render_profile, name='profile'),
     path('login/', CustomLogoutView.as_view(next_page='login'), name='logout'),
 
     #AJAX

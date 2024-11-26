@@ -43,13 +43,13 @@
                     <!-- 20% content here -->
                     <div class="profile-container">
                         <h2>Profile</h2>
-                        <img src="{{ picture }}" alt="Profile Picture" class="profile-pic" style="height: 100px;">
+                        <img src="{{ user.picture.url }}" alt="Profile Picture" class="profile-pic" style="height: 100px; " onclick="window.location.href='{{ user.picture.url }}'">
                         
                         <div class="profile-info">
-                            <h5>Username: <i>{{ username }}</i></h5>
-                            <h5>Is Staff: <i>{{ is_staff }}</i></h5>
-                            {% if is_staff == True %}
-                                <a href="{% url 'adminpanel' %}">Admin</a>
+                            <h5>Username: <i>{{ user.username }}</i></h5>
+                            <h5>Is Staff: <i>{{ user.is_staff }}</i></h5>
+                            {% if user.is_staff == True %}
+                                <p style="color: red; font-weight: bold; font-size: 18px;">Admin</p>
                             {% endif %}
                         </div>
                     </div>
@@ -58,12 +58,15 @@
                     <div style="display: flex;">
                         <button id="showOverview" class="btn btn-dark" style="margin: 10px;">Overview</button>
                         <button id="showFavorites" class="btn btn-dark" style="margin: 10px;">Favorites</button>
+
+                    {% if user.id == current_user.id %}
                         <button id="showDeleted" class="btn btn-dark" style="margin: 10px;">Deleted</button>
+                    {% endif %}
                     </div>
                 
                     <div id="OverviewDashboard" style="display: block;">
                         {% include 'Profile/profile_dashboard.html' %}
-                    </div>
+                     </div>
                 
                     <div id="FavoritesDashboard" style="display: none;">
                         {% include 'Profile/profile_test.html' %}
