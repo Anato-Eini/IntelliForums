@@ -235,19 +235,18 @@ def post_detail(request, pk, page_number):
         'tags': Tag.objects.filter(user_post_ref__id=pk),
     })
 
-
-def ban_user(request,pk):
+def ban_user_helper(request,pk):
     if request.method == 'POST':
         if request.user.is_staff:
             user = get_object_or_404(User, id=pk)
             user.is_active = False
             user.save()
-            return redirect('home', pk=0, page_number=1)
         else:
             raise PermissionDenied
-    else:
-        return redirect('home', pk=0, page_number=1)
 
+def ban_user(request,pk):
+    ban_user_helper(request, pk)
+    return redirect('home', pk=0, page_number=1)
 
 
 def unban_user(request,pk):
@@ -351,10 +350,14 @@ def render_adminpanel(request):
     
     users = User.objects.filter(is_active=True)
     banned_users = User.objects.filter(is_active=False)
+    reported_posts = ReportPost.objects.all()
+    reported_comments = ReportComment.objects.all()
 
     return render(request, 'Admin/admin.html', {
             'users' : users,
             'banned_users' : banned_users,
+            'reported_posts' : reported_posts,
+            'reported_comments' : reported_comments,
         })
 
 
@@ -492,6 +495,7 @@ def update_post_content(request, pk):
     return redirect('post_detail', pk=user_post.pk, page_number=1)
 
 
+
 def delete_post(request, pk):
     """
     Deletes post
@@ -514,6 +518,16 @@ def delete_post(request, pk):
 
     return redirect('home', pk=0, page_number=1)  
 
+def perma_delete_helper(request, pk):
+    if request.method == 'POST':
+        user_post = get_object_or_404(UserPost, pk=pk)
+
+        if request.user == user_post.user_ref or request.user.is_staff:
+            post = user_post.post_ref
+            post.delete()
+        else:
+            raise PermissionDenied
+
 
 def perma_delete(request, pk):
     """
@@ -526,15 +540,7 @@ def perma_delete(request, pk):
         HttpResponseRedirect:
 
     """
-    if request.method == 'POST':
-        user_post = get_object_or_404(UserPost, pk=pk)
-
-        if request.user == user_post.user_ref or request.user.is_staff:
-            post = user_post.post_ref
-            post.delete()
-        else:
-            raise PermissionDenied
-
+    perma_delete_helper(request, pk)
     return redirect('profile')
 
 
@@ -584,7 +590,77 @@ def restore_post(request, pk):
 
 #NEW FUNCTIONS HERE
 
+def report_post(request, userpost_id):
+    post = get_object_or_404(UserPost, id=userpost_id)
+    
+    if request.method == 'POST':
+        form = ReportPostForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.post_ref = post
+            report.user_ref = request.user  
+            report.save()
+            return redirect('home', pk=0, page_number=1)   
+    else:
+        form = ReportPostForm()
 
+    return render(request, 'report_post.html', {'form': form, 'post': post})
+
+def delete_reportpost_helper(request,pk): #pk = ReportPost pk
+    if not request.user.is_staff:
+        raise PermissionDenied
+    reportpost = get_object_or_404(ReportPost, id=pk)
+    if request.method == 'POST':
+        reportpost.delete()
+
+def delete_reportpost(request,pk):
+    delete_reportpost_helper(request,pk)
+    return redirect('adminpanel')
+
+def ban_user_from_post_report(request, user_pk, userpost_pk):
+    ban_user_helper(request,user_pk)
+    perma_delete_helper(request,userpost_pk)
+    return redirect('adminpanel')
+
+def perma_delete_from_post_report(request,pk): #pk is from UserPost
+    perma_delete_helper(request,pk)
+    return redirect('adminpanel')
+
+def report_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    if request.method == 'POST':
+        form = ReportCommentForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.comment_ref = comment
+            report.user_ref = request.user
+            report.save()
+            return redirect('home', pk=0, page_number=1)   
+    else:
+        form = ReportCommentForm()
+
+    return render(request, 'report_comment.html', {'form': form, 'comment': comment})
+
+def delete_reportcomment(request, report_id): #do nothing
+    report = get_object_or_404(ReportComment, id=report_id)
+    
+    report.delete()
+    return redirect('adminpanel')
+
+def delete_comment_from_comment_report(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    comment.delete()
+    return redirect('adminpanel')
+
+def ban_user_from_comment_report(request, user_id, comment_id):
+    ban_user_helper(request, user_id)
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    comment.delete()
+    return redirect('adminpanel')
+    
 """
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
     AJAX HANDLERS

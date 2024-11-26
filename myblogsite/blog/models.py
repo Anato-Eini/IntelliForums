@@ -185,7 +185,7 @@ class ReportPost(models.Model):
     """
     Represents a report on a post by a user.
     """
-    post_ref = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
     user_ref = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     reason = models.TextField()
 

@@ -193,3 +193,19 @@ class SearchForm(forms.Form):
         list_var.extend([(forum.id, forum.title) for forum in Forum.objects.all()])
         self.fields['choices'].choices = list_var
         self.fields['choices'].widget.attrs.update({'class': 'custom-select custom-select-sm w-auto mr-1'})
+
+class ReportPostForm(forms.ModelForm):
+    class Meta:
+        model = ReportPost
+        fields = ['reason']  
+        widgets = {
+            'reason': forms.Textarea(attrs={'placeholder': 'Describe the reason for reporting...', 'rows': 4}),
+        }
+
+class ReportCommentForm(forms.ModelForm):
+    class Meta:
+        model = ReportComment
+        fields = ['reason']
+        widgets = {
+            'reason' : forms.Textarea(attrs={'placeholder': 'Describe the reason for reporting...', 'rows': 4}),
+        }
