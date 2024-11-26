@@ -22,7 +22,7 @@
                     {% if current_user.is_staff %}
                     <a class="nav-link text-light ml-2" href="/adminpanel/">Admin</a>
                     {% endif %}
-                    <a class="nav-link text-light ml-2" href="/profile/">Profile</a>
+                    <a class="nav-link text-light ml-2" href="/profile/{{current_user.id}}">Profile</a>
                     <a class="nav-link text-light ml-2" href="{% url 'logout' %}">Logout</a>
                 {% else %}
                     <a class="nav-link text-light" href="/login/">Login</a>
@@ -34,7 +34,7 @@
                     {% if user.is_staff %}
                     <a class="nav-link text-light ml-2" href="/adminpanel/">Admin</a>
                     {% endif %}
-                    <a class="nav-link text-light ml-2" href="/profile/">Profile</a>
+                    <a class="nav-link text-light ml-2" href="/profile/{{user.id}}">Profile</a>
                     <a class="nav-link text-light ml-2" href="{% url 'logout' %}">Logout</a>
                 {% else %}
                     <a class="nav-link text-light" href="/login/">Login</a>
