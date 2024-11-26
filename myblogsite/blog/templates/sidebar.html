@@ -148,8 +148,6 @@
                                     <div class="simplebar-content" style="padding: 16px;">
                                         <nav class="nav nav-pills nav-gap-y-1 flex-column">
                                             <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon active">All Threads</a>
-{#                                            <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Popular this week</a>#}
-{#                                            <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Popular all time</a>#}
                                             <select class="custom-select custom-select-sm w-auto mr-1" id="forum-filter">
                                                 {% if forum_pk == 0 %}
                                                     <option selected value="0">General</option>
@@ -158,9 +156,9 @@
                                                 {% endif %}
                                                 {% for forum in forums %}
                                                     {% if forum_pk == forum.id %}
-                                                        <option value="{{forum.id}}" selected>{{forum.title}}</option>
+                                                        <option value="{{ forum.id }}" selected>{{forum.title}}</option>
                                                     {% else %}
-                                                        <option value="{{forum.id}}">{{forum.title}}</option>
+                                                        <option value="{{ forum.id }}">{{forum.title}}</option>
                                                     {% endif %}
                                                 {% endfor %}
                                             </select>
@@ -169,10 +167,7 @@
                                 </div>
                             </div>
                         </div>
-{#                        <div class="simplebar-placeholder" style="width: 234px; height: 292px;"></div>#}
                     </div>
-{#                    <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0; display: none;"></div></div>#}
-{#                    <div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 151px; display: block; transform: translate3d(0px, 0px, 0px);"></div></div>#}
                 </div>
             </div>
         </div>

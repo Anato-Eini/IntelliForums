@@ -66,6 +66,7 @@ def fetch_posts(request, pk, page_number):
                 ), 
                 page_number
             ).object_list
+            pk = choice
     else:
         posts = _get_page_object(
             Paginator(
@@ -90,7 +91,7 @@ def fetch_posts(request, pk, page_number):
         'search_form' : search_form,
         'user' : request.user,
         'forums' : forums,
-        'forum_pk' : pk
+        'forum_pk' : int(pk)
     })
 
 
