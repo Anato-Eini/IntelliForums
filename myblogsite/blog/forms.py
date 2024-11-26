@@ -197,7 +197,7 @@ class SearchForm(forms.Form):
 class ReportPostForm(forms.ModelForm):
     class Meta:
         model = ReportPost
-        fields = ['reason']  
+        fields = ['reason']
         widgets = {
             'reason': forms.Textarea(
             attrs={
@@ -206,6 +206,9 @@ class ReportPostForm(forms.ModelForm):
                 'rows': 4
             }
             ),
+        }
+        labels = {
+            'reason': 'Reason for Reporting'
         }
 
 class ReportCommentForm(forms.ModelForm):
