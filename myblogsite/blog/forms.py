@@ -199,7 +199,13 @@ class ReportPostForm(forms.ModelForm):
         model = ReportPost
         fields = ['reason']  
         widgets = {
-            'reason': forms.Textarea(attrs={'placeholder': 'Describe the reason for reporting...', 'rows': 4}),
+            'reason': forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Describe the reason for reporting...',
+                'rows': 4
+            }
+            ),
         }
 
 class ReportCommentForm(forms.ModelForm):
@@ -207,5 +213,14 @@ class ReportCommentForm(forms.ModelForm):
         model = ReportComment
         fields = ['reason']
         widgets = {
-            'reason' : forms.Textarea(attrs={'placeholder': 'Describe the reason for reporting...', 'rows': 4}),
+            'reason': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Describe the reason for reporting...',
+                    'rows': 4
+                }
+            ),
+        }
+        labels = {
+            'reason': 'Reason for Reporting'
         }

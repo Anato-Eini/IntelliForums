@@ -5,8 +5,6 @@ from myblogsite import settings
 from . import views
 from .views import CustomLoginView, CustomLogoutView
 
-#TODO View other user's profile
-
 urlpatterns = [
     path('', views.go_default_page, name='default_page'),
     path('login/', CustomLoginView.as_view(), name='login'),
