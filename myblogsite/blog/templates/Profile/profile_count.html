@@ -39,7 +39,20 @@
                     <h5 class="card-title">Upvoted Posts</h5>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">0</h5>
+                    <h5 class="card-title">{{ user_upvotes.count }}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--- Downvote Posts -->
+    <div class="col">
+        <div class="col-sm">
+            <div class="card text-center mb-3"> 
+                <div class="card-header">
+                    <h5 class="card-title">Downvoted Posts</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ user_downvotes.count }}</h5>
                 </div>
             </div>
         </div>

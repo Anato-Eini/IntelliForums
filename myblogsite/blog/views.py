@@ -89,7 +89,8 @@ def fetch_posts(request, pk, page_number):
         'page_number' : page_number,
         'search_form' : search_form,
         'user' : request.user,
-        'forums' : forums
+        'forums' : forums,
+        'forum_pk' : pk
     })
 
 
@@ -236,6 +237,16 @@ def post_detail(request, pk, page_number):
     })
 
 def ban_user_helper(request,pk):
+    """
+    Given an id, it will ban the user (set is_active to False)
+
+    Parameters:
+        request (HttpRequest): request object
+        pk (int): User id
+    
+    Returns:
+        None
+    """
     if request.method == 'POST':
         if request.user.is_staff:
             user = get_object_or_404(User, id=pk)
@@ -245,11 +256,31 @@ def ban_user_helper(request,pk):
             raise PermissionDenied
 
 def ban_user(request,pk):
+    """
+    Function for banning user
+
+    Parameters:
+        request (HttpRequest): request object
+        pk (int): User id
+
+    Returns:
+        HttpResponseRedirect: Redirects to the home page
+    """
     ban_user_helper(request, pk)
     return redirect('home', pk=0, page_number=1)
 
 
 def unban_user(request,pk):
+    """
+    Unbans user by setting is_active to True
+
+    Parameters:
+        request (HttpRequest): request object
+        pk (int): User id
+    
+    Returns:
+        HttpResponseRedirect: Redirects to the home page
+    """
     if request.method == 'POST':
         if request.user.is_staff:
             user = get_object_or_404(User, id=pk)
@@ -305,6 +336,8 @@ def render_profile(request, pk):
     deleted_user_posts = UserPost.objects.filter(user_ref__id=pk, is_deleted=True)
     user_comments = Comment.objects.filter(user_ref__id=pk)
     user_favorites = FavoritePost.objects.filter(user_ref__id=pk, user_post_ref__is_deleted=False)
+    user_upvotes = VotePost.objects.filter(user_ref__id=pk, is_upvote=True)
+    user_downvotes = VotePost.objects.filter(user_ref__id=pk, is_upvote=False)
 
     logging.error(request.user.id == user.id)
     
@@ -315,6 +348,8 @@ def render_profile(request, pk):
         'deleted_user_posts': deleted_user_posts,
         'user' : user,
         'current_user' : request.user,
+        'user_downvotes' : user_downvotes,
+        'user_upvotes' : user_upvotes
     })
 
 
