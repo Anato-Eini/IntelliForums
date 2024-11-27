@@ -23,4 +23,11 @@
 
 .post-content{
     border: 1px solid black;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-bottom: 8px;
+}
+
+.h2{
+    font-weight: 500;
 }
