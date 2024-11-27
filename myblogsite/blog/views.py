@@ -342,8 +342,6 @@ def render_profile(request, pk):
     user_upvotes = VotePost.objects.filter(user_ref__id=pk, is_upvote=True)
     user_downvotes = VotePost.objects.filter(user_ref__id=pk, is_upvote=False)
 
-    logging.error(request.user.id == user.id)
-    
     return render(request, 'profile.html', {
         'user_posts' : user_posts,
         'user_comments' : user_comments,
