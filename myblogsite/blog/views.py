@@ -1,5 +1,6 @@
 import logging
 from pyexpat.errors import messages
+from deprecated import deprecated
 
 from django.http import JsonResponse, HttpResponseForbidden
 from django.core.exceptions import ValidationError
@@ -319,6 +320,7 @@ def handle_view_post(user_pk, user_post_id):
         ).save()
 
 
+@deprecated
 @login_required(login_url='login')
 def render_profile(request, pk):
     """
@@ -354,6 +356,7 @@ def render_profile(request, pk):
     })
 
 
+@deprecated
 @csrf_protect
 def render_register(request):
     """
@@ -381,6 +384,15 @@ def render_register(request):
 
 @csrf_protect
 def render_adminpanel(request):
+    """
+    Renders admin panel page
+
+    Parameters:
+        request (HttpRequest): request object
+    
+    Returns:
+        HttpResponse: Http response
+    """
     if not request.user.is_staff:
         raise PermissionDenied
     
@@ -400,6 +412,7 @@ def render_adminpanel(request):
 def go_default_page(request):
     """
     Redirect to the home page
+
     Args:
         request:
 
@@ -412,13 +425,14 @@ def go_default_page(request):
 def edit_comment(request, comment_id, user_post_id):
     """
     Edits comments
-    Args:
-        request:
-        comment_id:
-        user_post_id:
 
+    Parameters:
+        request: HttpRequest object
+        comment_id: Comment id
+        user_post_id: UserPost id
+    
     Returns:
-
+        HttpResponse: Http response
     """
     comment = get_object_or_404(Comment, id=comment_id)
     form = CommentForm(instance=comment)
@@ -439,7 +453,8 @@ def edit_comment(request, comment_id, user_post_id):
 
 def delete_comment(request, comment_id, user_post_id):
     """
-    Deletes comments
+    Deletes comment from the database
+
     Args:
         request:
         comment_id: Comment id
@@ -456,7 +471,8 @@ def delete_comment(request, comment_id, user_post_id):
 
 def update_post(request, pk):
     """
-    Renders a page for updating post
+    Renders a page for updating post's title and content
+
     Args:
         request:
         pk: UserPost pk
@@ -478,7 +494,8 @@ def update_post(request, pk):
 
 def update_post_title(request, pk):
     """
-    Update post title
+    Updates post's title
+
     Args:
         request:
         pk: UserPost pk
@@ -507,13 +524,14 @@ def update_post_title(request, pk):
 
 def update_post_content(request, pk):
     """
-    Update post's content
+    Updates post's content
+
     Args:
         request:
         pk: UserPost pk
 
     Returns:
-
+        HttpResponseRedirect: Redirects to the post detail page
     """
     user_post = get_object_or_404(UserPost, pk=pk)
     post = user_post.post_ref
@@ -531,10 +549,10 @@ def update_post_content(request, pk):
     return redirect('post_detail', pk=user_post.pk, page_number=1)
 
 
-
 def delete_post(request, pk):
     """
-    Deletes post
+    Deletes post i.e. sets is_deleted to True
+
     Args:
         request: POST
         pk: UserPost pk
@@ -555,6 +573,20 @@ def delete_post(request, pk):
     return redirect('home', pk=0, page_number=1)  
 
 def perma_delete_helper(request, pk):
+    """
+    Logic for permanent deletion of a post from the
+    database
+
+    Paremeters:
+        request (HttpRequest): request object
+        pk (int): UserPost id
+    
+    Returns:
+        None
+    
+    Exceptions:
+        PermissionDenied: If user is not the owner of the post
+    """
     if request.method == 'POST':
         user_post = get_object_or_404(UserPost, pk=pk)
 
@@ -567,7 +599,8 @@ def perma_delete_helper(request, pk):
 
 def perma_delete(request, pk):
     """
-    Permanent deletion of a post
+    Permanent deletion of a post from the database
+
     Args:
         request: POST
         pk: userpost pk
@@ -582,7 +615,8 @@ def perma_delete(request, pk):
 
 def add_favorite(request, post_id):
     """
-    Adds a post to favorites
+    Adds a post to favorites table in the database
+
     Args:
         request:
         post_id: Post id
@@ -606,13 +640,14 @@ def add_favorite(request, post_id):
 @csrf_protect
 def restore_post(request, pk):
     """
-    Restores a post
+    Restores a post i.e. sets is_deleted to False
+
     Args:
         request: POST
         pk: UserPost pk
 
     Returns:
-
+        HttpResponseRedirect: Redirects to the profile page
     """
     if request.method == 'POST':
         user_post = get_object_or_404(UserPost, pk=pk)
@@ -624,9 +659,19 @@ def restore_post(request, pk):
 
     return redirect('profile')
 
-#NEW FUNCTIONS HERE
 
 def report_post(request, userpost_id):
+    """
+    Add a post to the report post table in the database
+    given a userpost id
+
+    Parameters:
+        request (HttpRequest): request object
+        userpost_id (int): UserPost id
+    
+    Returns:
+        HttpResponse: Http response
+    """
     post = get_object_or_404(UserPost, id=userpost_id)
     
     if request.method == 'POST':
@@ -642,27 +687,95 @@ def report_post(request, userpost_id):
 
     return render(request, 'report_post.html', {'form': form, 'post': post})
 
-def delete_reportpost_helper(request,pk): #pk = ReportPost pk
+
+def delete_reportpost_helper(request, pk):
+    """
+    Logic for deleting a report post from the database
+
+    Parameters:
+        request (HttpRequest): request object
+        pk (int): ReportPost id
+
+    Returns:
+        None
+
+    Exceptions:
+        PermissionDenied: If user is not staff
+    """
     if not request.user.is_staff:
         raise PermissionDenied
     reportpost = get_object_or_404(ReportPost, id=pk)
     if request.method == 'POST':
         reportpost.delete()
 
+
 def delete_reportpost(request,pk):
+    """
+    Deletes a report post given a report post id from
+      the databse
+
+    Parameters:
+        request (HttpRequest): request object
+        pk (int): ReportPost id
+
+    Returns:
+        None
+    """
     delete_reportpost_helper(request,pk)
     return redirect('adminpanel')
 
+
 def ban_user_from_post_report(request, user_pk, userpost_pk):
+    """
+    Bans a user from a post report and deletes the post from
+      the database
+
+    Parameters:
+        request (HttpRequest): request object
+        user_pk (int): User id
+        userpost_pk (int): UserPost id
+    
+    Returns:
+        HttpResponseRedirect: Redirects to the admin
+    
+    Exceptions:
+        PermissionDenied: If user is not staff
+    """
     ban_user_helper(request,user_pk)
     perma_delete_helper(request,userpost_pk)
     return redirect('adminpanel')
 
-def perma_delete_from_post_report(request,pk): #pk is from UserPost
+
+def perma_delete_from_post_report(request,pk):
+    """
+    Deletes a post from a report post
+
+    Parameters:
+        request (HttpRequest): request object
+        pk (int): UserPost id
+    
+    Returns:
+        HttpResponseRedirect: Redirects to the admin
+    
+    Exceptions:
+        PermissionDenied: If user is not staff
+    """
     perma_delete_helper(request,pk)
     return redirect('adminpanel')
 
+
 def report_comment(request, comment_id):
+    """
+    Report a comment given a comment id i.e. 
+    add a comment to the ReportComment table in the database
+
+    Parameters:
+        request (HttpRequest): request object
+        comment_id (int): Comment id
+    
+    Returns:
+        HttpResponse: Http response
+    """
     comment = get_object_or_404(Comment, id=comment_id)
     
     if request.method == 'POST':
@@ -678,13 +791,42 @@ def report_comment(request, comment_id):
 
     return render(request, 'report_comment.html', {'form': form, 'comment': comment})
 
-def delete_reportcomment(request, report_id): #do nothing
+
+def delete_reportcomment(request, report_id):
+    """
+    Deletes a report comment given a report comment id
+      from the database
+
+    Parameters:
+        request (HttpRequest): request object
+        report_id (int): ReportComment id
+    
+    Returns:
+        HttpResponseRedirect: Redirects to the admin
+        
+    Exceptions:
+        Http404: If report comment does not exist
+    """
     report = get_object_or_404(ReportComment, id=report_id)
     
     report.delete()
     return redirect('adminpanel')
 
+
 def delete_comment_from_comment_report(request, comment_id):
+    """
+    Deletes a comment given a comment id from the database
+
+    Parameters:
+        request (HttpRequest): request object
+        comment_id (int): Comment id
+    
+    Returns:
+        HttpResponseRedirect: Redirects to the admin
+    
+    Exceptions:
+        Http404: If comment does not exist
+    """
     comment = get_object_or_404(Comment, id=comment_id)
     
     comment.delete()
@@ -716,7 +858,7 @@ def post_vote(request):
     Returns:
         JsonResponse: key -> upvote, downvote
     """
-    post_pk = int(request.POST.get('pk')) #UserPost id
+    post_pk = int(request.POST.get('pk'))
     is_upvote = int(request.POST.get('type')) == 1
     vote_object = VotePost.objects.filter(user_post_ref__id=post_pk, user_ref__id=request.user.id).first()
 

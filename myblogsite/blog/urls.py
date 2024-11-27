@@ -13,7 +13,7 @@ urlpatterns = [
     path('home/<int:pk>/<int:page_number>/', views.fetch_posts,name='home'),
     path('post_detail/<int:pk>/<int:page_number>/', views.post_detail, name='post_detail'),
     path('profile/<int:pk>/', views.render_profile, name='profile'),
-    path('logout/', CustomLogoutView.as_view(next_page='default_page'), name='logout'),
+    path('logout/', CustomLogoutView.as_view(next_page='home'), name='logout'),
 
     #AJAX
     path('post_vote/', views.post_vote, name='post_vote'),
