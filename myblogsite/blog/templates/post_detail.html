@@ -28,10 +28,10 @@
                     <div class="inner-main-header mb-4">
 
                         <h2 class="d-inline-block">{{ post.title }}</h2>
-                        <div class="d-inline-block ml-2">
+                        <div class="d-inline-block ml-2" style="cursor: pointer;">
                             <img src="/media/{{ post.user_ref.picture }}" alt="{{ post.user_ref.username }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;" onclick="window.location.href='/profile/{{ post.user_ref.id }}'">
                         </div>
-                        <h5 class="d-inline-block ml-2 text-muted" onclick="window.location.href='/profile/{{ post.user_ref.id }}'">by {{ post.user_ref.username }}</h5>
+                        <h5 class="d-inline-block ml-2 text-muted" onclick="window.location.href='/profile/{{ post.user_ref.id }}'" style="cursor: pointer;">by {{ post.user_ref.username }}</h5>
                         <span class="d-inline-block ml-2 text-muted">{{ post.created_at }}</span>
                     </div>
                     <div class="post-content mb-4">

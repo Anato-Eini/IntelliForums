@@ -9,7 +9,7 @@
 </head>
 <body>
 
-{% if not user.is_active %}
+{% if not user.is_active and user.username %}
     <style>
         .banned-message {
             text-align: center;
@@ -30,6 +30,7 @@
         <h1>Access Denied</h1>
         <p>Your account has been banned. Please contact support for more information.</p>
         <a href="mailto:jeremybrad.lee@cit.edu" class="btn btn-primary">Contact Support</a>
+        <h1>{{ user.username }}</h1>
     </div>
 {% else %}
 
