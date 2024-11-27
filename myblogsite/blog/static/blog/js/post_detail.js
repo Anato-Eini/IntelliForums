@@ -1,5 +1,9 @@
 import {ajax_comment_vote, ajax_post_vote} from "./functions.js";
 
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+
 $(document).ready(() => {
 
     /**
