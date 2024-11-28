@@ -9,31 +9,6 @@
 </head>
 <body>
 
-{% if not user.is_active and user.username %}
-    <style>
-        .banned-message {
-            text-align: center;
-            margin-top: 50px;
-        }
-        .banned-message h1 {
-            color: red;
-            font-size: 2em;
-        }
-        .banned-message p {
-            font-size: 1.2em;
-        }
-        .banned-message .btn {
-            margin-top: 20px;
-        }
-    </style>
-    <div class="banned-message">
-        <h1>Access Denied</h1>
-        <p>Your account has been banned. Please contact support for more information.</p>
-        <a href="mailto:jeremybrad.lee@cit.edu" class="btn btn-primary">Contact Support</a>
-        <h1>{{ user.username }}</h1>
-    </div>
-{% else %}
-
 {% include 'header.html' %}
 
 <div class="container">
@@ -92,6 +67,6 @@
     var csrf_token = '{% csrf_token %}'
 </script>
 <script type="module" src="{% static 'blog/js/home.js' %}"></script>
-{% endif %}
+
 </body>
 </html>

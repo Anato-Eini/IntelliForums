@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        .banned-message {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .banned-message h1 {
+            color: red;
+            font-size: 2em;
+        }
+        .banned-message p {
+            font-size: 1.2em;
+        }
+        .banned-message .btn {
+            margin-top: 20px;
+        }
+    </style>
+    <div class="banned-message">
+        <h1>Access Denied</h1>
+        <p>Your account has been banned by {{ userban.admin_ref.username }}. Please contact support for more information.</p><br>
+        <p>Reason: {{ userban.reason }}</p>
+        <a href="mailto:jeremybrad.lee@cit.edu" class="btn btn-primary">Contact Support</a>
+        <h1>{{ userban.user_ref.username }}</h1>
+    </div>
+</html>

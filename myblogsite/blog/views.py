@@ -237,8 +237,9 @@ def post_detail(request, pk, page_number):
         'user' : request.user,
         'tags': Tag.objects.filter(user_post_ref__id=pk),
     })
+    
 
-def ban_user_helper(request,pk):
+def ban_user(request,pk):
     """
     Given an id, it will ban the user (set is_active to False)
 
@@ -247,34 +248,29 @@ def ban_user_helper(request,pk):
         pk (int): User id
     
     Returns:
-        None
+        redirects to form
     """
+    if not request.user.is_staff:
+        raise PermissionDenied
+    user = get_object_or_404(User, id=pk)
+    
     if request.method == 'POST':
-        if request.user.is_staff:
-            user = get_object_or_404(User, id=pk)
+        form = UserBanForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.admin_ref = request.user
+            report.user_ref = user
+            report.save()
             user.is_active = False
             user.save()
-        else:
-            raise PermissionDenied
-
-def ban_user(request,pk):
-    """
-    Function for banning user
-
-    Parameters:
-        request (HttpRequest): request object
-        pk (int): User id
-
-    Returns:
-        HttpResponseRedirect: Redirects to the home page
-    """
-    ban_user_helper(request, pk)
-    return redirect('home', pk=0, page_number=1)
-
+            return redirect('adminpanel')
+    else:
+        form = ReportCommentForm()
+    return render(request, 'ban_user.html', {'form': form})
 
 def unban_user(request,pk):
     """
-    Unbans user by setting is_active to True
+    Unbans user by setting is_active to True and deleting the UserBan instance of the previously banned user.
 
     Parameters:
         request (HttpRequest): request object
@@ -283,16 +279,17 @@ def unban_user(request,pk):
     Returns:
         HttpResponseRedirect: Redirects to the home page
     """
+    if not request.user.is_staff:
+        raise PermissionDenied
     if request.method == 'POST':
-        if request.user.is_staff:
-            user = get_object_or_404(User, id=pk)
-            user.is_active = True
-            user.save()
-            return redirect('home', pk=0, page_number=1)
-        else:
-            raise PermissionDenied
+        user = get_object_or_404(User, id=pk)
+        user.is_active = True
+        user.save()
+        userban = get_object_or_404(UserBan, user_ref=user)
+        userban.delete()
+        return redirect('adminpanel')
     else:
-        return redirect('home', pk=0, page_number=1)
+        return redirect('adminpanel')
     
 
 def handle_view_post(user_pk, user_post_id):
@@ -415,8 +412,13 @@ def go_default_page(request):
         request:
 
     Returns:
-        HttpResponseRedirect : Redirects to the home page
+        HttpResponseRedirect : Redirects to the home page if not banned. If banned, redirected to banned page.
     """
+    if not request.user.is_active:
+        userban = get_object_or_404(UserBan, user_ref=request.user)
+        return render(request, 'banned.html',{'userban': userban})
+
+
     return redirect('home', pk=0, page_number=1)
 
 
@@ -734,14 +736,13 @@ def ban_user_from_post_report(request, user_pk, userpost_pk):
         userpost_pk (int): UserPost id
     
     Returns:
-        HttpResponseRedirect: Redirects to the admin
+        None
     
     Exceptions:
         PermissionDenied: If user is not staff
     """
-    ban_user_helper(request,user_pk)
     perma_delete_helper(request,userpost_pk)
-    return redirect('adminpanel')
+    ban_user(request,user_pk)
 
 
 def perma_delete_from_post_report(request,pk):
@@ -831,11 +832,10 @@ def delete_comment_from_comment_report(request, comment_id):
     return redirect('adminpanel')
 
 def ban_user_from_comment_report(request, user_id, comment_id):
-    ban_user_helper(request, user_id)
+
     comment = get_object_or_404(Comment, id=comment_id)
-    
     comment.delete()
-    return redirect('adminpanel')
+    ban_user(request, user_id)
     
 """
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------

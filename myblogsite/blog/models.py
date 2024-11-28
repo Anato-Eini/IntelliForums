@@ -181,6 +181,25 @@ class Tag(models.Model):
     forum_ref = models.ForeignKey(Forum, on_delete=models.CASCADE)
     user_post_ref = models.ForeignKey(UserPost, on_delete=models.CASCADE)
 
+
+class UserBan(models.Model):
+    """
+    Represents a ban on a user by an admin.
+    """
+    admin_ref = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='bans_issued'
+    )
+    user_ref = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='bans_received'
+    )
+    reason = models.TextField()
+    time = models.DateTimeField(auto_now_add=True)
+
+
 class ReportPost(models.Model):
     """
     Represents a report on a post by a user.

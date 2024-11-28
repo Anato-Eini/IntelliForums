@@ -227,3 +227,20 @@ class ReportCommentForm(forms.ModelForm):
         labels = {
             'reason': 'Reason for Reporting'
         }
+
+class UserBanForm(forms.ModelForm):
+    class Meta:
+        model = UserBan
+        fields = ['reason']
+        widgets = {
+            'reason': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Describe the reason for banning...',
+                    'rows': 4
+                }
+            ),
+        }
+        labels = {
+            'reason': 'Reason for ban'
+        }

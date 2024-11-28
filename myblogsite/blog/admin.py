@@ -181,3 +181,26 @@ class ReportCommentAdmin(admin.ModelAdmin):
         'comment_ref',
         'user_ref'
     )
+
+@admin.register(UserBan)
+class UserBanReport(admin.ModelAdmin):
+    """
+   admin_ref = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='bans_issued'
+    )
+    user_ref = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='bans_received'
+    )
+    reason = models.TextField()
+    time = models.DateTimeField(auto_now_add=True)
+    """
+    list_display = (
+        'admin_ref',
+        'user_ref',
+        'reason',
+        'time'
+    )
