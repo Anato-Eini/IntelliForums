@@ -1,9 +1,9 @@
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.views import LogoutView, LoginView
-from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import CustomAuthenticationForm
+from .models import UserBan
 
 class CustomLoginView(LoginView):
     """
@@ -25,6 +25,11 @@ class CustomLoginView(LoginView):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+
+                if request.user.is_banned:
+                    userban = get_object_or_404(UserBan, user_ref=request.user)
+                    return render(request, 'banned.html',{'userban': userban})
+
                 return redirect('home', pk=0, page_number=1)
             else:
                 form.add_error(None, 'Invalid username or password')
