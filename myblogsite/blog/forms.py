@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+
 from .models import *
 
 class LoginForm(forms.Form):
@@ -244,3 +246,17 @@ class UserBanForm(forms.ModelForm):
         labels = {
             'reason': 'Reason for ban'
         }
+
+class CustomAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def as_custom(self):
+        return (
+            f"<div class='form-group'>"
+            f"<div class='username_label'>{self.fields['username'].label}</div>"
+            f"{self['username']}</div>"
+            f"<div class='form-group'>"
+            f"<div class='password_label'>{self.fields['password'].label}</div>"
+            f"{self['password']}</div>"
+        )

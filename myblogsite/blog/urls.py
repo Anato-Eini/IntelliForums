@@ -3,7 +3,7 @@ from django.urls import path
 
 from myblogsite import settings
 from . import views
-from .views import CustomLoginView, CustomLogoutView
+from .views_classes import CustomLoginView, CustomLogoutView
 
 urlpatterns = [
     path('', views.go_default_page, name='default_page'),

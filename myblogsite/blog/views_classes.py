@@ -1,22 +1,9 @@
-from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.views import LogoutView, LoginView
 from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model
 
-class CustomAuthenticationForm(AuthenticationForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def as_custom(self):
-        return (
-            f"<div class='form-group'>"
-            f"<div class='username_label'>{self.fields['username'].label}</div>"
-            f"{self['username']}</div>"
-            f"<div class='form-group'>"
-            f"<div class='password_label'>{self.fields['password'].label}</div>"
-            f"{self['password']}</div>"
-        )
+from .forms import CustomAuthenticationForm
 
 class CustomLoginView(LoginView):
     """
@@ -35,12 +22,12 @@ class CustomLoginView(LoginView):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
 
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 return redirect('home', pk=0, page_number=1)
             else:
-                form.add_error(None, "Invalid credentials")
+                form.add_error(None, 'Invalid username or password')
 
         return render(request, self.template_name, {'form': form})
 

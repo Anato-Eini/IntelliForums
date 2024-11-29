@@ -414,10 +414,6 @@ def go_default_page(request):
     Returns:
         HttpResponseRedirect : Redirects to the home page if not banned. If banned, redirected to banned page.
     """
-    if not request.user.is_active:
-        userban = get_object_or_404(UserBan, user_ref=request.user)
-        return render(request, 'banned.html',{'userban': userban})
-
 
     return redirect('home', pk=0, page_number=1)
 
