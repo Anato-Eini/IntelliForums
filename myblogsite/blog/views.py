@@ -1,8 +1,6 @@
-import logging
 from pyexpat.errors import messages
 from deprecated import deprecated
-from django.http import HttpResponseRedirect
-from django.http import JsonResponse, HttpResponseForbidden
+from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -23,12 +21,13 @@ def banned_propagator(request):
     Checks if the logged-in user is banned and renders the banned page if so.
     """
     if request.user.is_authenticated:
-        if request.user.bans_received.exists():  
-            userban = request.user.bans_received.first()  
+        if request.user.bans_received.exists():
+            userban = request.user.bans_received.first()
             return render(request, 'banned.html', {
                 'userban': userban,
             })
-    return None  
+    return None
+
 
 @csrf_protect
 def fetch_posts(request, pk, page_number):
@@ -47,9 +46,9 @@ def fetch_posts(request, pk, page_number):
 
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
-    
+
     posts = []
     if request.method == 'POST':
         form = SearchForm(request.POST)
@@ -60,27 +59,27 @@ def fetch_posts(request, pk, page_number):
                 Paginator(
                     get_filtered_posts(
                         UserPost.objects.filter(
-                                (Q(post_ref__title__icontains=substring) | Q(post_ref__content__icontains=substring)) &
-                                Q(is_deleted=False))
-                            .filter(id__in=Tag.objects.filter(forum_ref__id=choice)).values(
-                                'post_ref__id',
-                                'post_ref__user_ref__username',
-                                'post_ref__title',
-                                'post_ref__content',
-                                'post_ref__created_at',
-                                'post_ref__user_ref__picture',
-                                'id'),
-                            )
+                            (Q(post_ref__title__icontains=substring) | Q(post_ref__content__icontains=substring)) &
+                            Q(is_deleted=False))
+                        .filter(id__in=Tag.objects.filter(forum_ref__id=choice)).values(
+                            'post_ref__id',
+                            'post_ref__user_ref__username',
+                            'post_ref__title',
+                            'post_ref__content',
+                            'post_ref__created_at',
+                            'post_ref__user_ref__picture',
+                            'id'),
+                    )
                     if Forum.objects.filter(id=choice).exists()
                     else get_filtered_posts(
                         UserPost.objects.filter(
-                            Q(post_ref__title__icontains=substring) | 
-                            Q(post_ref__content__icontains=substring) & 
+                            Q(post_ref__title__icontains=substring) |
+                            Q(post_ref__content__icontains=substring) &
                             Q(is_deleted=False)
                         )
-                    ), 
+                    ),
                     20
-                ), 
+                ),
                 page_number
             ).object_list
             pk = choice
@@ -93,8 +92,7 @@ def fetch_posts(request, pk, page_number):
                     )
                 )
                 if Forum.objects.filter(id=pk).exists()
-                else get_filtered_posts(UserPost.objects.select_related('post_ref').filter(is_deleted = False))
-                , 20
+                else get_filtered_posts(UserPost.objects.select_related('post_ref').filter(is_deleted=False)), 20
             ), page_number
         ).object_list
 
@@ -103,12 +101,12 @@ def fetch_posts(request, pk, page_number):
     forums = Forum.objects.all()
 
     return render(request, 'home.html', {
-        'posts' : posts,
-        'page_number' : page_number,
-        'search_form' : search_form,
-        'user' : request.user,
-        'forums' : forums,
-        'forum_pk' : int(pk)
+        'posts': posts,
+        'page_number': page_number,
+        'search_form': search_form,
+        'user': request.user,
+        'forums': forums,
+        'forum_pk': int(pk)
     })
 
 
@@ -165,7 +163,7 @@ def new_post_form(request):
 
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if request.method == 'POST':
         form = GeneralPostForm(request.POST, request.FILES)
@@ -178,7 +176,7 @@ def new_post_form(request):
         user_instance = User.objects.get(id=request.user.id)
         post.user_ref = user_instance
         post.save()
-        
+
         user_post = UserPost.objects.create(
             post_ref=post,
             user_ref=user_instance
@@ -193,7 +191,7 @@ def new_post_form(request):
 
         return redirect(reverse('home', args=[0, 1]))
     else:
-        form = GeneralPostForm() 
+        form = GeneralPostForm()
 
     return render(request, 'post_form.html', {'form': form})
 
@@ -216,7 +214,7 @@ def post_detail(request, pk, page_number):
         ValidationError: If form contains incorrect data
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if request.method == "POST":
         form = CommentForm(request.POST, request.FILES)
@@ -253,33 +251,33 @@ def post_detail(request, pk, page_number):
             ),
             page_number
         ).object_list,
-        "user_post_pk" : pk,
-        'form' : form,
-        'post_upvotes' : VotePost.objects.filter(user_post_ref__id=pk, is_upvote=True).count(),
-        'post_downvotes' : VotePost.objects.filter(user_post_ref__id=pk, is_upvote=False).count(),
-        'user' : request.user,
+        "user_post_pk": pk,
+        'form': form,
+        'post_upvotes': VotePost.objects.filter(user_post_ref__id=pk, is_upvote=True).count(),
+        'post_downvotes': VotePost.objects.filter(user_post_ref__id=pk, is_upvote=False).count(),
+        'user': request.user,
         'tags': Tag.objects.filter(user_post_ref__id=pk),
     })
-    
 
-def ban_user(request,pk):
+
+def ban_user(request, pk):
     """
     Given an id, it will ban the user (set is_banned to True)
 
     Parameters:
         request (HttpRequest): request object
         pk (int): User id
-    
+
     Returns:
         redirects to form
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
     user = get_object_or_404(User, id=pk)
-    
+
     if request.method == 'POST':
         form = UserBanForm(request.POST)
         if form.is_valid():
@@ -295,19 +293,19 @@ def ban_user(request,pk):
     return render(request, 'ban_user.html', {'form': form})
 
 
-def unban_user(request,pk):
+def unban_user(request, pk):
     """
     Unbans user by setting is_banned to False and deleting the UserBan instance of the previously banned user.
 
     Parameters:
         request (HttpRequest): request object
         pk (int): User id
-    
+
     Returns:
         HttpResponseRedirect: Redirects to the home page
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
@@ -320,7 +318,8 @@ def unban_user(request,pk):
         return redirect('adminpanel')
     else:
         return redirect('adminpanel')
-    
+
+
 def ban_appeal(request):
     if not request.user.is_authenticated:
         raise PermissionDenied
@@ -335,7 +334,7 @@ def ban_appeal(request):
     else:
         form = BanAppealForm()
     return render(request, 'ban_appeal.html', {'form': form})
-    
+
 
 def handle_view_post(user_pk, user_post_id):
     """
@@ -350,7 +349,8 @@ def handle_view_post(user_pk, user_post_id):
     Returns:
         None
     """
-    query = PostView.objects.filter(user_ref__id=user_pk, user_post_ref__id=user_post_id)
+    query = PostView.objects.filter(
+        user_ref__id=user_pk, user_post_ref__id=user_post_id)
 
     if not query.exists():
         user_ref = get_object_or_404(User, id=user_pk)
@@ -376,25 +376,27 @@ def render_profile(request, pk):
 
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     user = User.objects.get(id=pk)
     user_posts = UserPost.objects.filter(user_ref__id=pk, is_deleted=False)
-    deleted_user_posts = UserPost.objects.filter(user_ref__id=pk, is_deleted=True)
+    deleted_user_posts = UserPost.objects.filter(
+        user_ref__id=pk, is_deleted=True)
     user_comments = Comment.objects.filter(user_ref__id=pk)
-    user_favorites = FavoritePost.objects.filter(user_ref__id=pk, user_post_ref__is_deleted=False)
+    user_favorites = FavoritePost.objects.filter(
+        user_ref__id=pk, user_post_ref__is_deleted=False)
     user_upvotes = VotePost.objects.filter(user_ref__id=pk, is_upvote=True)
     user_downvotes = VotePost.objects.filter(user_ref__id=pk, is_upvote=False)
 
     return render(request, 'profile.html', {
-        'user_posts' : user_posts,
-        'user_comments' : user_comments,
-        'user_favorites' : user_favorites,
+        'user_posts': user_posts,
+        'user_comments': user_comments,
+        'user_favorites': user_favorites,
         'deleted_user_posts': deleted_user_posts,
-        'user' : user,
-        'current_user' : request.user,
-        'user_downvotes' : user_downvotes,
-        'user_upvotes' : user_upvotes
+        'user': user,
+        'current_user': request.user,
+        'user_downvotes': user_downvotes,
+        'user_upvotes': user_upvotes
     })
 
 
@@ -421,7 +423,7 @@ def render_register(request):
     else:
         form = RegisterForm()
 
-    return render(request, 'register_form.html', {'form' : form})
+    return render(request, 'register_form.html', {'form': form})
 
 
 @csrf_protect
@@ -431,16 +433,16 @@ def render_adminpanel(request):
 
     Parameters:
         request (HttpRequest): request object
-    
+
     Returns:
         HttpResponse: Http response
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
-    
+
     users = User.objects.filter(is_banned=False)
     banned_users = User.objects.filter(is_banned=True)
     reported_posts = ReportPost.objects.all()
@@ -448,12 +450,12 @@ def render_adminpanel(request):
     appeals = BanAppeal.objects.all()
 
     return render(request, 'Admin/admin.html', {
-            'users' : users,
-            'banned_users' : banned_users,
-            'reported_posts' : reported_posts,
-            'reported_comments' : reported_comments,
-            'appeals' : appeals,
-        })
+        'users': users,
+        'banned_users': banned_users,
+        'reported_posts': reported_posts,
+        'reported_comments': reported_comments,
+        'appeals': appeals,
+    })
 
 
 def go_default_page(request):
@@ -467,7 +469,7 @@ def go_default_page(request):
         HttpResponseRedirect : Redirects to the home page if not banned. If banned, redirected to banned page.
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     return redirect('home', pk=0, page_number=1)
 
@@ -480,12 +482,12 @@ def edit_comment(request, comment_id, user_post_id):
         request: HttpRequest object
         comment_id: Comment id
         user_post_id: UserPost id
-    
+
     Returns:
         HttpResponse: Http response
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
     form = CommentForm(instance=comment)
@@ -517,7 +519,7 @@ def delete_comment(request, comment_id, user_post_id):
 
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
@@ -537,7 +539,7 @@ def update_post(request, pk):
 
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if request.method == 'POST':
         user_post = get_object_or_404(UserPost, pk=pk)
@@ -563,7 +565,7 @@ def update_post_title(request, pk):
 
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     user_post = get_object_or_404(UserPost, pk=pk)
     post = user_post.post_ref
@@ -596,7 +598,7 @@ def update_post_content(request, pk):
         HttpResponseRedirect: Redirects to the post detail page
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     user_post = get_object_or_404(UserPost, pk=pk)
     post = user_post.post_ref
@@ -627,7 +629,7 @@ def delete_post(request, pk):
 
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     user_post = get_object_or_404(UserPost, pk=pk)
     post = user_post.post_ref
@@ -635,10 +637,11 @@ def delete_post(request, pk):
         raise PermissionDenied
 
     if request.method == 'POST':
-        user_post.is_deleted = True  
+        user_post.is_deleted = True
         user_post.save()
 
-    return redirect('home', pk=0, page_number=1)  
+    return redirect('home', pk=0, page_number=1)
+
 
 def perma_delete_helper(request, pk):
     """
@@ -648,10 +651,10 @@ def perma_delete_helper(request, pk):
     Paremeters:
         request (HttpRequest): request object
         pk (int): UserPost id
-    
+
     Returns:
         None
-    
+
     Exceptions:
         PermissionDenied: If user is not the owner of the post
     """
@@ -678,11 +681,11 @@ def perma_delete(request, pk):
 
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if request.method == 'POST':
         perma_delete_helper(request, pk)
-    return redirect('home', pk=0, page_number=1)   
+    return redirect('home', pk=0, page_number=1)
 
 
 def add_favorite(request, post_id):
@@ -698,9 +701,10 @@ def add_favorite(request, post_id):
 
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
-    favorite_object = FavoritePost.objects.filter(user_post_ref__id=post_id, user_ref__id=request.user.id).first()
+    favorite_object = FavoritePost.objects.filter(
+        user_post_ref__id=post_id, user_ref__id=request.user.id).first()
     if favorite_object:
         favorite_object.delete()
     else:
@@ -725,7 +729,7 @@ def restore_post(request, pk):
         HttpResponseRedirect: Redirects to the profile page
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if request.method == 'POST':
         user_post = get_object_or_404(UserPost, pk=pk)
@@ -735,7 +739,7 @@ def restore_post(request, pk):
         else:
             raise PermissionDenied
 
-    return redirect('profile',pk=request.user.pk)
+    return redirect('profile', pk=request.user.pk)
 
 
 def report_post(request, userpost_id):
@@ -746,23 +750,23 @@ def report_post(request, userpost_id):
     Parameters:
         request (HttpRequest): request object
         userpost_id (int): UserPost id
-    
+
     Returns:
         HttpResponse: Http response
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     post = get_object_or_404(UserPost, id=userpost_id)
-    
+
     if request.method == 'POST':
         form = ReportPostForm(request.POST)
         if form.is_valid():
             report = form.save(commit=False)
             report.post_ref = post
-            report.user_ref = request.user  
+            report.user_ref = request.user
             report.save()
-            return redirect('home', pk=0, page_number=1)   
+            return redirect('home', pk=0, page_number=1)
     else:
         form = ReportPostForm()
 
@@ -784,7 +788,7 @@ def delete_reportpost_helper(request, pk):
         PermissionDenied: If user is not staff
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
@@ -793,7 +797,7 @@ def delete_reportpost_helper(request, pk):
         reportpost.delete()
 
 
-def delete_reportpost(request,pk):
+def delete_reportpost(request, pk):
     """
     Deletes a report post given a report post id from
       the databse
@@ -806,13 +810,13 @@ def delete_reportpost(request,pk):
         None
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
-    delete_reportpost_helper(request,pk)
+    delete_reportpost_helper(request, pk)
     return redirect('adminpanel')
 
 
-def ban_user_from_post_report(request, user_pk, userpost_pk): #GUBA
+def ban_user_from_post_report(request, user_pk, userpost_pk):  # GUBA
     """
     Bans a user from a post report and deletes the post from
       the database
@@ -821,38 +825,38 @@ def ban_user_from_post_report(request, user_pk, userpost_pk): #GUBA
         request (HttpRequest): request object
         user_pk (int): User id
         userpost_pk (int): UserPost id
-    
+
     Returns:
         None
-    
+
     Exceptions:
         PermissionDenied: If user is not staff
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
-    perma_delete_helper(request,userpost_pk)
-    ban_user(request,user_pk)
+    perma_delete_helper(request, userpost_pk)
+    ban_user(request, user_pk)
 
 
-def perma_delete_from_post_report(request,pk):
+def perma_delete_from_post_report(request, pk):
     """
     Deletes a post from a report post
 
     Parameters:
         request (HttpRequest): request object
         pk (int): UserPost id
-    
+
     Returns:
         HttpResponseRedirect: Redirects to the admin
-    
+
     Exceptions:
         PermissionDenied: If user is not staff
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
-    perma_delete_helper(request,pk)
+    perma_delete_helper(request, pk)
     return redirect('adminpanel')
 
 
@@ -864,15 +868,15 @@ def report_comment(request, comment_id):
     Parameters:
         request (HttpRequest): request object
         comment_id (int): Comment id
-    
+
     Returns:
         HttpResponse: Http response
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
-    
+
     if request.method == 'POST':
         form = ReportCommentForm(request.POST)
         if form.is_valid():
@@ -880,7 +884,7 @@ def report_comment(request, comment_id):
             report.comment_ref = comment
             report.user_ref = request.user
             report.save()
-            return redirect('home', pk=0, page_number=1)   
+            return redirect('home', pk=0, page_number=1)
     else:
         form = ReportCommentForm()
 
@@ -895,68 +899,71 @@ def delete_reportcomment(request, report_id):
     Parameters:
         request (HttpRequest): request object
         report_id (int): ReportComment id
-    
+
     Returns:
         HttpResponseRedirect: Redirects to the admin
-        
+
     Exceptions:
         Http404: If report comment does not exist
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     report = get_object_or_404(ReportComment, id=report_id)
-    
+
     report.delete()
     return redirect('adminpanel')
 
 
-def delete_comment_from_comment_report(request, comment_id): 
+def delete_comment_from_comment_report(request, comment_id):
     """
     Deletes a comment given a comment id from the database
 
     Parameters:
         request (HttpRequest): request object
         comment_id (int): Comment id
-    
+
     Returns:
         HttpResponseRedirect: Redirects to the admin
-    
+
     Exceptions:
         Http404: If comment does not exist
     """
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
-    
+
     comment.delete()
     return redirect('adminpanel')
 
-def ban_user_from_comment_report(request, user_id, comment_id): #GUBA
+
+def ban_user_from_comment_report(request, user_id, comment_id):  # GUBA
 
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
     ban_user(request, user_id)
 
-def reject_appeal(request,pk): #BanAppeal pk
+
+def reject_appeal(request, pk):  # BanAppeal pk
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
-    
+
     if request.method == "POST":
         ban_appeal = get_object_or_404(BanAppeal, id=pk)
         ban_appeal.delete()
     return redirect('adminpanel')
 
-def accept_appeal(request,pk): #BanAppeal pk
+
+def accept_appeal(request, pk):  # BanAppeal pk
     banned_response = banned_propagator(request)
-    if banned_response: 
+    if banned_response:
         return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
@@ -968,6 +975,7 @@ def accept_appeal(request,pk): #BanAppeal pk
         ban_appeal.delete()
     return redirect('adminpanel')
 
+
 """
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
     AJAX HANDLERS
@@ -975,6 +983,7 @@ def accept_appeal(request,pk): #BanAppeal pk
     Description:
         Starting from here are the ajax requests handlers for the project
 """
+
 
 @login_required(login_url='login')
 def post_vote(request):
@@ -989,7 +998,8 @@ def post_vote(request):
     """
     post_pk = int(request.POST.get('pk'))
     is_upvote = int(request.POST.get('type')) == 1
-    vote_object = VotePost.objects.filter(user_post_ref__id=post_pk, user_ref__id=request.user.id).first()
+    vote_object = VotePost.objects.filter(
+        user_post_ref__id=post_pk, user_ref__id=request.user.id).first()
 
     if vote_object:
         if vote_object.is_upvote == is_upvote:
@@ -1000,13 +1010,13 @@ def post_vote(request):
     else:
         VotePost.objects.create(
             user_post_ref=UserPost.objects.get(pk=post_pk),
-            user_ref = User.objects.get(id=request.user.id),
-            is_upvote = is_upvote
+            user_ref=User.objects.get(id=request.user.id),
+            is_upvote=is_upvote
         )
 
     return JsonResponse({
-        'upvote' : VotePost.objects.filter(user_post_ref__id=post_pk, is_upvote=True).count(),
-        'downvote' : VotePost.objects.filter(user_post_ref__id=post_pk, is_upvote=False).count(),
+        'upvote': VotePost.objects.filter(user_post_ref__id=post_pk, is_upvote=True).count(),
+        'downvote': VotePost.objects.filter(user_post_ref__id=post_pk, is_upvote=False).count(),
     })
 
 
@@ -1024,7 +1034,8 @@ def comment_vote(request):
     if request.method == "POST":
         comment_ref_id = int(request.POST.get('pk'))  # Comment.id
         is_upvote = int(request.POST.get('type')) == 1  # 1-Upvote 2-Downvote
-        vote_object = VoteComment.objects.filter(comment_ref__id=comment_ref_id, user_ref__id=request.user.id).first()
+        vote_object = VoteComment.objects.filter(
+            comment_ref__id=comment_ref_id, user_ref__id=request.user.id).first()
         if vote_object:
             if vote_object.is_upvote == is_upvote:
                 vote_object.delete()
@@ -1035,14 +1046,14 @@ def comment_vote(request):
             VoteComment.objects.create(
                 comment_ref=Comment.objects.get(pk=comment_ref_id),
                 user_ref=User.objects.get(id=request.user.id),
-                is_upvote = is_upvote
+                is_upvote=is_upvote
             )
     else:
         comment_ref_id = int(request.GET.get('pk'))
 
     return JsonResponse({
-        'upvote' : VoteComment.objects.filter(comment_ref__id=comment_ref_id, is_upvote=True).count(),
-        'downvote' : VoteComment.objects.filter(comment_ref__id=comment_ref_id, is_upvote=False).count(),
+        'upvote': VoteComment.objects.filter(comment_ref__id=comment_ref_id, is_upvote=True).count(),
+        'downvote': VoteComment.objects.filter(comment_ref__id=comment_ref_id, is_upvote=False).count(),
     })
 
 
@@ -1061,7 +1072,7 @@ def num_view(request):
     """
 
     return JsonResponse({
-        'view_count' : PostView.objects.filter(user_post_ref__id=request.GET.get('pk')).count(),
+        'view_count': PostView.objects.filter(user_post_ref__id=request.GET.get('pk')).count(),
     })
 
 
@@ -1080,5 +1091,5 @@ def num_comments(request):
     """
 
     return JsonResponse({
-        'comment_count' : Comment.objects.filter(user_post_ref__id=request.GET.get('pk')).count(),
+        'comment_count': Comment.objects.filter(user_post_ref__id=request.GET.get('pk')).count(),
     })

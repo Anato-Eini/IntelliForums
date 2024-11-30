@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import *
 
+
 @admin.register(PostView)
 class PostViewAdmin(admin.ModelAdmin):
     """
@@ -12,6 +13,7 @@ class PostViewAdmin(admin.ModelAdmin):
         'user_ref',
         'user_post_ref'
     )
+
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
@@ -32,6 +34,7 @@ class PostAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
+
 @admin.register(Forum)
 class ForumAdmin(admin.ModelAdmin):
     """
@@ -46,6 +49,7 @@ class ForumAdmin(admin.ModelAdmin):
 
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
+
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
@@ -68,6 +72,7 @@ class CommentAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     """
@@ -89,6 +94,7 @@ class UserAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
+
 @admin.register(UserPost)
 class UserPostAdmin(admin.ModelAdmin):
     """
@@ -105,6 +111,7 @@ class UserPostAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
+
 @admin.register(VotePost)
 class VotePostAdmin(admin.ModelAdmin):
     """
@@ -120,6 +127,7 @@ class VotePostAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
 
+
 @admin.register(VoteComment)
 class VoteCommentAdmin(admin.ModelAdmin):
     """
@@ -134,6 +142,7 @@ class VoteCommentAdmin(admin.ModelAdmin):
         'is_upvote'
     )
 
+
 @admin.register(FavoritePost)
 class FavoritePostAdmin(admin.ModelAdmin):
     """
@@ -145,6 +154,7 @@ class FavoritePostAdmin(admin.ModelAdmin):
         'user_ref',
         'user_post_ref'
     )
+
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
@@ -158,6 +168,7 @@ class TagAdmin(admin.ModelAdmin):
         'user_post_ref'
     )
 
+
 @admin.register(ReportPost)
 class ReportPostAdmin(admin.ModelAdmin):
     """
@@ -170,6 +181,7 @@ class ReportPostAdmin(admin.ModelAdmin):
         'user_ref'
     )
 
+
 @admin.register(ReportComment)
 class ReportCommentAdmin(admin.ModelAdmin):
     """
@@ -181,6 +193,7 @@ class ReportCommentAdmin(admin.ModelAdmin):
         'comment_ref',
         'user_ref'
     )
+
 
 @admin.register(UserBan)
 class UserBanReport(admin.ModelAdmin):
@@ -204,6 +217,7 @@ class UserBanReport(admin.ModelAdmin):
         'reason',
         'time'
     )
+
 
 @admin.register(BanAppeal)
 class BanAppealAdmin(admin.ModelAdmin):

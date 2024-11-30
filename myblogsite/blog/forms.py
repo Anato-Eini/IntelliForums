@@ -3,6 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from .models import *
 
+
 class LoginForm(forms.Form):
     username = forms.CharField(
         widget=forms.TextInput(
@@ -16,7 +17,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                'class' : 'form-control'
+                'class': 'form-control'
             }
         ),
         label="Password",
@@ -32,7 +33,7 @@ class CommentForm(forms.ModelForm):
             'content': forms.Textarea(
                 attrs={
                     'class': 'form-control',
-                    'placeholder' : 'Enter your comment',
+                    'placeholder': 'Enter your comment',
                 }
             ),
             'image': forms.ClearableFileInput(
@@ -42,8 +43,8 @@ class CommentForm(forms.ModelForm):
             )
         }
         labels = {
-            'content' : 'Content',
-            'image' : 'Image'
+            'content': 'Content',
+            'image': 'Image'
         }
 
 
@@ -89,8 +90,10 @@ class GeneralPostForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['choices'].choices = [(forum.id, forum.title) for forum in Forum.objects.all()]
-        self.fields['choices'].widget.attrs.update({'class': 'form-check form-check-inline'})
+        self.fields['choices'].choices = [
+            (forum.id, forum.title) for forum in Forum.objects.all()]
+        self.fields['choices'].widget.attrs.update(
+            {'class': 'form-check form-check-inline'})
 
 
 class PostForm(forms.ModelForm):
@@ -100,31 +103,32 @@ class PostForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(
                 attrs={
-                    'class' :'form-control'
+                    'class': 'form-control'
                 }
             ),
             'content': forms.Textarea(
                 attrs={
-                    'class' : 'form-control'
+                    'class': 'form-control'
                 }
             ),
-            'image' : forms.ClearableFileInput(
+            'image': forms.ClearableFileInput(
                 attrs={
-                    'class' : 'form-control'
+                    'class': 'form-control'
                 }
             )
         }
         labels = {
-            'title' : 'Title',
-            'content' : 'Content',
-            'image' : 'Upload an Image'
+            'title': 'Title',
+            'content': 'Content',
+            'image': 'Upload an Image'
         }
+
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                'class' : 'form-control'
+                'class': 'form-control'
             }
         ),
         label="Password",
@@ -133,11 +137,12 @@ class RegisterForm(forms.ModelForm):
     confirm_password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                'class' : 'form-control'
+                'class': 'form-control'
             }
         ),
         label="Confirm Password"
     )
+
     class Meta:
         model = User
         fields = ['username', 'password', 'confirm_password', 'picture']
@@ -147,9 +152,9 @@ class RegisterForm(forms.ModelForm):
                     'class': 'form-control'
                 }
             ),
-            'image' : forms.ClearableFileInput(
+            'image': forms.ClearableFileInput(
                 attrs={
-                    'class' : 'button'
+                    'class': 'button'
                 }
             )
         }
@@ -178,8 +183,8 @@ class SearchForm(forms.Form):
     content = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                'class' : 'form-control form-control-sm bg-gray-200 border-gray-200 shadow-none mb-4 mt-4',
-                'placeholder' : 'Search forum',
+                'class': 'form-control form-control-sm bg-gray-200 border-gray-200 shadow-none mb-4 mt-4',
+                'placeholder': 'Search forum',
             },
         ),
         label="",
@@ -192,9 +197,12 @@ class SearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         list_var = [(0, "General")]
-        list_var.extend([(forum.id, forum.title) for forum in Forum.objects.all()])
+        list_var.extend([(forum.id, forum.title)
+                        for forum in Forum.objects.all()])
         self.fields['choices'].choices = list_var
-        self.fields['choices'].widget.attrs.update({'class': 'custom-select custom-select-sm w-auto mr-1'})
+        self.fields['choices'].widget.attrs.update(
+            {'class': 'custom-select custom-select-sm w-auto mr-1'})
+
 
 class ReportPostForm(forms.ModelForm):
     class Meta:
@@ -202,16 +210,17 @@ class ReportPostForm(forms.ModelForm):
         fields = ['reason']
         widgets = {
             'reason': forms.Textarea(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Describe the reason for reporting...',
-                'rows': 4
-            }
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Describe the reason for reporting...',
+                    'rows': 4
+                }
             ),
         }
         labels = {
             'reason': 'Reason for Reporting'
         }
+
 
 class ReportCommentForm(forms.ModelForm):
     class Meta:
@@ -230,6 +239,7 @@ class ReportCommentForm(forms.ModelForm):
             'reason': 'Reason for Reporting'
         }
 
+
 class UserBanForm(forms.ModelForm):
     class Meta:
         model = UserBan
@@ -246,6 +256,7 @@ class UserBanForm(forms.ModelForm):
         labels = {
             'reason': 'Reason for ban'
         }
+
 
 class BanAppealForm(forms.ModelForm):
     class Meta:
@@ -264,6 +275,7 @@ class BanAppealForm(forms.ModelForm):
             'justification': 'Explain yourself'
         }
 
+
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -271,9 +283,11 @@ class CustomAuthenticationForm(AuthenticationForm):
     def as_custom(self):
         return (
             f"<div class='form-group'>"
-            f"<div class='username_label'>{self.fields['username'].label}</div>"
+            f"<div class='username_label'>{
+                self.fields['username'].label}</div>"
             f"{self['username']}</div>"
             f"<div class='form-group'>"
-            f"<div class='password_label'>{self.fields['password'].label}</div>"
+            f"<div class='password_label'>{
+                self.fields['password'].label}</div>"
             f"{self['password']}</div>"
         )
