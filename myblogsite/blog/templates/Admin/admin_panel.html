@@ -51,9 +51,11 @@
                             <div style="display: inline;">
                                 <button id="showUsers" class="btn btn-dark" style="margin: 10px;">Users</button>
                                 </br>
-                                <button id="showPosts" class="btn btn-dark" style="margin: 10px;">Posts</button>
+                                <button id="showPosts" class="btn btn-dark" style="margin: 10px;">Reported Posts</button>
                                 </br>
-                                <button id="showComments" class="btn btn-dark" style="margin: 10px;">Comments</button>
+                                <button id="showComments" class="btn btn-dark" style="margin: 10px;">Reported Comments</button>
+                                <br>
+                                <button id="showAppeals" class="btn btn-dark" style="margin: 10px;">Appeals</button>
                             </div>
                         </div>
                     </div>
@@ -70,7 +72,11 @@
                     </div>
                     
                     <div id="CommentsDashboard" style="display: none;">
-                        
+                        {% include 'Admin/reported_comments.html' %}
+                    </div>
+
+                    <div id="AppealsDashboard" style="display: none;">
+                        {% include 'Admin/appeals.html' %}
                     </div>
                 </div>
             </div>

@@ -201,6 +201,15 @@ class UserBan(models.Model):
     time = models.DateTimeField(auto_now_add=True)
 
 
+class BanAppeal(models.Model):
+    """
+    Represents a ban appeal of a banned user in order to try to get unbanned by an admin.
+    """
+    userban_ref = models.ForeignKey(UserBan, on_delete=models.CASCADE)
+    justification = models.TextField()
+    time = models.DateTimeField(auto_now_add=True)
+    
+
 class ReportPost(models.Model):
     """
     Represents a report on a post by a user.

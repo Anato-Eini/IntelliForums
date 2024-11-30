@@ -294,6 +294,7 @@ def ban_user(request,pk):
         form = UserBanForm()
     return render(request, 'ban_user.html', {'form': form})
 
+
 def unban_user(request,pk):
     """
     Unbans user by setting is_banned to False and deleting the UserBan instance of the previously banned user.
@@ -319,6 +320,21 @@ def unban_user(request,pk):
         return redirect('adminpanel')
     else:
         return redirect('adminpanel')
+    
+def ban_appeal(request):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+    userban = get_object_or_404(UserBan, user_ref=request.user)
+    if request.method == 'POST':
+        form = BanAppealForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.userban_ref = userban
+            report.save()
+            return redirect('login')
+    else:
+        form = BanAppealForm()
+    return render(request, 'ban_appeal.html', {'form': form})
     
 
 def handle_view_post(user_pk, user_post_id):
@@ -429,12 +445,14 @@ def render_adminpanel(request):
     banned_users = User.objects.filter(is_banned=True)
     reported_posts = ReportPost.objects.all()
     reported_comments = ReportComment.objects.all()
+    appeals = BanAppeal.objects.all()
 
     return render(request, 'Admin/admin.html', {
             'users' : users,
             'banned_users' : banned_users,
             'reported_posts' : reported_posts,
             'reported_comments' : reported_comments,
+            'appeals' : appeals,
         })
 
 
@@ -794,7 +812,7 @@ def delete_reportpost(request,pk):
     return redirect('adminpanel')
 
 
-def ban_user_from_post_report(request, user_pk, userpost_pk):
+def ban_user_from_post_report(request, user_pk, userpost_pk): #GUBA
     """
     Bans a user from a post report and deletes the post from
       the database
@@ -893,7 +911,7 @@ def delete_reportcomment(request, report_id):
     return redirect('adminpanel')
 
 
-def delete_comment_from_comment_report(request, comment_id):
+def delete_comment_from_comment_report(request, comment_id): 
     """
     Deletes a comment given a comment id from the database
 
@@ -915,7 +933,7 @@ def delete_comment_from_comment_report(request, comment_id):
     comment.delete()
     return redirect('adminpanel')
 
-def ban_user_from_comment_report(request, user_id, comment_id):
+def ban_user_from_comment_report(request, user_id, comment_id): #GUBA
 
     banned_response = banned_propagator(request)
     if banned_response: 
@@ -923,7 +941,33 @@ def ban_user_from_comment_report(request, user_id, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
     ban_user(request, user_id)
+
+def reject_appeal(request,pk): #BanAppeal pk
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
+    if not request.user.is_staff:
+        raise PermissionDenied
     
+    if request.method == "POST":
+        ban_appeal = get_object_or_404(BanAppeal, id=pk)
+        ban_appeal.delete()
+    return redirect('adminpanel')
+
+def accept_appeal(request,pk): #BanAppeal pk
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
+    if not request.user.is_staff:
+        raise PermissionDenied
+    if request.method == "POST":
+        ban_appeal = get_object_or_404(BanAppeal, id=pk)
+        user = ban_appeal.userban_ref.user_ref
+        user.is_banned = False
+        user.save()
+        ban_appeal.delete()
+    return redirect('adminpanel')
+
 """
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
     AJAX HANDLERS

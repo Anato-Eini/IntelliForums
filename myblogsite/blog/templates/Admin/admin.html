@@ -54,9 +54,11 @@
                                 </br>
                                 <button id="showBannedUsers" class="btn btn-dark" style="margin: 10px;">Banned Users</button>
                                 </br>
-                                <button id="showPosts" class="btn btn-dark" style="margin: 10px;">Posts</button>
+                                <button id="showPosts" class="btn btn-dark" style="margin: 10px;">Reported Posts</button>
                                 </br>
-                                <button id="showComments" class="btn btn-dark" style="margin: 10px;">Comments</button>
+                                <button id="showComments" class="btn btn-dark" style="margin: 10px;">Reported Comments</button>
+                                <br>
+                                <button id="showAppeals" class="btn btn-dark" style="margin: 10px;">Appeals</button>
                             </div>
                         </div>
                     </div>
@@ -79,6 +81,10 @@
                     <div id="CommentsDashboard" style="display: none;">
                         {% include 'Admin/reported_comments.html'%}
                     </div>
+
+                    <div id="AppealsDashboard" style="display: none;">
+                        {% include 'Admin/appeals.html'%}
+                    </div>
                 </div>
             </div>
         </div>
@@ -89,6 +95,7 @@
             $("#BannedDashboard").css("display", "none")
             $("#CommentsDashboard").css("display", "none")
             $("#PostsDashboard").css("display", "none")
+            $("#AppealsDashboard").css("display", "none")
         })
 
         $("#showBannedUsers").on('click',function(){
@@ -96,6 +103,7 @@
             $("#BannedDashboard").css("display", "block")
             $("#CommentsDashboard").css("display", "none")
             $("#PostsDashboard").css("display", "none")
+            $("#AppealsDashboard").css("display", "none")
         })
 
         $("#showPosts").on('click',function(){
@@ -103,6 +111,7 @@
             $("#BannedDashboard").css("display", "none")
             $("#CommentsDashboard").css("display", "none")
             $("#PostsDashboard").css("display", "block")
+            $("#AppealsDashboard").css("display", "none")
         })
 
         $("#showComments").on('click',function(){
@@ -110,6 +119,15 @@
             $("#BannedDashboard").css("display", "none")
             $("#CommentsDashboard").css("display", "block")
             $("#PostsDashboard").css("display", "none")
+            $("#AppealsDashboard").css("display", "none")
+        })
+
+        $("#showAppeals").on('click',function(){
+            $("#UsersDashboard").css("display", "none")
+            $("#BannedDashboard").css("display", "none")
+            $("#AppealsDashboard").css("display", "block")
+            $("#PostsDashboard").css("display", "none")
+            $("#CommentsDashboard").css("display", "none")
         })
     </script>
     <script type="module" src="{% static 'blog/js/profile.js' %}"></script>

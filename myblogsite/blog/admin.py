@@ -204,3 +204,16 @@ class UserBanReport(admin.ModelAdmin):
         'reason',
         'time'
     )
+
+@admin.register(BanAppeal)
+class BanAppealAdmin(admin.ModelAdmin):
+    """
+    userban_ref = models.ForeignKey(UserBan, on_delete=models.CASCADE)
+    justification = models.TextField()
+    time = models.DateTimeField(auto_now_add=True)
+    """
+    list_display = (
+        'userban_ref',
+        'justification',
+        'time'
+    )

@@ -247,6 +247,23 @@ class UserBanForm(forms.ModelForm):
             'reason': 'Reason for ban'
         }
 
+class BanAppealForm(forms.ModelForm):
+    class Meta:
+        model = BanAppeal
+        fields = ['justification']
+        widgets = {
+            'justification': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Why should you be unbanned?',
+                    'rows': 4
+                }
+            ),
+        }
+        labels = {
+            'justification': 'Explain yourself'
+        }
+
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

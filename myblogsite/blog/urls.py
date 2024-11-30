@@ -35,6 +35,7 @@ urlpatterns = [
     path('adminpanel/',views.render_adminpanel,name = "adminpanel"),
     path('ban_user/<int:pk>',views.ban_user,name = "ban_user"),
     path('unban_user/<int:pk>',views.unban_user,name = "unban_user"),
+    path('ban_appeal/',views.ban_appeal,name = "ban_appeal"),
     path('post/report_post/<int:userpost_id>/', views.report_post, name='report_post'),
     path('post/ban_user_from_post_report/<int:user_pk>/<int:userpost_pk>/', views.ban_user_from_post_report, name='ban_user_from_post_report'), #pk is userpost_id
     path('post/perma_delete_from_post_report/<int:pk>/', views.perma_delete_from_post_report, name='perma_delete_from_post_report'),
@@ -44,5 +45,7 @@ urlpatterns = [
     path('post/delete_reportcomment/<int:report_id>/', views.delete_reportcomment, name='delete_reportcomment'),
     path('post/delete_comment_from_report/<int:comment_id>/', views.delete_comment_from_comment_report, name='delete_comment_from_comment_report'),
     path('post/ban_user_from_comment_report/<int:user_id>/<int:comment_id>/', views.ban_user_from_comment_report, name="ban_user_from_comment_report"),
+    path('reject_appeal/<int:pk>',views.reject_appeal,name = "reject_appeal"),    
+    path('accept_appeal/<int:pk>',views.accept_appeal,name = "accept_appeal"),     
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
