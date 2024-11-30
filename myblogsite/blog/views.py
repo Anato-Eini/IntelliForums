@@ -1,7 +1,7 @@
 import logging
 from pyexpat.errors import messages
 from deprecated import deprecated
-
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse, HttpResponseForbidden
 from django.core.exceptions import ValidationError
 from django.core.exceptions import PermissionDenied
@@ -17,6 +17,18 @@ from .forms import *
 from .views_classes import *
 from django.db import transaction
 
+
+def banned_propagator(request):
+    """
+    Checks if the logged-in user is banned and renders the banned page if so.
+    """
+    if request.user.is_authenticated:
+        if request.user.bans_received.exists():  
+            userban = request.user.bans_received.first()  
+            return render(request, 'banned.html', {
+                'userban': userban,
+            })
+    return None  
 
 @csrf_protect
 def fetch_posts(request, pk, page_number):
@@ -34,6 +46,10 @@ def fetch_posts(request, pk, page_number):
         HttpResponse: HttpResponse object
 
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
+    
     posts = []
     if request.method == 'POST':
         form = SearchForm(request.POST)
@@ -148,6 +164,9 @@ def new_post_form(request):
         ValidationError: If form contains incorrect data
 
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     if request.method == 'POST':
         form = GeneralPostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -196,6 +215,9 @@ def post_detail(request, pk, page_number):
     Raises:
         ValidationError: If form contains incorrect data
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     if request.method == "POST":
         form = CommentForm(request.POST, request.FILES)
         if form.is_valid():
@@ -212,6 +234,7 @@ def post_detail(request, pk, page_number):
     handle_view_post(request.user.id, int(pk))
 
     return render(request, 'post_detail.html', {
+        'userpost': get_object_or_404(UserPost, pk=pk),
         'post': get_object_or_404(Post, pk=UserPost.objects.get(pk=pk).post_ref.id),
         'comments': _get_page_object(
             Paginator(
@@ -241,7 +264,7 @@ def post_detail(request, pk, page_number):
 
 def ban_user(request,pk):
     """
-    Given an id, it will ban the user (set is_active to False)
+    Given an id, it will ban the user (set is_banned to True)
 
     Parameters:
         request (HttpRequest): request object
@@ -250,6 +273,9 @@ def ban_user(request,pk):
     Returns:
         redirects to form
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
     user = get_object_or_404(User, id=pk)
@@ -261,16 +287,16 @@ def ban_user(request,pk):
             report.admin_ref = request.user
             report.user_ref = user
             report.save()
-            user.is_active = False
+            user.is_banned = True
             user.save()
             return redirect('adminpanel')
     else:
-        form = ReportCommentForm()
+        form = UserBanForm()
     return render(request, 'ban_user.html', {'form': form})
 
 def unban_user(request,pk):
     """
-    Unbans user by setting is_active to True and deleting the UserBan instance of the previously banned user.
+    Unbans user by setting is_banned to False and deleting the UserBan instance of the previously banned user.
 
     Parameters:
         request (HttpRequest): request object
@@ -279,11 +305,14 @@ def unban_user(request,pk):
     Returns:
         HttpResponseRedirect: Redirects to the home page
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
     if request.method == 'POST':
         user = get_object_or_404(User, id=pk)
-        user.is_active = True
+        user.is_banned = False
         user.save()
         userban = get_object_or_404(UserBan, user_ref=user)
         userban.delete()
@@ -305,7 +334,6 @@ def handle_view_post(user_pk, user_post_id):
     Returns:
         None
     """
-
     query = PostView.objects.filter(user_ref__id=user_pk, user_post_ref__id=user_post_id)
 
     if not query.exists():
@@ -331,6 +359,9 @@ def render_profile(request, pk):
         HttpResponse: Http response
 
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     user = User.objects.get(id=pk)
     user_posts = UserPost.objects.filter(user_ref__id=pk, is_deleted=False)
     deleted_user_posts = UserPost.objects.filter(user_ref__id=pk, is_deleted=True)
@@ -388,11 +419,14 @@ def render_adminpanel(request):
     Returns:
         HttpResponse: Http response
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
     
-    users = User.objects.filter(is_active=True)
-    banned_users = User.objects.filter(is_active=False)
+    users = User.objects.filter(is_banned=False)
+    banned_users = User.objects.filter(is_banned=True)
     reported_posts = ReportPost.objects.all()
     reported_comments = ReportComment.objects.all()
 
@@ -414,7 +448,9 @@ def go_default_page(request):
     Returns:
         HttpResponseRedirect : Redirects to the home page if not banned. If banned, redirected to banned page.
     """
-
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     return redirect('home', pk=0, page_number=1)
 
 
@@ -430,6 +466,9 @@ def edit_comment(request, comment_id, user_post_id):
     Returns:
         HttpResponse: Http response
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
     form = CommentForm(instance=comment)
 
@@ -459,6 +498,9 @@ def delete_comment(request, comment_id, user_post_id):
     Returns:
 
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
 
@@ -476,6 +518,9 @@ def update_post(request, pk):
     Returns:
 
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     if request.method == 'POST':
         user_post = get_object_or_404(UserPost, pk=pk)
         post = user_post.post_ref
@@ -499,6 +544,9 @@ def update_post_title(request, pk):
     Returns:
 
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     user_post = get_object_or_404(UserPost, pk=pk)
     post = user_post.post_ref
 
@@ -529,6 +577,9 @@ def update_post_content(request, pk):
     Returns:
         HttpResponseRedirect: Redirects to the post detail page
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     user_post = get_object_or_404(UserPost, pk=pk)
     post = user_post.post_ref
 
@@ -557,6 +608,9 @@ def delete_post(request, pk):
         HttpResponseRedirect:
 
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     user_post = get_object_or_404(UserPost, pk=pk)
     post = user_post.post_ref
     if request.user != post.user_ref and not request.user.is_staff:
@@ -605,8 +659,12 @@ def perma_delete(request, pk):
         HttpResponseRedirect:
 
     """
-    perma_delete_helper(request, pk)
-    return redirect('profile')
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
+    if request.method == 'POST':
+        perma_delete_helper(request, pk)
+    return redirect('home', pk=0, page_number=1)   
 
 
 def add_favorite(request, post_id):
@@ -621,6 +679,9 @@ def add_favorite(request, post_id):
         HttpResponseRedirect:
 
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     favorite_object = FavoritePost.objects.filter(user_post_ref__id=post_id, user_ref__id=request.user.id).first()
     if favorite_object:
         favorite_object.delete()
@@ -645,6 +706,9 @@ def restore_post(request, pk):
     Returns:
         HttpResponseRedirect: Redirects to the profile page
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     if request.method == 'POST':
         user_post = get_object_or_404(UserPost, pk=pk)
         if user_post.user_ref == request.user or user_post.user_ref.is_staff:
@@ -653,7 +717,7 @@ def restore_post(request, pk):
         else:
             raise PermissionDenied
 
-    return redirect('profile')
+    return redirect('profile',pk=request.user.pk)
 
 
 def report_post(request, userpost_id):
@@ -668,6 +732,9 @@ def report_post(request, userpost_id):
     Returns:
         HttpResponse: Http response
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     post = get_object_or_404(UserPost, id=userpost_id)
     
     if request.method == 'POST':
@@ -698,6 +765,9 @@ def delete_reportpost_helper(request, pk):
     Exceptions:
         PermissionDenied: If user is not staff
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
     reportpost = get_object_or_404(ReportPost, id=pk)
@@ -717,6 +787,9 @@ def delete_reportpost(request,pk):
     Returns:
         None
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     delete_reportpost_helper(request,pk)
     return redirect('adminpanel')
 
@@ -737,6 +810,9 @@ def ban_user_from_post_report(request, user_pk, userpost_pk):
     Exceptions:
         PermissionDenied: If user is not staff
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     perma_delete_helper(request,userpost_pk)
     ban_user(request,user_pk)
 
@@ -755,6 +831,9 @@ def perma_delete_from_post_report(request,pk):
     Exceptions:
         PermissionDenied: If user is not staff
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     perma_delete_helper(request,pk)
     return redirect('adminpanel')
 
@@ -771,6 +850,9 @@ def report_comment(request, comment_id):
     Returns:
         HttpResponse: Http response
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
     
     if request.method == 'POST':
@@ -802,6 +884,9 @@ def delete_reportcomment(request, report_id):
     Exceptions:
         Http404: If report comment does not exist
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     report = get_object_or_404(ReportComment, id=report_id)
     
     report.delete()
@@ -822,6 +907,9 @@ def delete_comment_from_comment_report(request, comment_id):
     Exceptions:
         Http404: If comment does not exist
     """
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
     
     comment.delete()
@@ -829,6 +917,9 @@ def delete_comment_from_comment_report(request, comment_id):
 
 def ban_user_from_comment_report(request, user_id, comment_id):
 
+    banned_response = banned_propagator(request)
+    if banned_response: 
+        return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
     ban_user(request, user_id)
