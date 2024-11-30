@@ -283,11 +283,9 @@ class CustomAuthenticationForm(AuthenticationForm):
     def as_custom(self):
         return (
             f"<div class='form-group'>"
-            f"<div class='username_label'>{
-                self.fields['username'].label}</div>"
+            f"<div class='username_label'>{self.fields['username'].label}</div>"
             f"{self['username']}</div>"
             f"<div class='form-group'>"
-            f"<div class='password_label'>{
-                self.fields['password'].label}</div>"
+            f"<div class='password_label'>{self.fields['password'].label}</div>"
             f"{self['password']}</div>"
         )
