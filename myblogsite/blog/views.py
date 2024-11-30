@@ -838,6 +838,9 @@ def ban_user_from_post_report(request, user_pk, userpost_pk):  # GUBA
     perma_delete_helper(request, userpost_pk)
     ban_user(request, user_pk)
 
+    return redirect('adminpanel')
+
+
 
 def perma_delete_from_post_report(request, pk):
     """
@@ -946,6 +949,8 @@ def ban_user_from_comment_report(request, user_id, comment_id):  # GUBA
     comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
     ban_user(request, user_id)
+
+    return redirect('adminpanel')
 
 
 def reject_appeal(request, pk):  # BanAppeal pk
