@@ -4,7 +4,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import CustomAuthenticationForm
 from .models import UserBan
-
+"""
+💩
+"""
 class CustomLoginView(LoginView):
     """
     Custom Login View inherited from Django LoginView
