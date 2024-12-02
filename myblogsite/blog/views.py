@@ -836,10 +836,7 @@ def ban_user_from_post_report(request, user_pk, userpost_pk):  # GUBA
     if banned_response:
         return banned_response
     perma_delete_helper(request, userpost_pk)
-    ban_user(request, user_pk)
-
-    return redirect('adminpanel')
-
+    return ban_user(request, user_pk)
 
 
 def perma_delete_from_post_report(request, pk):
@@ -948,9 +945,8 @@ def ban_user_from_comment_report(request, user_id, comment_id):  # GUBA
         return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
-    ban_user(request, user_id)
+    return ban_user(request, user_id)
 
-    return redirect('adminpanel')
 
 
 def reject_appeal(request, pk):  # BanAppeal pk
@@ -974,7 +970,7 @@ def accept_appeal(request, pk):  # BanAppeal pk
         raise PermissionDenied
     if request.method == "POST":
         ban_appeal = get_object_or_404(BanAppeal, id=pk)
-        user = ban_appeal.userban_ref.user_ref
+        user = ban_appeal.userban_ref.user_refE
         user.is_banned = False
         user.save()
         ban_appeal.delete()
