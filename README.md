@@ -1,9 +1,318 @@
-# IntelliForums
+<a id="readme-top"></a>
 
-Functional Requirements <a href = 'https://docs.google.com/document/d/1QwDRXmar-ztxRYgQpsVKN3Fgg6jkXiQ-JWenTDIHvTM/edit'>here</a>
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
-Figma <a href = 'https://www.figma.com/design/RyUp3QbuiyquVUd6hOr0Bn/IM2?node-id=0-1&t=8G5eAZclnGlGTJi4-'>link</a>
 
-Gantt Chart <a href = 'https://docs.google.com/spreadsheets/d/1emJhUlhcaSpzuB8jP_2BvoRQ1bP72NqA/edit?usp=sharing&ouid=100040180580851938686&rtpof=true&sd=true'>link</a>
 
-ERD <a href= 'https://online.visual-paradigm.com/w/lguzsane/diagrams/?lightbox=1&highlight=0000ff&edit=https%3A%2F%2Fonline.visual-paradigm.com%2Fw%2Flguzsane%2Fdiagrams%2F%23diagram%3Aworkspace%3Dlguzsane%26proj%3D0%26id%3D10%26type%3DERDiagram&editBlankUrl=https%3A%2F%2Fonline.visual-paradigm.com%2Fapp%2Fdiagrams%2F%23diagram%3Aproj%3D0%26vpov%3D16.3%26vpob%3D20220410%26client%3D1%26edit%3D_blank&layers=1&nav=1&title=IntelliForums&vpov=16.3&vpob=20220410#R3cU2FsdaGVkX1O823l3wDhg%2BKm%2FRGKBs%2FBIR1jfrjcyuCXfg0kc3E%3DX8Wrnok5G%2FyLYGl9x6EEOgUNqWVEH44XTF4xU7ScKQCZo6I1mMelD1wLsYak3eDF3b%2F6NqFYZvIzN7%2BAtr%2BUamEIG1b5nuBPCiXX6IEXBmoMdf%2FKRALtmtLc5v9MyqaUO6%2F7qDWQ00ez4w4fT84zTyvRIGAzpotOyDtV8U5tmMLN%2F2amArV6m6qLzC5Vm6hkdT0u%2BE6Q2LrLG6CRR%2F2XShJgAMeLd44V8nBK2T%2FPAxk%2BKTeUMGxdAH%2BoQJapII8KgSLzNS%2FywX5qChEg0pw3PLCpW8cxxbgkb5YZxpGnXZrHOAyMRcl9fnM53mhG1ekmzdzhrAv7nGH5etppvoWub6sz8KZXoZbRmX87fT9%2Fu5j3woP8mPu3BgYw4dFkbnfEeFbvQOkPWaQtjEMjrAZnGJGCqMSTp5cRmxDLKbfgC6KS%2Ft0IIYsBBGyK%2BaWbmWRCVYb3aDBytvrQ%2FfuyiGsqpQMOBtB%2BhpAIFaCsFKqfTwYPdno49mZhSHuN0SOmUupcfDnFP1GKI4YPmnwZ3IGJfGwpayJKQx0oMoWWsoT9R95KTkLr5pIEEVXF0QMXwS0Vu%2BiSPjayLFiX2Oky%2FVOQetkWtWx%2B%2B6boRthuApEzRApWECRCjKi8C%2FG5IPiNxCS4bMZu4WGsUZb0MhxLItE7Y2eAJU6ErVMBPqotfMLH3G0a87fQ2RROjjCdbwTKTmrFMNBl7p0uihIIgNueMGT246K5OqHGdF6moRbtj9U0bKlyAtyTEECUhIunvlXzKpf4orpYyj5L3yRwI1GYBD29oZEZc6wCi7IGUbgaaAAdYfLzUSBXmz%2BSjy9ixDbxDmtXxbRi5Y5kCqXGWiYypRlmDjj1zPoi%2B9Tdq%2B7IBWGLBg%2FZiZONLbbj8JLfakPHNQelnNlf72ElsLCDOMSjYgdalDZY%2BwDjP4BK6ZfJU5K2leybtjwqPwIGb9tst4wyuH4Ig0IF3YK21G%2BfDFnctow7bG8NPUFPFYxUTUUFQH9iXc%2FwhUxKO%2BwP%2FrY5WmP53oHTHEZq07hv52YzD3wB7%2FlT5DPwGWsudgHOA6JFCikGM3%2F5HFPoZkNONzIJIyCa5pL5A8mS9yfZsrvKFbuDZ3RIvE5y3Khmj7rlUYvphK5QkH5xTZqQB6R9NWxfi3XIs%2BO5bEXNLsNL8fOBHjlWYNps8Ah0uP1vKC3hJy2zD3fbMml%2FEW0ILMo%2FncemASC%2F7HAPycP5o6cZozOA3YLmLrlxAxuYPbfnLjCIjE5Qjdq9rlumaA66ay3lKbE70veoZZhNqpcrxu3M3U4MQR0JaSRVjOvIIzWKDT3WQWzaFjWVZwdcxOw38mLnuzuxvC2ecWQ7%2FQk4RGROZkJdKBOv2LlbasBmPce9YNeB4nn7DQgVk7PR%2BAnWKSAwZpYuk7pCkA%2BgfRhCXP8Ba6D7YCAiAq65u4BhcqzSt0s9URC%2F%2FBogfiKXT6Ez3E4VKevGYWb6941fbwPDx02ANXMYBjFLWMlfWTPS%2BEPPAn6erQirRJkuX9gxlUL7PUeb2tiD9fEFID2BnkuaxaZhQNNJOWEGg9QdBS9cOxjP3vjR7bPUq0Jzz1b9RxJrq9Se6pXnJey6qG4zfzUt%2BTVBsJzKIK7KkhslscJnWgnCEKdAetur%2FVB8A7KPw9V%2B06XpCcs240HAGrbnNzUh3%2BK7b%2FNV9Uv6vKy2HY6PDTwGLALZhW4scLeE%2Bj7OPsCfb3yplq%2BMpdsBfz2REndXdbCcpvnGm8RaOwFY73JjS2lNKO9j49UL69LUBa%2FRzYdU%2FFL3E7%2F0G2QXnBA6KOpi7JqPT%2BBneIqtLmLYHmoSCL4EnOonzUyOXTnp8OonFSUP9lsOZoHnkpTxAD5NVwHoh5%2Ff2q2%2BM8H89OrMkUZ8%2FL8cPRVABdJ%2FueitiVpiCRL66Ci6yQ5ohxbOb80PWYk%2F4BppS2qI83IGtVeXidw9bsA%2FdIqIdodUc5IKuHRZpHzV%2BkWeeEj5EqFDhR9cAGyGm41xbOoMc0e9raWFTKWDvUeJFA8zo8tKnCFevKsWl6%2FYwA7cCr7FRlisicqb52rzuib%2FKg8JNUyWSEFYnrvKiDVj0IqfmA%2BFknM2Z3Nr0U3VZrdU5GtTryq1kmmD%2FZezUzEbikq5JZcMYf0ydlht%2BG6LHER6%2F0rv%2B7mZiMggQRRlrhXr3JHUOSTzDjmAaayaa%2B4CeIpGX6LPOHebTqW4HvsfpBXOd3tKwbIQ2LAPbFV3x0NXMcyPrd1Zuxaw4cp1aZqYJlXLih3KpEvkPlTjuUbzsdpB15h1C996KrakBwkTA4sHwdzhJyFXYvwA3vM14PeGQdSsl9Uiw2WbfMuEshLQprRBQSiT1MU84kZLRMrSx%2Ff8e%2F6O62efY1%2B0%2BPBB1BP7800gXAEKiV0CQEok0Bs7i3asMg4jo4%2By2YApA7ErmZ%2FV0Ys4AbPlmasm%2BOKXxcm10pEVEs43A47wkZg3Wm%2B0rJXntm2mFisU3Abot8ylph05bi6MRAMwhNwWR14fu9WI7rIekgPGDSbUOCkMJoLGtYEDhjYfl%2FFZ70JfPXKiNb1MyzKp6OWhdXpFmboJAuC7uwhb50zf4GncuASV8Og%2BdUZKJJuuiBnWXyEBoWMny6xlsQ8d9Hm77Sj06L0AZ1ksbdDO6DGu0g24ijPZFIPcFNmYnrrwppUdefHatrFl3v%2BhuEyCAF7jV02UUjsN1tmPHJFxFa4FbFNs%2FrgUh9O%2F98USI3STgbkVdKHhdCcjCNzJcyYHDP0rXVQvGaIVvW%2FhtywpQuoNwso%2BFuk6ufm671oZoi2FgHd1FV%2FI1CsezE83xmg5%2BmgIcMx3QlrGTPUQUO9Oe1Bd8NQ%2FOv%2BQJwpZU7wNwVuMEu1kTY8oxWqp1MRaImF1mQLv7hdsrSaaOmK5khHkM7QzyCj1MnDILTbt690kq%2F7qD3XNFrvgFOWkCSpRD5rUjyLtMbBUpeZVlsE%2BmR%2FDdVb0tzU9jUHSQvtlDxbzlBaKRaWbwB9OIs3tEEPlXawpRV4Xr4bMTNlkhm3rVd50qtFDa9hSzRANnHspVoXgdik3nNoisk4CuG1N8QtM1Fgp0m7YHEu5poc6V7x22qfyjb%2B1qVKH2%2BiwJaoUosovTQMYK%2BcBNvZT2oWA2Aj6E31EnDUpQPDnmv6Pz9owh9tZt4E8rmeRsED1ldFr5Y3Avamy%2F06gSxbuDq8WWhgwLIyduilWh4v%2FiXwTxxQGVTOepMrq19e3BLjzDK%2F5liHDgIQNg2%2FKT5N8eaVCagAADHeve2J1JdnF9zhHhmvUn2PuJWDHFK7L1pY1SW3dENHXXIECq%2F6kJmDkfp5lerQeOy3XLNlT5N5Xqfvmhe%2FoSLOB1jOBrztyCbcVzbVj%2BCFmKrJExGvq4xK39GUsLBVLJbi1riAAZPN0YDHFvN%2FlC%2FEN6DG7mbAYwSj6Tts5j01NwsSwWqABcaQM9c19pNl11ITdIt8Ihl49OXQMXTBVuDJQ2hk4UTQDQ75DHyqfE1p8f1E8L7gS5gfeCvreiiq68cxJag9QucUdK2xVCbUV6X0124jTM6wYlcKbLCMZERfyoRxEB2tUCa2hzNxT1wCNoaWRpID3vyWDn0P88i2Yw9MkdQgANWTX4QOfr%2FCZIcNWNI34xZrtb7rKardNjsABUcpw3cyMLh10q%2F0BkmDwYZ7fBg72bfSN%2FyLRlQ70P5%2BtSxxWy6amvxw5VH7gexoazwaJ01juGzvv6sw2wrkMPanm94DXUYro76uDpeV8GqReBFVweyJphqSV76Y%2Fa%2B%2FMHfs3jvYF%2FZHQvjyBhXl4baX3OY6xRT8%2FmEF8qiBlLwOa2yy5rcUaDfpY5%2BDLb%2BMAYCPxc%2F2j%2BbeeNT6MPkrdRFPMhnZNzgo%2FnxMf4ufohw1RDA6u5MpGfE%2FfZbamLeCOE8S0H3oLXcfoJb8Gaa7WeQG1%2BwlwdMGPNv9M%2FmXBS3lFQDV8i7viGdI%2B8n1t1Wmf%2FSPqAkPLi6%2BZmHkBcL2YB%2B3%2F5T6YbP8TwoLphS2o1dLOLxRQ7RsSv%2F%2FzAPL1QsUpwsyeR5OLz3sTlaXl9%2F4sTz0yejI8%2F9tGkOF%2FR4e2vSq3PwdCH%2FhaNCpUnju0q5v3sF0XsDLmjsSJLOIgwKxEuSvqSOrYySJ8Vq3IXXsuE5KvzCFhjf%2BLcnRl%2FlFK3kzmWKgnTMxaDEOGI%2FgiHBJyjYnkeTUL6ooDglmgsOjl0RjxI2j5b6EGHHoTAfYkhfBHWXqQmAJ63yFWx02JBTTZ6%2B5rsY3BhpGY%2FYqinOC0FLkWSqizEOFjOSWTpKnyCpkIWirNvRZVSxhqzOP0r9vWeb62Em6GB33RHWiUGw2K9xtBfTXWublo6VcjusEZAvhCKaRHT8fRUK7PD%2Fnnta7tnUvhbAbDUoCaMB3Axinb00RyEtxlsAubohnvFWUuPGybaibWmdyXkWt%2BCNko%2F31BLb9iLBf2ZBbWkH9zAxEgljUu1PQtockHifo0C847TUy7o0jnjaQbUOSE7%2F3mAj%2BtrcMHSw%2BQvCaPkd%2BgdAw1gW6%2BdMNb9qUbZb4qfMc7Ucf0CiavMcweb0qPtJgT0bUHoqORrPrKhezA1hE2WPNbm0ctEmOrEiAxJSxj%2BXa85156fquHDJryybFG4zKqHtTRrVQ0pA4krp58mmB1%2BFseEMNIXb8kbiwrahYA4zaV1E0oi%2FTqgRqlIpEyBNSH60uLTaf0NDKA%2B45gVJnwkENsaSqdpn6gH%2Br1PorSrnUyyEFr7qFLyNfMRoS4zGguE0U7iPI5kqA0wbaqT2YGkz8iw%2Bgg9aGNZzrjASoPwDpSb81UHMU3ayn2PaFcc0pzC%2B1eD4u1qBD80syxzoDWfbWbsPkvbCPZsdb5ByF7dDGuStM2zdo7n7Z%2FL6a69RW0ijjJQ5IFZmC22a%2B5v3QhYEjrUi7Xai2bpE4uIQL4PS9x2RdljO7BtCO%2B%2Fxj2sNgBTvRaR3NoMTIe7b8Th5olSfvRkRUmAfNYLoeAAVZtPAeaK938fpdk9xAuNc%2FtGzMpYMNvpiSkj74G00j806i0gygcGDgtFkZ0RyATG%2BmDkDlpDrf0qRzbahPRsCHU5d0I59YFUOiYxwXDSuNFB4QG0xochrATx3znS5MIsMrtqnm1pwnG2Knp83nJggaPRY0a%2Ba9g1tEZUvJwEw3Yg8E%2BljCynH04glJVOVcXBqgS%2BYCKQ8fQZWGAUiBia0P3iGP7e3PVYP%2FYzCkWBYFoX%2F7saCs%2B9fXHzdE95z98YVRlHcoj7O0C43Werhjf75uhQ9dmvgnFKRFmJFaEAHkn9%2FKO9hFkxJzI7yOIgCYlfk8tWsVcEueLI0OQXlqh9MQTd9%2FtR5ExQJU0DlBNh51fWB4nTccokgrM06mFFvKvAOcRI2JU2jC0r%2FUw5vma7%2BNPUC0uWa7QJb2s4RI6qKuVtHjHAO1yAC9%2BvgztnF%2FneNZvLkkIFSl86gbcSHyCOGENhsUgFotl8i%2FNcCzlf3M7b0EbP2l4tmKvw3ppa2%2BTaCq5iCGQ6cQoVD4ecZkqNWOSCLhWXGoFOk1TPoGQJ5UFEL52lHpSKMZYb0YV0vdKlMFGF7Hh3JetGGok7n4FtCxKlmRWJeaxr9mFquu5%2FQHynqPvsc%2F6n%2FeWdCMWmBVwMERnL1Az4ssEZNDtHgy3l4h3Z6p4nswRC0BaTX0dD%2F6%2BgZNDl1bOhN8hvdVHo2VDJjfrl3YORx35%2BmMfnRBLkSNwazvR2zq9DJi24bt2JUx2Xef2aVMuCzC4eWSldEji6%2BqCj3wWghwP6%2BqssKEIX3lPSiyncZn%2ByXqjZ90OZKoHKIRGhK5biKwZD%2BlZ6Bc3NB9KWZM8GgzdBaRFr70CbxPOMWRg9JlMWGE5D9RiJ3m4uKpss3SEYvzuVEvzKwBiTZlMOnK5jOrn2NoozeJHH7scJCYVPUlD92xsvd66lezMlmqpwfW0jfbcM9ToW%2BTU%2BweVYf4O2eZyl8DKIfqrJwKU0hne4nEwaG%2F21jzp0RViE5rFH%2FTTBXn%2BJZ5Fv7HKZQDBsdxqhtrybcAemikR9epNTqRZW%2FEZnlH37JsMdNPxl8QxQf9Jf6VvQSZtcIeLieaLLOXS72CqxgffmLufgR2L%2FrUwsTwO1rmxbagbiqF6drrnyqPpVRovODzR4H0pte2HdmcyZX7bvQEXHhivA7dRZsUcKF0%2FM1hQH3SFRs6Z3hbzLIw23OcQHLac449YMGwcsRsJ1Z7HLAaBWjStTNksXyDqp4RaIQq150GragEWAezm%2BxpLdZHUnNxdoqvrTneOC0jq8bNqGTS3Z52ikAEtvJi8FD7ZVl6tWc2dH1YugU2CYG7cEjLZ442AfDqhMIiNymSqqPrcoXmu4DcDmrao%2B8zbcrqtawIlfMqYp7vxOQh4WCL0Nvb%2BPb%2F1j2X34gi4GYPnj8BtPHuaC%2Bo5MSga36G%2Fghoa3xmwV5ZP6YOMlitEVT9WI04vW236qgTNrIdBNjM6z4p%2BPCd7lpsmQb18Co7%2B4XGkZs%2FshfuEoFIb7KVD%2B0Lg%2B8LnX5ABphraXup68T%2FKUegBHLoXJeq%2FYuvGuQ4u47V9b0Hi%2FxxwAzByaa1RDGEXFvEvAfgW5GKLJnwlLGStOnjbuDR%2BJAS3%2B8IoBbfcxaETUHGV655DhpRb0T2%2FoWlaiqd3qN%2BRZYC6tSpy3iDP6Pki16G3GpkUuCUc68zo6Bp1n4wHzqOndSXtzHcQPxsjU3%2BD3cM2eE7TYO39ybvgfDXbv3qenIvsntWYmh3hNWRQn56WjLOvFMxZKTP7p2K3OBAaNAmP2H8KUa5wFzZtwK8J1P9j3fUFkGZDaqrlGPdkeyrc%3D19oPi10e'>link </a>
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+<a href="https://github.com/othneildrew/Best-README-Template">
+    <img src="https://i.ibb.co/9VMMZ0Z/462576758-984678703495193-5655876495060392474-n.png" alt="Logo" height="100">
+</a>
+
+<h3 align="center">IntelliForums</h3>
+
+<p align="center">
+  Final Requirement for Information Management 2
+  <br>
+  <a href="https://github.com/Anato-Eini/IntelliForums/issues/new?assignees=&labels=&projects=&template=bug_report.md"><strong>Report Bug</strong></a>
+  ·
+  <a href="https://github.com/Anato-Eini/IntelliForums/issues/new?assignees=&labels=&projects=&template=feature_request.md"><strong>Request Feature</strong></a>
+</p>
+</div>
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    <li>
+        <a href="#functional-requirements">Functional Requirements</a>
+        <ul>
+            <li><a href="#user-management">User Management</a></li>
+            <li><a href="#post-management">Post Management</a></li>
+            <li><a href="#comment-management">Comment Management</a></li>
+            <li><a href="#admin-management">Admin Management</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#entity-relationship-diagram-erd">Entity-Relationship Diagram (ERD)</a>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+  </ol>
+</details>
+
+
+## About The Project
+IntelliForums is a web-based forum application designed to facilitate discussions and information sharing among users. The platform allows users to create and manage posts, comment on discussions, and interact with other users through upvotes and downvotes. Admins have the ability to moderate content and manage user activities to ensure a safe and productive environment.
+
+Key features of IntelliForums include:
+
+- User registration and login
+- Profile management
+- Post creation, editing, and deletion
+- Commenting on posts
+- Upvoting and downvoting posts and comments
+- Reporting inappropriate content
+- Admin panel for user and content management
+
+The project aims to provide a robust and user-friendly forum experience, leveraging modern web technologies to ensure scalability and maintainability.
+
+### Built With
+The project is built using the following libraries/frameworks:
+
+<div align="center">
+    <a href="https://getbootstrap.com/">
+        <img src="https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap">
+    </a>
+    <a href="https://jquery.com/">
+        <img src="https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white" alt="jQuery">
+    </a>
+    <a href="https://www.djangoproject.com/">
+        <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green" alt="Django">
+    </a>
+    <a href="https://www.sqlite.org/">
+        <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white">
+    </a>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">
+        <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
+    </a>
+</div>
+
+<div align="right">
+    <a href="#readme-top">
+        <img src="https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue?style=for-the-badge" alt="Back to top">
+    </a>
+</div>
+
+## Figma
+
+<a href="https://www.figma.com/design/RyUp3QbuiyquVUd6hOr0Bn/IM2?node-id=0-1&node-type=canvas" target="_blank">
+    <img src="https://img.shields.io/badge/View%20Figma%20Design-%E2%86%A9-blue?style=for-the-badge" alt="View Figma Design">
+</a>
+
+## Gantt Chart
+
+<a href="https://docs.google.com/spreadsheets/d/1emJhUlhcaSpzuB8jP_2BvoRQ1bP72NqA/edit?gid=610723999#gid=610723999" target="_blank">
+    <img src="https://scontent.fcgy2-4.fna.fbcdn.net/v/t1.15752-9/462645479_8565679093542147_5851800317613133830_n.png?stp=dst-png_s2048x2048&_nc_cat=110&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGnwvpdAo3TQJsmpDTaHaPiNaQn-H2gH_A1pCf4faAf8IR_7ErkD4puasXLwZcWoR0vhTvAyilIgJRhcpJaAgS5&_nc_ohc=Jq_h0vBJMRQQ7kNvgFNScme&_nc_zt=23&_nc_ht=scontent.fcgy2-4.fna&oh=03_Q7cD1QHKNqsHqPcOqdm3xLT6HIQOJh3osf-SJZj2hV8P-832gg&oe=6776C2E2" alt="View Gantt Chart">
+    <br>
+</a>
+
+
+
+## Functional Requirements
+
+### User Management
+- **User Registration**: Allow users to create an account.
+- **User Login**: Enable users to log into their account.
+- **View Own Profile**: Users can view and edit their own profile information.
+- **View Others’ Profile**: Users can view the profiles of other users.
+- **Appeal for Unban (for Banned Users)**: Banned users can submit an appeal to be unbanned.
+
+### Post Management
+- **Post Creation**: Users can create new posts.
+- **Update Post**: Users can edit their existing posts.
+- **Soft-delete Post**: Users can temporarily delete their posts.
+- **Restore Soft-deleted Post**: Users can restore their temporarily deleted posts.
+- **Permanently Delete Post**: Users can permanently delete their posts.
+- **Upvote/Downvote Posts**: Users can upvote or downvote posts.
+- **Report Post**: Users can report posts that violate guidelines.
+
+### Comment Management
+- **Comment Creation**: Users can add comments to posts.
+- **Update Comment**: Users can edit their comments.
+- **Delete Comment**: Users can delete their comments.
+- **Upvote/Downvote Comments**: Users can upvote or downvote comments.
+- **Report Comment**: Users can report comments that violate guidelines.
+
+### Admin Management
+- **Ban User**: Admins can ban users who violate guidelines.
+- **Unban User**: Admins can unban users.
+- **View Admin Panel**: Admins can access the admin panel to manage the platform.
+- **Resolve Post Reports**: Admins can review and resolve reported posts.
+- **Resolve Comment Reports**: Admins can review and resolve reported comments.
+
+## Entity-Relationship Diagram (ERD)
+<a href="https://scontent.fcgy2-2.fna.fbcdn.net/v/t1.15752-9/467019518_1111649553167318_238892060902087252_n.png?_nc_cat=104&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFD9UULvhw5Vs0PKEFvFXqD-EmNKzPaWjT4SY0rM9paNKoyoW7rBekDziv1uCRPR5IjuIKoMhtOwds9BFybZHr1&_nc_ohc=7s61v_gGAWQQ7kNvgEE-qz9&_nc_zt=23&_nc_ht=scontent.fcgy2-2.fna&oh=03_Q7cD1QGgoupOhEqQdIxXYmXUUp9-mf_47S3lA-Fvd1ZAkcjRng&oe=6776A09F">
+<img src="https://scontent.fcgy2-2.fna.fbcdn.net/v/t1.15752-9/467019518_1111649553167318_238892060902087252_n.png?_nc_cat=104&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFD9UULvhw5Vs0PKEFvFXqD-EmNKzPaWjT4SY0rM9paNKoyoW7rBekDziv1uCRPR5IjuIKoMhtOwds9BFybZHr1&_nc_ohc=7s61v_gGAWQQ7kNvgEE-qz9&_nc_zt=23&_nc_ht=scontent.fcgy2-2.fna&oh=03_Q7cD1QGgoupOhEqQdIxXYmXUUp9-mf_47S3lA-Fvd1ZAkcjRng&oe=6776A09F"></img>
+</a>
+
+
+### Prerequisites
+
+* Python 3.x
+    ```sh
+        # For Ubuntu
+        sudo apt-get install python3
+
+        # For Windows
+        choco install python
+
+        # For macOS
+        brew install python
+    ```
+* pip
+    ```sh
+        # For Ubuntu
+        sudo apt-get install python3-pip
+
+        # For Windows
+        python -m ensurepip --upgrade
+
+        # For macOS
+        python3 -m ensurepip --upgrade
+    ```
+* Django
+    ```sh
+        pip install django
+    ```
+* SQLite (optional, if not already installed)
+    ```sh
+        # For Ubuntu
+        sudo apt-get install sqlite3
+
+        # For Windows
+        choco install sqlite
+
+        # For macOS
+        brew install sqlite
+    ```
+
+### Installation
+
+1. Clone the repo
+    ```sh
+    git clone https://github.com/Anato-Eini/IntelliForums.git
+    ```
+2. Navigate to the project directory
+    ```sh
+    cd IntelliForums
+    ```
+3. Create a virtual environment
+    ```sh
+    python3 -m venv venv
+    ```
+4. Activate the virtual environment
+    ```sh
+    # For Ubuntu/macOS
+    source venv/bin/activate
+
+    # For Windows
+    .\venv\Scripts\activate
+    ```
+5. Install the required packages
+    ```sh
+    pip install -r requirements.txt
+    ```
+6. Apply migrations
+    ```sh
+    python manage.py migrate
+    ```
+7. Run the development server
+    ```sh
+    python manage.py runserver
+    ```
+
+<div align="right">
+    <a href="#readme-top">
+        <img src="https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue?style=for-the-badge" alt="Back to top">
+    </a>
+</div>
+
+
+
+
+
+<!-- ROADMAP -->
+## Roadmap
+
+
+See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+
+<div align="right">
+    <a href="#readme-top">
+        <img src="https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue?style=for-the-badge" alt="Back to top">
+    </a>
+</div>
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this project better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<div align="right">
+    <a href="#readme-top">
+        <img src="https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue?style=for-the-badge" alt="Back to top">
+    </a>
+</div>
+
+### Top contributors:
+
+<a href="https://github.com/othneildrew/Best-README-Template/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Anato-Eini/IntelliForums" alt="contrib.rocks image" />
+</a>
+
+<div align="right">
+    <a href="#readme-top">
+        <img src="https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue?style=for-the-badge" alt="Back to top">
+    </a>
+</div>
+
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+<div align="right">
+    <a href="#readme-top">
+        <img src="https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue?style=for-the-badge" alt="Back to top">
+    </a>
+</div>
+
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/Anato-Eini/IntelliForums.svg?style=for-the-badge
+[contributors-url]: https://github.com/Anato-Eini/IntelliForums/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Anato-Eini/IntelliForums.svg?style=for-the-badge
+[forks-url]: https://github.com/Anato-Eini/IntelliForums/network/members
+[stars-shield]: https://img.shields.io/github/stars/Anato-Eini/IntelliForums.svg?style=for-the-badge
+[stars-url]: https://github.com/Anato-Eini/IntelliForums/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Anato-Eini/IntelliForums.svg?style=for-the-badge
+[issues-url]: https://github.com/Anato-Eini/IntelliForums/issues
+[license-shield]: https://img.shields.io/github/license/Anato-Eini/IntelliForums.svg?style=for-the-badge
+[license-url]: https://github.com/Anato-Eini/IntelliForums/blob/master/LICENSE
+[product-screenshot]: images/screenshot.png
