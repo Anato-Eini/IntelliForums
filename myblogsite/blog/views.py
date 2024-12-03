@@ -267,6 +267,47 @@ def post_detail(request, pk, page_number):
     })
 
 
+def ban_user_with_post_deletion(request, pk, user_post_id=None):
+    """
+    Given an id, it will ban the user (set is_banned to True) and deletes the post  
+
+    Parameters:
+        request (HttpRequest): request object
+        pk (int): User id
+
+    Returns:
+        redirects to form
+    """
+    banned_response = banned_propagator(request)
+
+    if banned_response:
+        return banned_response
+    if not request.user.is_staff:
+        raise PermissionDenied
+
+    user = get_object_or_404(User, id=pk)
+
+    if request.method == 'POST':
+        form = UserBanForm(request.POST)
+
+        if form.is_valid():
+            perma_delete_helper(request, user_post_id)
+
+            report = form.save(commit=False)
+            report.admin_ref = request.user
+            report.user_ref = user
+            report.save()
+
+            user.is_banned = True
+            user.save()
+
+            return redirect('adminpanel')
+    else:
+        form = UserBanForm()
+
+    return render(request, 'ban_user.html', {'form': form})
+
+
 def ban_user(request, pk):
     """
     Given an id, it will ban the user (set is_banned to True)
@@ -289,6 +330,7 @@ def ban_user(request, pk):
 
     if request.method == 'POST':
         form = UserBanForm(request.POST)
+
         if form.is_valid():
             report = form.save(commit=False)
             report.admin_ref = request.user
@@ -675,8 +717,7 @@ def perma_delete_helper(request, pk):
         user_post = get_object_or_404(UserPost, pk=pk)
 
         if request.user == user_post.user_ref or request.user.is_staff:
-            post = user_post.post_ref
-            post.delete()
+            user_post.post_ref.delete()
         else:
             raise PermissionDenied
 
@@ -700,8 +741,7 @@ def perma_delete(request, pk):
 
     logging.error("perma_delete")
 
-    if request.method == 'POST':
-        perma_delete_helper(request, pk)
+    perma_delete_helper(request, pk)
 
     return redirect('home', pk=0, page_number=1)
 
@@ -834,7 +874,7 @@ def delete_reportpost(request, pk):
     return redirect('adminpanel')
 
 
-def ban_user_from_post_report(request, user_pk, userpost_pk):  # GUBA
+def ban_user_from_post_report(request, user_pk, userpost_pk):
     """
     Bans a user from a post report and deletes the post from
       the database
@@ -845,7 +885,7 @@ def ban_user_from_post_report(request, user_pk, userpost_pk):  # GUBA
         userpost_pk (int): UserPost id
 
     Returns:
-        None
+        Returns whatever ban_user function returns
 
     Exceptions:
         PermissionDenied: If user is not staff
@@ -855,11 +895,7 @@ def ban_user_from_post_report(request, user_pk, userpost_pk):  # GUBA
     if banned_response:
         return banned_response
 
-    logging.error("ban_user_from_post_report")
-
-    perma_delete_helper(request, userpost_pk)
-
-    return ban_user(request, user_pk)
+    return ban_user_with_post_deletion(request, user_pk, user_post_id=userpost_pk)
 
 
 def perma_delete_from_post_report(request, pk):
@@ -969,15 +1005,65 @@ def delete_comment_from_comment_report(request, comment_id):
 
 
 def ban_user_from_comment_report(request, user_id, comment_id):  # GUBA
+    """
+    Bans a user from a comment report and deletes the comment from the database
+
+    Args:
+        request (HttpRequest): request object
+        user_id (int): user id
+        comment_id (int): comment id
+
+    Returns:
+        returns whatever ban_user function returns
+    """
 
     banned_response = banned_propagator(request)
+
     if banned_response:
         return banned_response
-    comment = get_object_or_404(Comment, id=comment_id)
-    comment.delete()
-    ban_user(request, user_id)
 
-    return redirect('adminpanel')
+    return ban_user_with_comment_deletion(request, user_id, comment_id)
+
+
+def ban_user_with_comment_deletion(request, pk, comment_id=None):
+    """
+    Given an id, it will ban the user (set is_banned to True) and deletes the post  
+
+    Parameters:
+        request (HttpRequest): request object
+        pk (int): User id
+
+    Returns:
+        redirects to form
+    """
+    banned_response = banned_propagator(request)
+
+    if banned_response:
+        return banned_response
+    if not request.user.is_staff:
+        raise PermissionDenied
+
+    user = get_object_or_404(User, id=pk)
+
+    if request.method == 'POST':
+        form = UserBanForm(request.POST)
+
+        if form.is_valid():
+            get_object_or_404(Comment, id=comment_id).delete()
+
+            report = form.save(commit=False)
+            report.admin_ref = request.user
+            report.user_ref = user
+            report.save()
+
+            user.is_banned = True
+            user.save()
+
+            return redirect('adminpanel')
+    else:
+        form = UserBanForm()
+
+    return render(request, 'ban_user.html', {'form': form})
 
 
 def reject_appeal(request, pk):  # BanAppeal pk
