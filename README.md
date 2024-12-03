@@ -154,7 +154,7 @@ The project is built using the following libraries/frameworks:
 - **Resolve Post Reports**: Admins can review and resolve reported posts.
 - **Resolve Comment Reports**: Admins can review and resolve reported comments.
 
-## Entity-Relationship Diagram (ERD)
+## Entity-Relationship Diagram (ERD) 🗂️
 <a href="https://scontent.fcgy2-2.fna.fbcdn.net/v/t1.15752-9/467019518_1111649553167318_238892060902087252_n.png?_nc_cat=104&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFD9UULvhw5Vs0PKEFvFXqD-EmNKzPaWjT4SY0rM9paNKoyoW7rBekDziv1uCRPR5IjuIKoMhtOwds9BFybZHr1&_nc_ohc=7s61v_gGAWQQ7kNvgEE-qz9&_nc_zt=23&_nc_ht=scontent.fcgy2-2.fna&oh=03_Q7cD1QGgoupOhEqQdIxXYmXUUp9-mf_47S3lA-Fvd1ZAkcjRng&oe=6776A09F">
 <img src="https://scontent.fcgy2-2.fna.fbcdn.net/v/t1.15752-9/467019518_1111649553167318_238892060902087252_n.png?_nc_cat=104&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFD9UULvhw5Vs0PKEFvFXqD-EmNKzPaWjT4SY0rM9paNKoyoW7rBekDziv1uCRPR5IjuIKoMhtOwds9BFybZHr1&_nc_ohc=7s61v_gGAWQQ7kNvgEE-qz9&_nc_zt=23&_nc_ht=scontent.fcgy2-2.fna&oh=03_Q7cD1QGgoupOhEqQdIxXYmXUUp9-mf_47S3lA-Fvd1ZAkcjRng&oe=6776A09F"></img>
 </a>
