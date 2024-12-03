@@ -1116,10 +1116,10 @@ def accept_appeal(request, pk):
     if request.method == "POST":
         ban_appeal = get_object_or_404(BanAppeal, id=pk)
         user = ban_appeal.userban_ref.user_ref
+        userban = ban_appeal.userban_ref
         user.is_banned = False
         user.save()
-        ban_appeal.delete()
-
+        userban.delete()
     return redirect('adminpanel')
 
 
