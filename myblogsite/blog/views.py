@@ -1,3 +1,4 @@
+import logging
 from pyexpat.errors import messages
 from deprecated import deprecated
 from django.http import JsonResponse
@@ -19,13 +20,19 @@ from django.db import transaction
 def banned_propagator(request):
     """
     Checks if the logged-in user is banned and renders the banned page if so.
+
+    Parameters:
+        request (HttpRequest): request object
+
+    Returns:
+        HttpResponse: HttpResponse object
     """
-    if request.user.is_authenticated:
-        if request.user.bans_received.exists():
-            userban = request.user.bans_received.first()
-            return render(request, 'banned.html', {
-                'userban': userban,
-            })
+    if request.user.is_authenticated and request.user.bans_received.exists():
+        userban = request.user.bans_received.first()
+        return render(request, 'banned.html', {
+            'userban': userban,
+        })
+
     return None
 
 
@@ -272,10 +279,12 @@ def ban_user(request, pk):
         redirects to form
     """
     banned_response = banned_propagator(request)
+
     if banned_response:
         return banned_response
     if not request.user.is_staff:
         raise PermissionDenied
+
     user = get_object_or_404(User, id=pk)
 
     if request.method == 'POST':
@@ -290,6 +299,7 @@ def ban_user(request, pk):
             return redirect('adminpanel')
     else:
         form = UserBanForm()
+
     return render(request, 'ban_user.html', {'form': form})
 
 
@@ -658,7 +668,10 @@ def perma_delete_helper(request, pk):
     Exceptions:
         PermissionDenied: If user is not the owner of the post
     """
+
     if request.method == 'POST':
+        logging.error("perma_delete_helper")
+
         user_post = get_object_or_404(UserPost, pk=pk)
 
         if request.user == user_post.user_ref or request.user.is_staff:
@@ -681,10 +694,15 @@ def perma_delete(request, pk):
 
     """
     banned_response = banned_propagator(request)
+
     if banned_response:
         return banned_response
+
+    logging.error("perma_delete")
+
     if request.method == 'POST':
         perma_delete_helper(request, pk)
+
     return redirect('home', pk=0, page_number=1)
 
 
@@ -833,9 +851,14 @@ def ban_user_from_post_report(request, user_pk, userpost_pk):  # GUBA
         PermissionDenied: If user is not staff
     """
     banned_response = banned_propagator(request)
+
     if banned_response:
         return banned_response
+
+    logging.error("ban_user_from_post_report")
+
     perma_delete_helper(request, userpost_pk)
+
     return ban_user(request, user_pk)
 
 
@@ -854,9 +877,14 @@ def perma_delete_from_post_report(request, pk):
         PermissionDenied: If user is not staff
     """
     banned_response = banned_propagator(request)
+
     if banned_response:
         return banned_response
+
+    logging.error("perma_delete_from_post_report")
+
     perma_delete_helper(request, pk)
+
     return redirect('adminpanel')
 
 
@@ -930,11 +958,13 @@ def delete_comment_from_comment_report(request, comment_id):
         Http404: If comment does not exist
     """
     banned_response = banned_propagator(request)
+
     if banned_response:
         return banned_response
-    comment = get_object_or_404(Comment, id=comment_id)
 
+    comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
+
     return redirect('adminpanel')
 
 
@@ -945,8 +975,9 @@ def ban_user_from_comment_report(request, user_id, comment_id):  # GUBA
         return banned_response
     comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
-    return ban_user(request, user_id)
+    ban_user(request, user_id)
 
+    return redirect('adminpanel')
 
 
 def reject_appeal(request, pk):  # BanAppeal pk
@@ -970,7 +1001,7 @@ def accept_appeal(request, pk):  # BanAppeal pk
         raise PermissionDenied
     if request.method == "POST":
         ban_appeal = get_object_or_404(BanAppeal, id=pk)
-        user = ban_appeal.userban_ref.user_refE
+        user = ban_appeal.userban_ref.user_ref
         user.is_banned = False
         user.save()
         ban_appeal.delete()
