@@ -212,6 +212,7 @@ class UserBanReport(admin.ModelAdmin):
     time = models.DateTimeField(auto_now_add=True)
     """
     list_display = (
+        'id',
         'admin_ref',
         'user_ref',
         'reason',
