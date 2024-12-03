@@ -27,43 +27,6 @@
 </div>
 
 
-
-<!-- TABLE OF CONTENTS -->
-<details>
-    <summary><strong>Table of Contents 📑</strong></summary>
-    <ol>
-        <li>
-            <a href="#about-the-project">About The Project 📚</a>
-            <ul>
-                <li><a href="#built-with">Built With 🛠️</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#functional-requirements">Functional Requirements ⚙️</a>
-            <ul>
-                <li><a href="#user-management">User Management 👤</a></li>
-                <li><a href="#post-management">Post Management 📝</a></li>
-                <li><a href="#comment-management">Comment Management 💬</a></li>
-                <li><a href="#admin-management">Admin Management 🔧</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#entity-relationship-diagram-erd">Entity-Relationship Diagram (ERD) 🗂️</a>
-        </li>
-        <li>
-            <a href="#getting-started">Getting Started 🚀</a>
-            <ul>
-                <li><a href="#prerequisites">Prerequisites 📋</a></li>
-                <li><a href="#installation">Installation 🛠️</a></li>
-            </ul>
-        </li>
-        <li><a href="#roadmap">Roadmap 🛣️</a></li>
-        <li><a href="#contributing">Contributing 🤝</a></li>
-        <li><a href="#license">License 📜</a></li>
-    </ol>
-</details>
-
-
 ## About The Project 📚
 
 IntelliForums is a web-based forum application designed to facilitate discussions and information sharing among users. The platform allows users to create and manage posts, comment on discussions, and interact with other users through upvotes and downvotes. Admins have the ability to moderate content and manage user activities to ensure a safe and productive environment.
