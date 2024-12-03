@@ -64,22 +64,24 @@
 </details>
 
 
-## About The Project
+## About The Project 📚
+
 IntelliForums is a web-based forum application designed to facilitate discussions and information sharing among users. The platform allows users to create and manage posts, comment on discussions, and interact with other users through upvotes and downvotes. Admins have the ability to moderate content and manage user activities to ensure a safe and productive environment.
 
 Key features of IntelliForums include:
 
-- User registration and login
-- Profile management
-- Post creation, editing, and deletion
-- Commenting on posts
-- Upvoting and downvoting posts and comments
-- Reporting inappropriate content
-- Admin panel for user and content management
+- 📝 User registration and login
+- 👤 Profile management
+- 📰 Post creation, editing, and deletion
+- 💬 Commenting on posts
+- 👍 Upvoting and downvoting posts and comments
+- 🚩 Reporting inappropriate content
+- 🔧 Admin panel for user and content management
 
 The project aims to provide a robust and user-friendly forum experience, leveraging modern web technologies to ensure scalability and maintainability.
 
-### Built With
+
+### Built With 🛠️
 The project is built using the following libraries/frameworks:
 
 <div align="center">
@@ -106,31 +108,31 @@ The project is built using the following libraries/frameworks:
     </a>
 </div>
 
-## Figma
+## Figma 🎨
 
 <a href="https://www.figma.com/design/RyUp3QbuiyquVUd6hOr0Bn/IM2?node-id=0-1&node-type=canvas" target="_blank">
     <img src="https://img.shields.io/badge/View%20Figma%20Design-%E2%86%A9-blue?style=for-the-badge" alt="View Figma Design">
 </a>
 
-## Gantt Chart
+## Gantt Chart 📊
 
 <a href="https://docs.google.com/spreadsheets/d/1emJhUlhcaSpzuB8jP_2BvoRQ1bP72NqA/edit?gid=610723999#gid=610723999" target="_blank">
-    <img src="https://scontent.fcgy2-4.fna.fbcdn.net/v/t1.15752-9/462645479_8565679093542147_5851800317613133830_n.png?stp=dst-png_s2048x2048&_nc_cat=110&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGnwvpdAo3TQJsmpDTaHaPiNaQn-H2gH_A1pCf4faAf8IR_7ErkD4puasXLwZcWoR0vhTvAyilIgJRhcpJaAgS5&_nc_ohc=Jq_h0vBJMRQQ7kNvgFNScme&_nc_zt=23&_nc_ht=scontent.fcgy2-4.fna&oh=03_Q7cD1QHKNqsHqPcOqdm3xLT6HIQOJh3osf-SJZj2hV8P-832gg&oe=6776C2E2" alt="View Gantt Chart">
+    <img src="https://scontent.fcgy2-4.fna.fbcdn.net/v/t1.15752-9/462574579_2339583333058519_6825254499664307981_n.png?stp=dst-png_s2048x2048&_nc_cat=110&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeEZB4Dcf7RzRg_Idz590jSMCRLu0lVpczAJEu7SVWlzMIW9NKkeXdqepdF6CXeRwFRwlJ1f1yoRugPuBDRcZuWa&_nc_ohc=i4_UJdZ3PRAQ7kNvgF_bdeN&_nc_zt=23&_nc_ht=scontent.fcgy2-4.fna&oh=03_Q7cD1QFypfbcTraz4PS5SI-DBgqVbMLlraZpTibInOZPIGUn2w&oe=6776B0EC" alt="View Gantt Chart">
     <br>
 </a>
 
 
 
-## Functional Requirements
+## Functional Requirements ⚙️
 
-### User Management
+### User Management 👤
 - **User Registration**: Allow users to create an account.
 - **User Login**: Enable users to log into their account.
 - **View Own Profile**: Users can view and edit their own profile information.
 - **View Others’ Profile**: Users can view the profiles of other users.
 - **Appeal for Unban (for Banned Users)**: Banned users can submit an appeal to be unbanned.
 
-### Post Management
+### Post Management 📝
 - **Post Creation**: Users can create new posts.
 - **Update Post**: Users can edit their existing posts.
 - **Soft-delete Post**: Users can temporarily delete their posts.
@@ -139,14 +141,14 @@ The project is built using the following libraries/frameworks:
 - **Upvote/Downvote Posts**: Users can upvote or downvote posts.
 - **Report Post**: Users can report posts that violate guidelines.
 
-### Comment Management
+### Comment Management 💬
 - **Comment Creation**: Users can add comments to posts.
 - **Update Comment**: Users can edit their comments.
 - **Delete Comment**: Users can delete their comments.
 - **Upvote/Downvote Comments**: Users can upvote or downvote comments.
 - **Report Comment**: Users can report comments that violate guidelines.
 
-### Admin Management
+### Admin Management 🔧
 - **Ban User**: Admins can ban users who violate guidelines.
 - **Unban User**: Admins can unban users.
 - **View Admin Panel**: Admins can access the admin panel to manage the platform.
@@ -159,7 +161,7 @@ The project is built using the following libraries/frameworks:
 </a>
 
 
-### Prerequisites
+### Prerequisites 📋
 
 * Python 3.x
     ```sh
@@ -199,7 +201,7 @@ The project is built using the following libraries/frameworks:
         brew install sqlite
     ```
 
-### Installation
+### Installation 🛠️
 
 1. Clone the repo
     ```sh
@@ -241,14 +243,11 @@ The project is built using the following libraries/frameworks:
 </div>
 
 
-
-
-
 <!-- ROADMAP -->
-## Roadmap
+## Roadmap 🛣️
 
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/Anato-Eini/IntelliForums/issues) for a full list of proposed features (and known issues).
 
 <div align="right">
     <a href="#readme-top">
@@ -257,17 +256,17 @@ See the [open issues](https://github.com/othneildrew/Best-README-Template/issues
 </div>
 
 <!-- CONTRIBUTING -->
-## Contributing
+## Contributing 🤝
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this project better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
+If you have a suggestion that would make this project better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! ⭐ Thanks again!
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the Project 🍴
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`) 🌟
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`) 💬
+4. Push to the Branch (`git push origin feature/AmazingFeature`) 🚀
+5. Open a Pull Request 📬
 
 <div align="right">
     <a href="#readme-top">
@@ -275,9 +274,9 @@ If you have a suggestion that would make this project better, please fork the re
     </a>
 </div>
 
-### Top contributors:
+### Top Contributors 🌟:
 
-<a href="https://github.com/othneildrew/Best-README-Template/graphs/contributors">
+<a href="https://github.com/Anato-Eini/IntelliForums/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Anato-Eini/IntelliForums" alt="contrib.rocks image" />
 </a>
 
@@ -290,7 +289,7 @@ If you have a suggestion that would make this project better, please fork the re
 
 
 <!-- LICENSE -->
-## License
+## License 📜
 
 Distributed under the MIT License. See `LICENSE` for more information.
 

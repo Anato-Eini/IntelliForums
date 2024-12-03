@@ -1120,6 +1120,7 @@ def accept_appeal(request, pk):
         user.is_banned = False
         user.save()
         userban.delete()
+
     return redirect('adminpanel')
 
 
