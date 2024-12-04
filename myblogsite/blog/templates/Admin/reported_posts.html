@@ -20,8 +20,8 @@
                                     </h6>
                                 </div>
                                 <div class="text-muted small text-center align-self-center">
-                                    <span class="d-none d-sm-inline-block favorite-views"><i class="far fa-eye"></i></span>
-                                    <span class="favorite-comments-num"><i class="far fa-comment ml-2"></i></span>
+                                    <!--<span class="d-none d-sm-inline-block favorite-views"><i class="far fa-eye"></i></span> -->
+                                    <!--<span class="favorite-comments-num"><i class="far fa-comment ml-2"></i></span>-->
                                     <div style = "display: flex;">
                                         <form action="{% url 'ban_user_from_post_report' user_pk=report.post_ref.user_ref.id  userpost_pk=report.post_ref.id %}" method="POST" onsubmit="return confirm('Are you sure you want to ban this user and delete the post?')">
                                             {% csrf_token %}
