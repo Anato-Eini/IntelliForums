@@ -30,13 +30,39 @@ IntelliForums is a web-based forum application designed to facilitate discussion
 
 Key features of IntelliForums include:
 
-- 📝 User registration and login
-- 👤 Profile management
-- 📰 Post creation, editing, and deletion
-- 💬 Commenting on posts
-- 👍 Upvoting and downvoting posts and comments
-- 🚩 Reporting inappropriate content
-- 🔧 Admin panel for user and content management
+### User Management 👤
+
+- **User Registration**: Allow users to create an account.
+- **User Login**: Enable users to log into their account.
+- **View Own Profile**: Users can view and edit their own profile information.
+- **View Others’ Profile**: Users can view the profiles of other users.
+- **Appeal for Unban (for Banned Users)**: Banned users can submit an appeal to be unbanned.
+
+### Post Management 📝
+
+- **Post Creation**: Users can create new posts.
+- **Update Post**: Users can edit their existing posts.
+- **Soft-delete Post**: Users can temporarily delete their posts.
+- **Restore Soft-deleted Post**: Users can restore their temporarily deleted posts.
+- **Permanently Delete Post**: Users can permanently delete their posts.
+- **Upvote/Downvote Posts**: Users can upvote or downvote posts.
+- **Report Post**: Users can report posts that violate guidelines.
+
+### Comment Management 💬
+
+- **Comment Creation**: Users can add comments to posts.
+- **Update Comment**: Users can edit their comments.
+- **Delete Comment**: Users can delete their comments.
+- **Upvote/Downvote Comments**: Users can upvote or downvote comments.
+- **Report Comment**: Users can report comments that violate guidelines.
+
+### Admin Management 🔧
+
+- **Ban User**: Admins can ban users who violate guidelines.
+- **Unban User**: Admins can unban users.
+- **View Admin Panel**: Admins can access the admin panel to manage the platform.
+- **Resolve Post Reports**: Admins can review and resolve reported posts.
+- **Resolve Comment Reports**: Admins can review and resolve reported comments.
 
 The project aims to provide a robust and user-friendly forum experience, leveraging modern web technologies to ensure scalability and maintainability.
 
@@ -107,48 +133,6 @@ The project is built using the following libraries/frameworks:
     <img src="https://scontent.fcgy2-4.fna.fbcdn.net/v/t1.15752-9/462574579_2339583333058519_6825254499664307981_n.png?stp=dst-png_s2048x2048&_nc_cat=110&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeEZB4Dcf7RzRg_Idz590jSMCRLu0lVpczAJEu7SVWlzMIW9NKkeXdqepdF6CXeRwFRwlJ1f1yoRugPuBDRcZuWa&_nc_ohc=i4_UJdZ3PRAQ7kNvgF_bdeN&_nc_zt=23&_nc_ht=scontent.fcgy2-4.fna&oh=03_Q7cD1QFypfbcTraz4PS5SI-DBgqVbMLlraZpTibInOZPIGUn2w&oe=6776B0EC" alt="View Gantt Chart">
     <br>
 </a>
-
-<div align="right">
-    <a href="#readme-top">
-        <img src="https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue?style=for-the-badge" alt="Back to top">
-    </a>
-</div>
-
-## Functional Requirements ⚙️
-
-### User Management 👤
-
-- **User Registration**: Allow users to create an account.
-- **User Login**: Enable users to log into their account.
-- **View Own Profile**: Users can view and edit their own profile information.
-- **View Others’ Profile**: Users can view the profiles of other users.
-- **Appeal for Unban (for Banned Users)**: Banned users can submit an appeal to be unbanned.
-
-### Post Management 📝
-
-- **Post Creation**: Users can create new posts.
-- **Update Post**: Users can edit their existing posts.
-- **Soft-delete Post**: Users can temporarily delete their posts.
-- **Restore Soft-deleted Post**: Users can restore their temporarily deleted posts.
-- **Permanently Delete Post**: Users can permanently delete their posts.
-- **Upvote/Downvote Posts**: Users can upvote or downvote posts.
-- **Report Post**: Users can report posts that violate guidelines.
-
-### Comment Management 💬
-
-- **Comment Creation**: Users can add comments to posts.
-- **Update Comment**: Users can edit their comments.
-- **Delete Comment**: Users can delete their comments.
-- **Upvote/Downvote Comments**: Users can upvote or downvote comments.
-- **Report Comment**: Users can report comments that violate guidelines.
-
-### Admin Management 🔧
-
-- **Ban User**: Admins can ban users who violate guidelines.
-- **Unban User**: Admins can unban users.
-- **View Admin Panel**: Admins can access the admin panel to manage the platform.
-- **Resolve Post Reports**: Admins can review and resolve reported posts.
-- **Resolve Comment Reports**: Admins can review and resolve reported comments.
 
 <div align="right">
     <a href="#readme-top">
