@@ -73,6 +73,18 @@ The project is built using the following libraries/frameworks:
 
 ## Figma 🎨
 
+<img src="https://scontent.fcgy2-1.fna.fbcdn.net/v/t1.15752-9/467474749_1031232535439380_5476741394063943079_n.png?_nc_cat=100&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeG61tBARuUV23fHQ5o0aCJdTKJ_5ZHkn_dMon_lkeSf990cSg8JjfI-7n9d9fHNOunJGnLn4K3MO58eh36vTo35&_nc_ohc=y9q7aJtUIYkQ7kNvgFnCHHe&_nc_zt=23&_nc_ht=scontent.fcgy2-1.fna&oh=03_Q7cD1QF0zaZ5DTg8W3eGH6ny1013pX-ynmQZ9pP2-LQLivJh4Q&oe=67771549">
+
+<img src="https://scontent.fcgy2-2.fna.fbcdn.net/v/t1.15752-9/462640965_4261342260855010_5875176451044869406_n.png?_nc_cat=109&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGlY3WlLqW_MYXQBexvTdDhimO9Yc2POpeKY71hzY86lw_MPAZI14Pi4nsXulKQe66VgWRzv2yaZDFi_wcN878p&_nc_ohc=5aLlN5mhjBYQ7kNvgEvJ8U0&_nc_zt=23&_nc_ht=scontent.fcgy2-2.fna&oh=03_Q7cD1QEiNL3-NjpaYrxIvIL3QTDaVirTdx5jlueCkpod5MPw_A&oe=677708CC">
+
+<img src="https://scontent.fcgy2-1.fna.fbcdn.net/v/t1.15752-9/462568131_1094429762347900_1098591001855135673_n.png?_nc_cat=102&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGbjEELlrLPOZocQmzMoIT0h8bcyrreKUeHxtzKut4pR6g4LRn6yhBRYealXf2JuyrLqWo3JwnnEo_pMbVagjxk&_nc_ohc=6xTDS1k8-fUQ7kNvgFlBY3u&_nc_zt=23&_nc_ht=scontent.fcgy2-1.fna&oh=03_Q7cD1QGY4xECmObiS8ZE7T4JOKoQLSjHVFjg3wK71-bzg5JzNA&oe=67772967">
+
+<img src="https://scontent.fcgy2-2.fna.fbcdn.net/v/t1.15752-9/462584271_2864461190395174_4798717567427172398_n.png?_nc_cat=109&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGdd07HeY29RUTAljz9QhuVqV3G38NgD4qpXcbfw2APigq9PlWUtdfFV7LTmfgaDyJ26rAM0cSSErkBtCwKrgQX&_nc_ohc=Tf5M0oVSNeYQ7kNvgH9Nrzs&_nc_zt=23&_nc_ht=scontent.fcgy2-2.fna&oh=03_Q7cD1QH1gtLROzBzwiEK2vgTS0Y_TQsDSXHxLv5f9s7sr0zc_A&oe=6777282A">
+
+<img src="https://scontent.fcgy2-1.fna.fbcdn.net/v/t1.15752-9/462565993_9517375658277407_8229759737651492387_n.png?_nc_cat=102&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGwmQX-N5n0ebkWqGDguscOxacxXqKUSpbFpzFeopRKlpdgZoNatqYXpepBQTSSasoo-F8UdQAT8a1ER92wOoz-&_nc_ohc=ufUN1CB3M7MQ7kNvgHxyrkW&_nc_zt=23&_nc_ht=scontent.fcgy2-1.fna&oh=03_Q7cD1QEFndAAutOxutHMnkrt3VHxKk9VDd1WKSA20Nh0JauYkA&oe=6777211D">
+
+<img src="https://scontent.fcgy2-4.fna.fbcdn.net/v/t1.15752-9/465658877_564999313053478_7941133866009450641_n.png?_nc_cat=110&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeHPyy8GVb8Xordtatj7eML9N8uN5saIxOs3y43mxojE65SZZ-Q7iNJxvICzPt0-5mdeZ88bpv5IiarzWC_y81-b&_nc_ohc=e6_k9UaHn1sQ7kNvgEXP3sj&_nc_zt=23&_nc_ht=scontent.fcgy2-4.fna&oh=03_Q7cD1QESbHzJZ63MpPewXJooqxpKSEg2g6Ix7UWmj_lI1o8EKg&oe=67771243">
+
 <a href="https://www.figma.com/design/RyUp3QbuiyquVUd6hOr0Bn/IM2?node-id=0-1&node-type=canvas" target="_blank">
     <img src="https://img.shields.io/badge/View%20Figma%20Design-%E2%86%A9-blue?style=for-the-badge" alt="View Figma Design">
 </a>
