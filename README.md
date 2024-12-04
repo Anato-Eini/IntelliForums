@@ -24,6 +24,9 @@
 </p>
 </div>
 
+
+<!-- About The Project -->
+
 ## About The Project 📚
 
 IntelliForums is a web-based forum application designed to facilitate discussions and information sharing among users. The platform allows users to create and manage posts, comment on discussions, and interact with other users through upvotes and downvotes. Admins have the ability to moderate content and manage user activities to ensure a safe and productive environment.
@@ -94,6 +97,9 @@ The project is built using the following libraries/frameworks:
     </a>
 </div>
 
+
+<!-- Figma -->
+
 ## Figma 🎨
 
 <a href="https://www.figma.com/design/RyUp3QbuiyquVUd6hOr0Bn/IM2?node-id=0-1&node-type=canvas" target="_blank">
@@ -126,6 +132,7 @@ The project is built using the following libraries/frameworks:
     </a>
 </div>
 
+
 <!-- Gantt Chart -->
 ## Gantt Chart 📊
 
@@ -140,6 +147,9 @@ The project is built using the following libraries/frameworks:
     </a>
 </div>
 
+
+<!--  Entity-Relationship Diagram (ERD) 🗂️ -->
+
 ## Entity-Relationship Diagram (ERD) 🗂️
 
 <a href="https://scontent.fcgy2-2.fna.fbcdn.net/v/t1.15752-9/467019518_1111649553167318_238892060902087252_n.png?_nc_cat=104&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFD9UULvhw5Vs0PKEFvFXqD-EmNKzPaWjT4SY0rM9paNKoyoW7rBekDziv1uCRPR5IjuIKoMhtOwds9BFybZHr1&_nc_ohc=7s61v_gGAWQQ7kNvgEE-qz9&_nc_zt=23&_nc_ht=scontent.fcgy2-2.fna&oh=03_Q7cD1QGgoupOhEqQdIxXYmXUUp9-mf_47S3lA-Fvd1ZAkcjRng&oe=6776A09F">
@@ -152,6 +162,8 @@ The project is built using the following libraries/frameworks:
     </a>
 </div>
 
+
+<!-- Prerequisites -->
 ### Prerequisites 📋
 
 - Python 3.x
@@ -180,10 +192,6 @@ The project is built using the following libraries/frameworks:
       python3 -m ensurepip --upgrade
   ```
 
-- Django
-  ```sh
-      pip install django
-  ```
 - SQLite (optional, if not already installed)
 
   ```sh
@@ -196,6 +204,8 @@ The project is built using the following libraries/frameworks:
       # For macOS
       brew install sqlite
   ```
+
+<!-- Installation -->
 
 ### Installation 🛠️
 
@@ -225,10 +235,11 @@ The project is built using the following libraries/frameworks:
    ```sh
    pip install -r requirements.txt
    ```
-6. Apply migrations
-   ```sh
-   python manage.py migrate
-   ```
+6. Navigate to the project app
+    ```sh
+    cd myblogsite
+    ```
+
 7. Run the development server
    ```sh
    python manage.py runserver
